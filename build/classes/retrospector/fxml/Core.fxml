@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+<?import org.controlsfx.control.Rating?>
+
+<TabPane fx:id="anchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="425.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="retrospector.fxml.CoreController">
+  <tabs>
+    <Tab fx:id="searchTab" text="Search">
+         <content>
+            <VBox prefHeight="200.0" prefWidth="100.0" spacing="3.0">
+               <children>
+                  <TextField fx:id="searchBox" style="-fx-background-image: url('http://www.clipartbest.com/cliparts/dir/aXn/diraXnR6T.png'); -fx-background-repeat: no-repeat; -fx-background-position: right center; -fx-background-size: 20;" />
+                  <TableView fx:id="searchTable" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                    <columns>
+                      <TableColumn fx:id="searchTitleColumn" prefWidth="216.0" text="Title" />
+                      <TableColumn fx:id="searchCreatorColumn" prefWidth="102.0" text="Creator" />
+                        <TableColumn fx:id="searchSeasonColumn" prefWidth="64.0" text="Season" />
+                        <TableColumn fx:id="searchEpisodeColumn" prefWidth="65.0" text="Episode" />
+                        <TableColumn fx:id="searchRatingColumn" prefWidth="59.0" text="Rating" />
+                        <TableColumn fx:id="searchReviewsColumn" prefWidth="73.0" text="Reviews" />
+                    </columns>
+                  </TableView>
+                  <HBox>
+                     <children>
+                        <Button fx:id="searchNewMedia" mnemonicParsing="false" text="New" />
+                        <Button fx:id="searchEditMedia" mnemonicParsing="false" text="Edit" />
+                        <Button fx:id="searchDeleteMedia" mnemonicParsing="false" text="Delete" />
+                     </children>
+                  </HBox>
+               </children>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+            </VBox>
+         </content></Tab>
+      <Tab fx:id="mediaTab" text="Media">
+         <content>
+            <GridPane hgap="10.0" vgap="10.0">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="100.0" prefHeight="100.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="300.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="120.0" minHeight="10.0" prefHeight="120.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <VBox alignment="CENTER" GridPane.columnIndex="1">
+                     <children>
+                        <TextField fx:id="mediaTitle" promptText="Title" />
+                        <HBox alignment="CENTER">
+                           <children>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="by " />
+                              <TextField fx:id="mediaCreator" promptText="Creator" />
+                           </children>
+                        </HBox>
+                        <TextField fx:id="mediaSeason" promptText="Season" />
+                        <TextField fx:id="mediaEpisode" promptText="Episode" />
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER">
+                     <children>
+                        <Rating fx:id="mediaStars" />
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER" GridPane.columnIndex="2">
+                     <children>
+                        <Text fx:id="mediaRating" strokeType="OUTSIDE" strokeWidth="0.0" text="6.7">
+                           <font>
+                              <Font size="22.0" />
+                           </font>
+                        </Text>
+                        <Line endX="40.0" />
+                        <Text fx:id="mediaMaxRating" strokeType="OUTSIDE" strokeWidth="0.0" text="10">
+                           <font>
+                              <Font size="34.0" />
+                           </font>
+                        </Text>
+                     </children>
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                  </VBox>
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnSpan="3" GridPane.rowIndex="1">
+                     <children>
+                        <VBox prefHeight="200.0" prefWidth="100.0" spacing="3.0" HBox.hgrow="SOMETIMES">
+                           <children>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Category" />
+                              <ChoiceBox fx:id="mediaCategory" prefWidth="150.0" />
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Type" />
+                              <ChoiceBox fx:id="mediaType" prefWidth="150.0" />
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Description" />
+                              <TextArea fx:id="mediaDescription" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                           </children>
+                        </VBox>
+                        <VBox prefHeight="242.0" prefWidth="228.0" spacing="3.0" HBox.hgrow="NEVER">
+                           <children>
+                              <HBox alignment="CENTER">
+                                 <children>
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Reviews" />
+                                    <Button fx:id="mediaNewReview" mnemonicParsing="false" text="New" />
+                                    <Button fx:id="mediaEditReview" mnemonicParsing="false" text="Edit" />
+                                    <Button fx:id="mediaDeleteReview" mnemonicParsing="false" text="Delete" />
+                                 </children>
+                              </HBox>
+                              <TableView fx:id="mediaReviewTable" prefHeight="232.0" prefWidth="228.0" VBox.vgrow="ALWAYS">
+                                 <columns>
+                                    <TableColumn fx:id="mediaRatingColumn" prefWidth="75.0" text="Rating" />
+                                    <TableColumn fx:id="mediaUserColumn" prefWidth="75.0" text="User" />
+                                    <TableColumn fx:id="mediaDateColumn" prefWidth="75.0" text="Date" />
+                                 </columns>
+                              </TableView>
+                           </children>
+                        </VBox>
+                     </children>
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                  </HBox>
+                  <HBox alignment="CENTER" GridPane.columnSpan="3" GridPane.rowIndex="2">
+                     <children>
+                        <Button fx:id="mediaSave" mnemonicParsing="false" text="Save" />
+                        <Button fx:id="mediaDelete" mnemonicParsing="false" text="Delete" />
+                        <Button fx:id="mediaCancel" mnemonicParsing="false" text="Cancel" />
+                     </children>
+                  </HBox>
+               </children>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+            </GridPane>
+         </content>
+      </Tab>
+    <Tab fx:id="reviewTab" text="Review">
+         <content>
+            <GridPane hgap="10.0" vgap="10.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints maxHeight="100.0" minHeight="100.0" prefHeight="100.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="300.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <VBox alignment="CENTER">
+                     <children>
+                        <Rating fx:id="reviewStars" />
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER" GridPane.columnIndex="2">
+                     <children>
+                        <Text fx:id="reviewRating" strokeType="OUTSIDE" strokeWidth="0.0" text="6.7">
+                           <font>
+                              <Font size="22.0" />
+                           </font>
+                        </Text>
+                        <Line endX="40.0" />
+                        <Text fx:id="reviewMaxRating" strokeType="OUTSIDE" strokeWidth="0.0" text="10">
+                           <font>
+                              <Font size="34.0" />
+                           </font>
+                        </Text>
+                     </children>
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                  </VBox>
+                  <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="3.0" GridPane.columnSpan="3" GridPane.rowIndex="1">
+                     <children>
+                        <Slider fx:id="reviewRater" blockIncrement="0.1" majorTickUnit="1.0" max="10.0" min="1.0" minorTickCount="10" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="6.0" />
+                        <TextField fx:id="reviewUser" maxWidth="300.0" />
+                        <DatePicker fx:id="reviewDate" maxWidth="300.0" VBox.vgrow="NEVER" />
+                        <TextArea fx:id="reviewDescription" maxWidth="300.0" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                        <HBox alignment="CENTER" maxWidth="300.0">
+                           <children>
+                              <Button fx:id="reviewSave" mnemonicParsing="false" text="Save" />
+                              <Button fx:id="reviewDelete" mnemonicParsing="false" text="Delete" />
+                              <Button fx:id="reviewCancel" mnemonicParsing="false" text="Cancel" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER" GridPane.columnIndex="1">
+                     <children>
+                        <TextField fx:id="reviewTitle" disable="true" promptText="Title" />
+                        <HBox alignment="CENTER">
+                           <children>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="by " />
+                              <TextField fx:id="reviewCreator" disable="true" promptText="Creator" />
+                           </children>
+                        </HBox>
+                        <TextField fx:id="reviewSeason" disable="true" promptText="Season" />
+                        <TextField fx:id="reviewEpisode" disable="true" promptText="Episode" />
+                     </children>
+                  </VBox>
+               </children>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+            </GridPane>
+         </content></Tab>
+      <Tab fx:id="chartTab" text="Chart">
+         <content>
+            <GridPane hgap="10.0" vgap="10.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <VBox prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <ToggleButton fx:id="chartRatings" mnemonicParsing="false" prefWidth="80.0" text="Ratings" />
+                        <ToggleButton fx:id="chartReviews" mnemonicParsing="false" prefWidth="80.0" text="Reviews" />
+                        <ToggleButton fx:id="chartTime" maxWidth="80.0" mnemonicParsing="false" text="Time" />
+                        <ToggleButton fx:id="chartUsers" maxWidth="80.0" mnemonicParsing="false" text="Users" />
+                        <Button fx:id="chartShow" maxWidth="80.0" mnemonicParsing="false" text="Show" />
+                     </children>
+                  </VBox>
+                  <VBox fx:id="chartVBox" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowSpan="2" />
+                  <GridPane GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Total Media" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Total Reviews" GridPane.rowIndex="1" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Total Users" GridPane.rowIndex="2" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Total Runtime" GridPane.rowIndex="3" />
+                        <Text fx:id="chartTotalMedia" strokeType="OUTSIDE" strokeWidth="0.0" text="10" GridPane.columnIndex="1" />
+                        <Text fx:id="chartTotalReviews" strokeType="OUTSIDE" strokeWidth="0.0" text="100" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Text fx:id="chartTotalUsers" strokeType="OUTSIDE" strokeWidth="0.0" text="2" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Text fx:id="chartTotalRuntime" strokeType="OUTSIDE" strokeWidth="0.0" text="2 years" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                     </children>
+                  </GridPane>
+               </children>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+            </GridPane>
+         </content>
+      </Tab>
+  </tabs>
+</TabPane>

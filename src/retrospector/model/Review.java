@@ -15,8 +15,31 @@ public class Review {
     private LocalDate date;
     private String user;
     private String review;
-    private Integer rating;
+    private Double rating;
 
+    public Review(){
+        this(DataManager.getDefaultRating() + 0.0);
+    }
+    
+    public Review(Double rating){
+        this(rating, LocalDate.now());
+    }
+    
+    public Review(Double rating, LocalDate date){
+        this(rating,date,DataManager.getDefaultUser());
+    }
+    
+    public Review(Double rating, LocalDate date, String user){
+        this(rating,date,user,"");
+    }
+    
+    public Review(Double rating, LocalDate date, String user, String review){
+        setRating(rating);
+        setDate(date);
+        setUser(user);
+        setReview(review);
+    }
+    
     public LocalDate getDate() {
         return date;
     }
@@ -41,11 +64,11 @@ public class Review {
         this.review = review;
     }
 
-    public Integer getRating() {
+    public Double getRating() {
         return rating;
     }
 
-    public void setRating(Integer rating) {
+    public void setRating(Double rating) {
         this.rating = rating;
     }
     

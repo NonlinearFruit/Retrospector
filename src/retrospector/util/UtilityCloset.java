@@ -5,9 +5,11 @@
  */
 package retrospector.util;
 
+import java.util.function.BiFunction;
 import javafx.scene.Node;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
+import retrospector.model.Media;
 
 /**
  *
@@ -23,6 +25,13 @@ public class UtilityCloset {
         Label label = new Label(name,node);
         label.setContentDisplay(side);
         return label;
+    }
+    
+    public static BiFunction<String,Media,Boolean> getMediaHound(){
+        return (s,m)->{
+            
+            return true;
+        };
     }
     
 }

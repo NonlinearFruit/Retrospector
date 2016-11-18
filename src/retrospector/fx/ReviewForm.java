@@ -61,7 +61,7 @@ public class ReviewForm extends VBox{
     
     public Review getReview(){
         Review r = new Review();
-        r.setRating((int)rate.getRating());
+        r.setRating(rate.getRating());
         r.setDate(date.getValue());
         r.setUser(user.getText());
         r.setReview(review.getText());

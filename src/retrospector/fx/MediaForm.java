@@ -152,7 +152,7 @@ public class MediaForm extends VBox{
         m.setType(type.getValue());
         m.setSeasonId(season.getText());
         m.setEpisodeId(episode.getText());
-        m.setReviews(reviewList);
+//        m.setReviews(reviewList);
         return m;
     }
     

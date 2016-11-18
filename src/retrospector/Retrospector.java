@@ -6,11 +6,10 @@
 package retrospector;
 
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import retrospector.fx.MediaForm;
 
 /**
  *
@@ -19,14 +18,28 @@ import retrospector.fx.MediaForm;
 public class Retrospector extends Application {
     
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws Exception{
         
-        VBox reviewPane = new VBox();
-        MediaForm form = new MediaForm(reviewPane);
-        BorderPane root = new BorderPane();
-        root.setCenter(form);
-        root.setRight(reviewPane);
+//        List<Media> media = new ArrayList<>();
+//        SearchPane<Media> search = new SearchPane(UtilityCloset.getMediaHound(),media,"AverageRating","Title","Creator","Season","Episode");
+//        VBox reviewPane = new VBox();
+//        MediaForm form = new MediaForm(reviewPane);
+//        BorderPane root = new BorderPane();
+//        MenuItem b = new MenuItem("New Media");
+//        b.setOnAction((e)->{
+//            Media neo = new Media();
+//            media.add(neo);
+//            form.setMedia(neo);
+//            search.addToSearchSet(neo);
+//        });
+//        Menu a = new Menu("Data",null,b);
+//        MenuBar menu = new MenuBar(a);
+//        root.setTop(menu);
+//        root.setCenter(form);
+//        root.setRight(reviewPane);
+//        root.setLeft(search);
         
+        Parent root = FXMLLoader.load(getClass().getResource("/retrospector/fxml/Core.fxml"));
         Scene scene = new Scene(root, 1300, 800);
         
         primaryStage.setTitle("Retrospector");

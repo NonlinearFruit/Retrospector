@@ -5,6 +5,7 @@
  */
 package retrospector.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,12 +24,43 @@ public class Media {
     private Type type;
     private String seasonId;
     private String episodeId;
+    
+    public Media(){
+        this("");
+    }
+    
+    public Media(String title){
+        this(title,"");
+    }
+    
+    public Media(String title, String creator){
+        this(title, creator, Category.MOVIE);
+    }
+    
+    public Media(String title, String creator, Category category){
+        this(title, creator, category, Type.SINGLE);
+    }
+    
+    public Media(String title, String creator, Category category, Type type){
+        this(title, creator, category, type, new ArrayList<>());
+    }
+    
+    public Media(String title, String creator, Category category, Type type, List<Review> reviews){
+        setTitle(title);
+        setCreator(creator);
+        setCategory(category);
+        setType(type);
+        setReviews(reviews);
+        setSeasonId("");
+        setEpisodeId("");
+        setDescription("");
+    }
 
     public List<Review> getReviews() {
         return reviews;
     }
 
-    public void setReviews(List<Review> reviews) {
+    private void setReviews(List<Review> reviews) {
         this.reviews = reviews;
     }
 
