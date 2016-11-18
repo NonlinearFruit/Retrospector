@@ -2,5 +2,11 @@
 Maintain an active list of your personal reviews/ratings of media.
 
 # Screenshots
-
-![screenshot](/screenshots/Media+Review.png)
+## Search
+![screenshot](/screenshots/Search.png)
+## Media
+![screenshot](/screenshots/Media.png)
+## Review
+![screenshot](/screenshots/Review.png)
+## Chart
+![screenshot](/screenshots/Chart.png)
