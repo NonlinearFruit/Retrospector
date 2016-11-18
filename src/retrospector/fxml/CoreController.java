@@ -5,9 +5,13 @@
  */
 package retrospector.fxml;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ResourceBundle;
 import javafx.beans.binding.Bindings;
@@ -17,8 +21,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.chart.Axis;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart.Data;
 import javafx.scene.chart.XYChart.Series;
@@ -38,6 +44,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
+import javafx.util.StringConverter;
 import org.controlsfx.control.Rating;
 import retrospector.model.*;
 
@@ -182,11 +189,20 @@ public class CoreController implements Initializable {
         initMediaTab();
         initReviewTab();
         initChartTab();
+        anchor.getSelectionModel().selectedItemProperty().addListener((observe,old,neo)->{
+            if(neo.getText().equals("Search"))
+                updateSearchTab();
+            else if(neo.getText().equals("Media"))
+                updateMediaTab();
+            else if(neo.getText().equals("Review"))
+                updateReviewTab();
+            else
+                updateChartTab();
+        });
     }    
     
     public void updateSearchTab(){
         searchTable.refresh();
-        updateChartTab();
     }
     
     public void initSearchTab(){
@@ -248,13 +264,11 @@ public class CoreController implements Initializable {
         });
         searchDeleteMedia.setOnAction(e->{
             DataManager.getMedia().remove(currentMedia);
-            updateSearchTab();
         });
     }
     
     public void setMedia(Media media){
         currentMedia = media;
-        updateMediaTab();
     }
     
     public void updateMediaTab(){
@@ -262,8 +276,8 @@ public class CoreController implements Initializable {
         mediaCreator.setText(currentMedia.getCreator());
         mediaSeason.setText(currentMedia.getSeasonId());
         mediaEpisode.setText(currentMedia.getEpisodeId());
-        double rating = currentMedia.getAverageRating();
-        mediaStars.setRating(rating/2);
+        BigDecimal rating = currentMedia.getAverageRating();
+        mediaStars.setRating(rating.divide(BigDecimal.valueOf(2)).doubleValue());
         mediaRating.setText(ratingFormat.format(rating));
         
         mediaCategory.setValue(currentMedia.getCategory());
@@ -272,7 +286,6 @@ public class CoreController implements Initializable {
         
         mediaReviewTable.setItems(FXCollections.observableArrayList(currentMedia.getReviews()));
         mediaReviewTable.refresh();
-        updateSearchTab();
     }
     
     public void initMediaTab(){
@@ -283,7 +296,28 @@ public class CoreController implements Initializable {
         mediaRating.setText(ratingFormat.format(DataManager.getDefaultRating()));
         mediaMaxRating.setText(ratingFormat.format(DataManager.getMaxRating()));
         mediaCategory.setItems(FXCollections.observableArrayList(Media.Category.values()));
+        mediaCategory.getSelectionModel().selectedItemProperty().addListener((observe,old,neo)->{
+            
+        });
         mediaType.setItems(FXCollections.observableArrayList(Media.Type.values()));
+        mediaType.getSelectionModel().selectedItemProperty().addListener((observe,old,neo)->{
+            switch(neo){
+                case SERIES:
+                    mediaSeason.setVisible(true);
+                    mediaEpisode.setVisible(true);
+                    mediaEpisode.toFront();
+                    break;
+                case MINISERIES:
+                    mediaSeason.setVisible(false);
+                    mediaEpisode.setVisible(true);
+                    mediaSeason.toFront();
+                    break;
+                case SINGLE:
+                default:
+                    mediaSeason.setVisible(false);
+                    mediaEpisode.setVisible(false);
+            }
+        });
         
         mediaReviewTable.getSelectionModel().selectedItemProperty().addListener((observe, old, neo)->{
             setReview(neo);
@@ -295,7 +329,6 @@ public class CoreController implements Initializable {
         mediaNewReview.setOnAction(e->{
             Review review = new Review();
             currentMedia.getReviews().add(review);
-            updateMediaTab();
             setReview(review);
             anchor.getSelectionModel().select(reviewTab);
         });
@@ -304,7 +337,6 @@ public class CoreController implements Initializable {
         });
         mediaDeleteReview.setOnAction(e->{
             currentMedia.getReviews().remove(currentReview);
-            updateMediaTab();
         });
         
         mediaSave.setOnAction(e->{
@@ -315,12 +347,10 @@ public class CoreController implements Initializable {
             currentMedia.setCategory(mediaCategory.getValue());
             currentMedia.setType(mediaType.getValue());
             currentMedia.setDescription(mediaDescription.getText());
-            updateMediaTab();
             anchor.getSelectionModel().select(searchTab);
         });
         mediaDelete.setOnAction(e->{
             DataManager.getReviews().remove(currentMedia);
-            updateSearchTab();
             anchor.getSelectionModel().select(searchTab);
         });
         mediaCancel.setOnAction(e->{
@@ -330,7 +360,6 @@ public class CoreController implements Initializable {
     
     public void setReview(Review review){
         currentReview = review;
-        updateReviewTab();
     }
     
     public void updateReviewTab(){
@@ -338,11 +367,10 @@ public class CoreController implements Initializable {
         reviewCreator.setText(currentMedia.getCreator());
         reviewSeason.setText(currentMedia.getSeasonId());
         reviewEpisode.setText(currentMedia.getEpisodeId());
-        reviewRater.setValue(currentReview.getRating());
+        reviewRater.setValue(currentReview.getRating().doubleValue());
         reviewDescription.setText(currentReview.getReview());
         reviewUser.setText(currentReview.getUser());
         reviewDate.setValue(currentReview.getDate());
-        updateMediaTab();
     }
     
     public void initReviewTab(){
@@ -358,15 +386,13 @@ public class CoreController implements Initializable {
         
         reviewSave.setOnAction(e->{
             currentReview.setDate(reviewDate.getValue());
-            currentReview.setRating(reviewRater.getValue());
+        currentReview.setRating(BigDecimal.valueOf(reviewRater.getValue()).round(new MathContext(2, RoundingMode.HALF_UP)));
             currentReview.setUser(reviewUser.getText());
             currentReview.setReview(reviewDescription.getText());
-            updateMediaTab();
             anchor.getSelectionModel().select(mediaTab);
         });
         reviewDelete.setOnAction(e->{
             currentMedia.getReviews().remove(currentReview);
-            updateMediaTab();
             anchor.getSelectionModel().select(mediaTab);
         });
         reviewCancel.setOnAction(e->{
@@ -384,17 +410,47 @@ public class CoreController implements Initializable {
                 time = chartTime.isSelected();
         
         chartVBox.getChildren().clear();
-        if(!users && reviews && ratings && !time){
-            double one=0, two=0, three=0, four=0, five=0;
+        // User :: Review :: Rating :: Time
+        
+        // 0    :: 0      :: 0      :: 0
+        if(!users && !reviews && !ratings && !time){
+            
+        }
+        
+        // 0    :: 0      :: 0      :: 1
+        if(!users && !reviews && !ratings && time){
+            
+        }
+        
+        // 0    :: 0      :: 1      :: 0
+        if(!users && !reviews && ratings && !time){
+            
+        }
+        
+        // 0    :: 0      :: 1      :: 1 see 0111
+        
+        // 0    :: 1      :: 0      :: 0
+        if(!users && reviews && !ratings && !time){
+            
+        }
+        
+        // 0    :: 1      :: 0      :: 1
+        if(!users && reviews && !ratings && time){
+            
+        }
+        
+        // 0    :: 1      :: 1      :: 0
+        else if(!users && reviews && ratings && !time){
+            int one=0, two=0, three=0, four=0, five=0;
             for (Review review : currentMedia.getReviews()) {
-                double rating = review.getRating();
-                if(rating<2)
+                BigDecimal rating = review.getRating();
+                if(rating.compareTo(BigDecimal.valueOf(2))<0)
                     one+=1;
-                else if(rating<4)
+                else if(rating.compareTo(BigDecimal.valueOf(4))<0)
                     two+=1;
-                else if(rating<6)
+                else if(rating.compareTo(BigDecimal.valueOf(6))<0)
                     three+=1;
-                else if(rating<8)
+                else if(rating.compareTo(BigDecimal.valueOf(8))<0)
                     four+=1;
                 else
                     five+=1;
@@ -408,10 +464,157 @@ public class CoreController implements Initializable {
                     new Data(five,"Five Star")
             );
             BarChart<String,Integer> graph = new BarChart(new NumberAxis(),new CategoryAxis(FXCollections.observableArrayList("One Star","Two Star","Three Star","Four Star","Five Star")));
+            graph.setTitle("Number of Reviews per Rating");
             graph.getData().add(series);
             chartVBox.getChildren().add(graph);
         }
         
+        // 0    :: 1      :: 1      :: 1  && 0    :: 0      :: 1      :: 1  
+        else if(!users /*&& reviews*/ && ratings && time){
+            NumberAxis xAxis = new NumberAxis();
+            Axis yAxis = new NumberAxis(0.0,5.0,1.0);
+            yAxis.setLabel("Rating");
+            xAxis.setAutoRanging(true);
+            xAxis.setForceZeroInRange(false);
+            xAxis.setLabel("Time");
+            xAxis.setTickLabelFormatter(new StringConverter<Number>() {
+                @Override
+                public String toString(Number day) {
+                    return LocalDate.ofEpochDay(day.longValue()).format(DateTimeFormatter.ISO_LOCAL_DATE);
+                }
+
+                @Override
+                public Number fromString(String date) {
+                    return LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE).toEpochDay();
+                }
+            });
+            LineChart graph = new LineChart(xAxis,yAxis);
+            Series series = new Series();
+            int one=0, two=0, three=0, four=0, five=0;
+            for (Review review : currentMedia.getReviews()) {
+                BigDecimal rating = review.getRating();
+                series.getData().add(new Data(review.getDate().toEpochDay(),rating.divide(new BigDecimal(2),2,RoundingMode.HALF_UP)));
+            }
+            graph.setTitle("Ratings over Time");
+            graph.getData().add(series);
+            chartVBox.getChildren().add(graph);
+        }
+        
+        // 1    :: 0      :: 0      :: 0
+        if(users && !reviews && !ratings && !time){
+            
+        }
+        
+        // 1    :: 0      :: 0      :: 1
+        if(users && !reviews && !ratings && time){
+            
+        }
+        
+        // 1    :: 0      :: 1      :: 0
+        if(users && !reviews && ratings && !time){
+            NumberAxis xAxis = new NumberAxis(0,5,1);
+            BarChart<BigDecimal,String> graph = new BarChart(xAxis,new CategoryAxis());
+            graph.setTitle("Average Rating per User");
+            Series<BigDecimal,String> series = new Series<>();
+            for (String user : DataManager.getUsers()) {
+                BigDecimal mean = BigDecimal.ZERO;
+                BigDecimal count = BigDecimal.ONE;
+                for (Review review : currentMedia.getReviews()) {
+                    if(user.equals(review.getUser())){
+                        count = count.add(BigDecimal.ONE);
+                        mean = mean.add(review.getRating());
+                    }
+                }
+                mean = mean.divide(count,2,RoundingMode.HALF_UP);
+                series.getData().add(new Data(mean,user));
+            }
+            graph.getData().add(series);
+            chartVBox.getChildren().add(graph);
+        }
+        
+        // 1    :: 0      :: 1      :: 1
+        if(users && !reviews && ratings && time){
+            
+        }
+        
+        // 1    :: 1      :: 0      :: 0
+        if(users && reviews && !ratings && !time){
+            
+        }
+        
+        // 1    :: 1      :: 0      :: 1
+        if(users && reviews && !ratings && time){
+            
+        }
+        
+        // 1    :: 1      :: 1      :: 0
+        else if(users && reviews && ratings && !time){
+            BarChart<String,Integer> graph = new BarChart(new NumberAxis(),new CategoryAxis(FXCollections.observableArrayList("One Star","Two Star","Three Star","Four Star","Five Star")));
+            for (String user : DataManager.getUsers()) {
+                int one=0, two=0, three=0, four=0, five=0;
+                for (Review review : currentMedia.getReviews()) {
+                    BigDecimal rating = review.getRating();
+                    if(user.equals(review.getUser())){
+                        if(rating.compareTo(BigDecimal.valueOf(2))<0)
+                            one+=1;
+                        else if(rating.compareTo(BigDecimal.valueOf(4))<0)
+                            two+=1;
+                        else if(rating.compareTo(BigDecimal.valueOf(6))<0)
+                            three+=1;
+                        else if(rating.compareTo(BigDecimal.valueOf(8))<0)
+                            four+=1;
+                        else
+                            five+=1;
+                    }
+                }
+                Series series = new Series();
+                series.setName(user);
+                series.getData().addAll(
+                        new Data(one,"One Star"),
+                        new Data(two,"Two Star"),
+                        new Data(three,"Three Star"),
+                        new Data(four,"Four Star"),
+                        new Data(five,"Five Star")
+                );
+                graph.getData().add(series);
+            }
+            chartVBox.getChildren().add(graph);
+        }
+        
+        // 1    :: 1      :: 1      :: 1
+        else if(users && reviews && ratings && time){
+            NumberAxis xAxis = new NumberAxis();
+            Axis yAxis = new NumberAxis(0.0,5.0,1.0);
+            yAxis.setLabel("Rating");
+            xAxis.setAutoRanging(true);
+            xAxis.setForceZeroInRange(false);
+            xAxis.setLabel("Time");
+            xAxis.setTickLabelFormatter(new StringConverter<Number>() {
+                @Override
+                public String toString(Number day) {
+                    return LocalDate.ofEpochDay(day.longValue()).format(DateTimeFormatter.ISO_LOCAL_DATE);
+                }
+
+                @Override
+                public Number fromString(String date) {
+                    return LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE).toEpochDay();
+                }
+            });
+            LineChart graph = new LineChart(xAxis,yAxis);
+            for (String user : DataManager.getUsers()) {
+                Series series = new Series();
+                series.setName(user);
+                int one=0, two=0, three=0, four=0, five=0;
+                for (Review review : currentMedia.getReviews()) {
+                    BigDecimal rating = review.getRating();
+                    if(user.equals(review.getUser())){
+                        series.getData().add(new Data(review.getDate().toEpochDay(),rating.divide(new BigDecimal(2),2,RoundingMode.HALF_UP)));
+                    }
+                }
+                graph.getData().add(series);
+            }
+            chartVBox.getChildren().add(graph);
+        }
         // Stats at Bottom
         chartTotalMedia.setText(String.valueOf(DataManager.getReviews().size()));
         chartTotalReviews.setText(String.valueOf(DataManager.getReviews().size()));
@@ -431,7 +634,6 @@ public class CoreController implements Initializable {
         chartShow.setOnAction(e->{
             updateChartTab();
         });
-        updateChartTab();
     }
     
 }

@@ -5,6 +5,9 @@
  */
 package retrospector.model;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -120,13 +123,15 @@ public class Media {
         this.episodeId = episodeId;
     }
     
-    public double getAverageRating() {
-        double mean = 0;
+    public BigDecimal getAverageRating() {
+        if(reviews.size()==0)
+            return new BigDecimal(DataManager.getDefaultRating());
+        BigDecimal mean = BigDecimal.ZERO;
         for (Review review : reviews) {
             if(review.getRating()!=null)
-                mean += review.getRating();
+                mean = mean.add(review.getRating());
         }
-        mean = mean/reviews.size();
+        mean = mean.divide(BigDecimal.valueOf(reviews.size()),new MathContext(2, RoundingMode.HALF_UP));
         return mean;
     }
     

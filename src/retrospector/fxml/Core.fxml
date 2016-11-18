@@ -111,7 +111,7 @@
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Type" />
                               <ChoiceBox fx:id="mediaType" prefWidth="150.0" />
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Description" />
-                              <TextArea fx:id="mediaDescription" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                              <TextArea fx:id="mediaDescription" prefHeight="200.0" prefWidth="200.0" wrapText="true" VBox.vgrow="ALWAYS" />
                            </children>
                         </VBox>
                         <VBox prefHeight="242.0" prefWidth="228.0" spacing="3.0" HBox.hgrow="NEVER">
@@ -193,7 +193,7 @@
                         <Slider fx:id="reviewRater" blockIncrement="0.1" majorTickUnit="1.0" max="10.0" min="1.0" minorTickCount="10" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="6.0" />
                         <TextField fx:id="reviewUser" maxWidth="300.0" />
                         <DatePicker fx:id="reviewDate" maxWidth="300.0" VBox.vgrow="NEVER" />
-                        <TextArea fx:id="reviewDescription" maxWidth="300.0" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                        <TextArea fx:id="reviewDescription" maxWidth="300.0" prefHeight="200.0" prefWidth="200.0" wrapText="true" VBox.vgrow="ALWAYS" />
                         <HBox alignment="CENTER" maxWidth="300.0">
                            <children>
                               <Button fx:id="reviewSave" mnemonicParsing="false" text="Save" />

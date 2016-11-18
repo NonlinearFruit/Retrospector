@@ -5,6 +5,7 @@
  */
 package retrospector.model;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 /**
@@ -15,25 +16,25 @@ public class Review {
     private LocalDate date;
     private String user;
     private String review;
-    private Double rating;
+    private BigDecimal rating;
 
     public Review(){
-        this(DataManager.getDefaultRating() + 0.0);
+        this(BigDecimal.valueOf(DataManager.getDefaultRating()));
     }
     
-    public Review(Double rating){
+    public Review(BigDecimal rating){
         this(rating, LocalDate.now());
     }
     
-    public Review(Double rating, LocalDate date){
+    public Review(BigDecimal rating, LocalDate date){
         this(rating,date,DataManager.getDefaultUser());
     }
     
-    public Review(Double rating, LocalDate date, String user){
+    public Review(BigDecimal rating, LocalDate date, String user){
         this(rating,date,user,"");
     }
     
-    public Review(Double rating, LocalDate date, String user, String review){
+    public Review(BigDecimal rating, LocalDate date, String user, String review){
         setRating(rating);
         setDate(date);
         setUser(user);
@@ -64,11 +65,11 @@ public class Review {
         this.review = review;
     }
 
-    public Double getRating() {
+    public BigDecimal getRating() {
         return rating;
     }
 
-    public void setRating(Double rating) {
+    public void setRating(BigDecimal rating) {
         this.rating = rating;
     }
     
