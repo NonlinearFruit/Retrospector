@@ -601,6 +601,7 @@ public class CoreController implements Initializable {
                 }
             });
             LineChart graph = new LineChart(xAxis,yAxis);
+            graph.setTitle("Number of Reviews per Rating per User");
             for (String user : DataManager.getUsers()) {
                 Series series = new Series();
                 series.setName(user);
