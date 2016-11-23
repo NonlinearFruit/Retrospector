@@ -68,15 +68,30 @@
                <children>
                   <VBox alignment="CENTER" GridPane.columnIndex="1">
                      <children>
-                        <TextField fx:id="mediaTitle" promptText="Title" />
+                        <HBox>
+                           <children>
+                              <TextField fx:id="mediaTitle" promptText="Title" HBox.hgrow="ALWAYS" />
+                              <Button fx:id="mediaNewMedia" mnemonicParsing="false" text="New" />
+                           </children>
+                        </HBox>
                         <HBox alignment="CENTER">
                            <children>
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="by " />
                               <TextField fx:id="mediaCreator" promptText="Creator" />
                            </children>
                         </HBox>
-                        <TextField fx:id="mediaSeason" promptText="Season" />
-                        <TextField fx:id="mediaEpisode" promptText="Episode" />
+                        <HBox>
+                           <children>
+                              <TextField fx:id="mediaSeason" promptText="Season" HBox.hgrow="ALWAYS" />
+                              <Button fx:id="mediaAddSeason" mnemonicParsing="false" text="Add" />
+                           </children>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <TextField fx:id="mediaEpisode" promptText="Episode" HBox.hgrow="ALWAYS" />
+                              <Button fx:id="mediaAddEpisode" mnemonicParsing="false" text="Add" />
+                           </children>
+                        </HBox>
                      </children>
                   </VBox>
                   <VBox alignment="CENTER">
@@ -191,9 +206,9 @@
                   <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="3.0" GridPane.columnSpan="3" GridPane.rowIndex="1">
                      <children>
                         <Slider fx:id="reviewRater" blockIncrement="0.1" majorTickUnit="1.0" max="10.0" min="1.0" minorTickCount="10" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="6.0" />
-                        <TextField fx:id="reviewUser" maxWidth="300.0" />
-                        <DatePicker fx:id="reviewDate" maxWidth="300.0" VBox.vgrow="NEVER" />
-                        <TextArea fx:id="reviewDescription" maxWidth="300.0" prefHeight="200.0" prefWidth="200.0" wrapText="true" VBox.vgrow="ALWAYS" />
+                        <TextField fx:id="reviewUser" maxWidth="300.0" promptText="User" />
+                        <DatePicker fx:id="reviewDate" maxWidth="300.0" promptText="Date" VBox.vgrow="NEVER" />
+                        <TextArea fx:id="reviewDescription" maxWidth="300.0" prefHeight="200.0" prefWidth="200.0" promptText="Review" wrapText="true" VBox.vgrow="ALWAYS" />
                         <HBox alignment="CENTER" maxWidth="300.0">
                            <children>
                               <Button fx:id="reviewSave" mnemonicParsing="false" text="Save" />
@@ -236,11 +251,12 @@
                <children>
                   <VBox prefHeight="200.0" prefWidth="100.0">
                      <children>
-                        <ToggleButton fx:id="chartRatings" mnemonicParsing="false" prefWidth="80.0" text="Ratings" />
-                        <ToggleButton fx:id="chartReviews" mnemonicParsing="false" prefWidth="80.0" text="Reviews" />
-                        <ToggleButton fx:id="chartTime" maxWidth="80.0" mnemonicParsing="false" text="Time" />
-                        <ToggleButton fx:id="chartUsers" maxWidth="80.0" mnemonicParsing="false" text="Users" />
-                        <Button fx:id="chartShow" maxWidth="80.0" mnemonicParsing="false" text="Show" />
+                        <ChoiceBox fx:id="chartChoiceBox" prefHeight="26.0" prefWidth="150.0" />
+                        <ToggleButton fx:id="chartRatings" mnemonicParsing="false" prefWidth="150.0" text="Ratings" />
+                        <ToggleButton fx:id="chartReviews" mnemonicParsing="false" prefWidth="150.0" text="Reviews" />
+                        <ToggleButton fx:id="chartTime" maxWidth="150.0" mnemonicParsing="false" text="Time" />
+                        <ToggleButton fx:id="chartUsers" maxWidth="150.0" mnemonicParsing="false" text="Users" />
+                        <Button fx:id="chartShow" maxWidth="150.0" mnemonicParsing="false" text="Show" />
                      </children>
                   </VBox>
                   <VBox fx:id="chartVBox" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowSpan="2" />

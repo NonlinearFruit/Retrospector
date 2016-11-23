@@ -8,6 +8,7 @@ package retrospector.model;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +17,7 @@ import java.util.List;
  * @author nonfrt
  */
 public class Media {
-    public static enum Category{MOVIE,TV_SERIES,BOOK,PODCAST,YOUTUBE,POEM,MUSIC,PRODUCT,OTHER}
+    public static enum Category{MOVIE,TV_SERIES,BOOK,PODCAST,YOUTUBE,POEM,MUSIC,VIDEO_GAME,TABLETOP_GAME,PRODUCT,OTHER}
     public static enum Type{MINISERIES,SERIES,SINGLE}
     
     private List<Review> reviews;
@@ -123,6 +124,10 @@ public class Media {
         this.episodeId = episodeId;
     }
     
+    /**
+     * Takes the average of all the ratings.
+     * @return 
+     */
     public BigDecimal getAverageRating() {
         if(reviews.size()==0)
             return new BigDecimal(DataManager.getDefaultRating());
@@ -133,6 +138,40 @@ public class Media {
         }
         mean = mean.divide(BigDecimal.valueOf(reviews.size()),new MathContext(2, RoundingMode.HALF_UP));
         return mean;
+    }
+    
+    /**
+     * Retrieves the default user's most recent rating of this media. If none
+     * is found, then it returns a 0.
+     * @return 
+     */
+    public BigDecimal getCurrentRating(){
+        BigDecimal rating = BigDecimal.ZERO;
+        LocalDate date = LocalDate.MIN;
+        for (Review review : getReviews()) {
+            if(date.isBefore(review.getDate()) && DataManager.getDefaultUser().equals(review.getUser())){
+                date = review.getDate();
+                rating = review.getRating();
+            }
+        }
+        return rating;
+    }
+    
+    /**
+     * Retrieves the default user's first rating of this media. If none is
+     * found, then it returns 0.
+     * @return 
+     */
+    public BigDecimal getOriginalRating(){
+        BigDecimal rating = BigDecimal.ZERO;
+        LocalDate date = LocalDate.now();
+        for (Review review : getReviews()) {
+            if(date.isAfter(review.getDate()) && DataManager.getDefaultUser().equals(review.getUser())){
+                date = review.getDate();
+                rating = review.getRating();
+            }
+        }
+        return rating;
     }
     
     @Override

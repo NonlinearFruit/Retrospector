@@ -18,6 +18,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -47,6 +48,8 @@ import javafx.util.Callback;
 import javafx.util.StringConverter;
 import org.controlsfx.control.Rating;
 import retrospector.model.*;
+import retrospector.model.Media.Category;
+import retrospector.util.UtilityCloset;
 
 /**
  * FXML Controller class
@@ -55,6 +58,8 @@ import retrospector.model.*;
  */
 public class CoreController implements Initializable {
 
+    @FXML
+    private TabPane anchor;
     @FXML
     private Tab searchTab;
     @FXML
@@ -122,6 +127,12 @@ public class CoreController implements Initializable {
     @FXML
     private TableColumn<Review, LocalDate> mediaDateColumn;
     @FXML
+    private Button mediaNewMedia;
+    @FXML
+    private Button mediaAddSeason;
+    @FXML
+    private Button mediaAddEpisode;
+    @FXML
     private TextField reviewTitle;
     @FXML
     private TextField reviewCreator;
@@ -150,6 +161,8 @@ public class CoreController implements Initializable {
     @FXML
     private Button reviewCancel;
     @FXML
+    private Tab reviewTab;
+    @FXML
     private ToggleButton chartRatings;
     @FXML
     private ToggleButton chartReviews;
@@ -157,8 +170,6 @@ public class CoreController implements Initializable {
     private ToggleButton chartTime;
     @FXML
     private ToggleButton chartUsers;
-    @FXML
-    private Button chartShow;
     @FXML
     private VBox chartVBox;
     @FXML
@@ -169,16 +180,14 @@ public class CoreController implements Initializable {
     private Text chartTotalUsers;
     @FXML
     private Text chartTotalRuntime;
+    @FXML
+    private Tab chartTab;
+    @FXML
+    private ChoiceBox<Chartagories> chartChoiceBox;
     
     private Media currentMedia;
     private Review currentReview;
     private DecimalFormat ratingFormat =  new DecimalFormat("#.#");
-    @FXML
-    private TabPane anchor;
-    @FXML
-    private Tab reviewTab;
-    @FXML
-    private Tab chartTab;
 
     /**
      * Initializes the controller class.
@@ -199,10 +208,12 @@ public class CoreController implements Initializable {
             else
                 updateChartTab();
         });
+        updateSearchTab();
     }    
     
     public void updateSearchTab(){
         searchTable.refresh();
+        searchTable.getSelectionModel().select(0);
     }
     
     public void initSearchTab(){
@@ -264,6 +275,7 @@ public class CoreController implements Initializable {
         });
         searchDeleteMedia.setOnAction(e->{
             DataManager.getMedia().remove(currentMedia);
+            updateSearchTab();
         });
     }
     
@@ -337,6 +349,7 @@ public class CoreController implements Initializable {
         });
         mediaDeleteReview.setOnAction(e->{
             currentMedia.getReviews().remove(currentReview);
+            updateMediaTab();
         });
         
         mediaSave.setOnAction(e->{
@@ -400,6 +413,10 @@ public class CoreController implements Initializable {
         });
     }
     
+    public static enum Chartagories{
+        CATEGORY,CURRENT_MEDIA,SEASON,ALL_SEASONS
+    }
+    
     public void updateChartTab(){
         
         // Chart
@@ -410,6 +427,32 @@ public class CoreController implements Initializable {
                 time = chartTime.isSelected();
         
         chartVBox.getChildren().clear();
+        
+        ObservableList<Review> setOfReviews = FXCollections.observableArrayList();
+        switch(chartChoiceBox.getSelectionModel().getSelectedItem()){
+            case CATEGORY:
+                for (Media media : DataManager.getMedia()) {
+                    if(UtilityCloset.isSameMedia(Chartagories.CATEGORY, currentMedia, media))
+                        setOfReviews.addAll(media.getReviews());
+                }
+                break;
+            case SEASON:
+                for (Media media : DataManager.getMedia()) {
+                    if(UtilityCloset.isSameMedia(Chartagories.SEASON, currentMedia, media))
+                        setOfReviews.addAll(media.getReviews());
+                }
+                break;
+            case ALL_SEASONS:
+                for (Media media : DataManager.getMedia()) {
+                    if(UtilityCloset.isSameMedia(Chartagories.ALL_SEASONS, currentMedia, media))
+                        setOfReviews.addAll(media.getReviews());
+                }
+                break;
+            case CURRENT_MEDIA:
+            default:
+                setOfReviews.addAll(currentMedia.getReviews());
+        }
+        
         // User :: Review :: Rating :: Time
         
         // 0    :: 0      :: 0      :: 0
@@ -442,7 +485,7 @@ public class CoreController implements Initializable {
         // 0    :: 1      :: 1      :: 0
         else if(!users && reviews && ratings && !time){
             int one=0, two=0, three=0, four=0, five=0;
-            for (Review review : currentMedia.getReviews()) {
+            for (Review review : setOfReviews) {
                 BigDecimal rating = review.getRating();
                 if(rating.compareTo(BigDecimal.valueOf(2))<0)
                     one+=1;
@@ -491,7 +534,7 @@ public class CoreController implements Initializable {
             LineChart graph = new LineChart(xAxis,yAxis);
             Series series = new Series();
             int one=0, two=0, three=0, four=0, five=0;
-            for (Review review : currentMedia.getReviews()) {
+            for (Review review : setOfReviews) {
                 BigDecimal rating = review.getRating();
                 series.getData().add(new Data(review.getDate().toEpochDay(),rating.divide(new BigDecimal(2),2,RoundingMode.HALF_UP)));
             }
@@ -519,7 +562,7 @@ public class CoreController implements Initializable {
             for (String user : DataManager.getUsers()) {
                 BigDecimal mean = BigDecimal.ZERO;
                 BigDecimal count = BigDecimal.ONE;
-                for (Review review : currentMedia.getReviews()) {
+                for (Review review : setOfReviews) {
                     if(user.equals(review.getUser())){
                         count = count.add(BigDecimal.ONE);
                         mean = mean.add(review.getRating());
@@ -552,7 +595,7 @@ public class CoreController implements Initializable {
             BarChart<String,Integer> graph = new BarChart(new NumberAxis(),new CategoryAxis(FXCollections.observableArrayList("One Star","Two Star","Three Star","Four Star","Five Star")));
             for (String user : DataManager.getUsers()) {
                 int one=0, two=0, three=0, four=0, five=0;
-                for (Review review : currentMedia.getReviews()) {
+                for (Review review : setOfReviews) {
                     BigDecimal rating = review.getRating();
                     if(user.equals(review.getUser())){
                         if(rating.compareTo(BigDecimal.valueOf(2))<0)
@@ -606,7 +649,7 @@ public class CoreController implements Initializable {
                 Series series = new Series();
                 series.setName(user);
                 int one=0, two=0, three=0, four=0, five=0;
-                for (Review review : currentMedia.getReviews()) {
+                for (Review review : setOfReviews) {
                     BigDecimal rating = review.getRating();
                     if(user.equals(review.getUser())){
                         series.getData().add(new Data(review.getDate().toEpochDay(),rating.divide(new BigDecimal(2),2,RoundingMode.HALF_UP)));
@@ -632,7 +675,21 @@ public class CoreController implements Initializable {
     }
     
     public void initChartTab(){
-        chartShow.setOnAction(e->{
+        chartChoiceBox.setItems(FXCollections.observableArrayList(Chartagories.values()));
+        chartChoiceBox.getSelectionModel().select(1);
+        chartRatings.setOnAction(e->{
+            updateChartTab();
+        });
+        chartReviews.setOnAction(e->{
+            updateChartTab();
+        });
+        chartUsers.setOnAction(e->{
+            updateChartTab();
+        });
+        chartTime.setOnAction(e->{
+            updateChartTab();
+        });
+        chartChoiceBox.setOnAction(e->{
             updateChartTab();
         });
     }

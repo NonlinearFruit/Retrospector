@@ -9,10 +9,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
-import retrospector.Retrospector;
+import static retrospector.util.UtilityCloset.getPath2JarFolder;
 
 /**
  * Read and write property files.
@@ -21,14 +19,6 @@ import retrospector.Retrospector;
 public class PropertyManager {
     public static final String configPath="Retrospector.config";
     private static Configuration config = null;
-    
-    public static String getPath2JarFolder() throws URISyntaxException{
-        String path = Retrospector.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
-        if(path.indexOf("/")!=-1)
-            return path.substring(0,path.lastIndexOf("/")+1);
-        else
-            return path.substring(0,path.lastIndexOf("\\")+1);
-    }
 
     public static class Configuration{
         public static enum prop{DEFAULT_USER,MAX_RATING,DEFAULT_RATING};
@@ -40,7 +30,7 @@ public class PropertyManager {
         public Configuration(){
             defaultUser = "Ben";
             maxRating = 10;
-            defaultRating = 5;
+            defaultRating = 6;
         }
         
         public Configuration(String user, Integer maxRate, Integer defaultRate){
@@ -99,7 +89,7 @@ public class PropertyManager {
             );
             return config;
         } catch(IOException|NumberFormatException|URISyntaxException e) {
-            e.printStackTrace();
+            System.err.println("Loading Config File Failed!");
             Configuration dfault = new Configuration();
             try{ saveProperties(dfault); } catch(IOException|URISyntaxException ex) {} // Since there isn't a config file, make one!
             return dfault;
