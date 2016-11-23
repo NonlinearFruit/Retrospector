@@ -130,7 +130,7 @@ public class Media {
      */
     public BigDecimal getAverageRating() {
         if(reviews.size()==0)
-            return new BigDecimal(DataManager.getDefaultRating());
+            return BigDecimal.ZERO;
         BigDecimal mean = BigDecimal.ZERO;
         for (Review review : reviews) {
             if(review.getRating()!=null)
@@ -146,15 +146,13 @@ public class Media {
      * @return 
      */
     public BigDecimal getCurrentRating(){
-        BigDecimal rating = BigDecimal.ZERO;
-        LocalDate date = LocalDate.MIN;
-        for (Review review : getReviews()) {
-            if(date.isBefore(review.getDate()) && DataManager.getDefaultUser().equals(review.getUser())){
-                date = review.getDate();
-                rating = review.getRating();
-            }
-        }
-        return rating;
+        return
+            getReviews().stream()
+                .filter(r->DataManager.getDefaultUser().equals(r.getUser()))
+                .sorted( (x,y) -> -1*Long.signum(x.getDate().toEpochDay()-y.getDate().toEpochDay()) )
+                .findFirst()
+                .get()
+                .getRating();
     }
     
     /**
@@ -163,15 +161,13 @@ public class Media {
      * @return 
      */
     public BigDecimal getOriginalRating(){
-        BigDecimal rating = BigDecimal.ZERO;
-        LocalDate date = LocalDate.now();
-        for (Review review : getReviews()) {
-            if(date.isAfter(review.getDate()) && DataManager.getDefaultUser().equals(review.getUser())){
-                date = review.getDate();
-                rating = review.getRating();
-            }
-        }
-        return rating;
+        return
+            getReviews().stream()
+                .filter(r->DataManager.getDefaultUser().equals(r.getUser()))
+                .sorted( (x,y) -> Long.signum(x.getDate().toEpochDay()-y.getDate().toEpochDay()) )
+                .findFirst()
+                .get()
+                .getRating();
     }
     
     @Override

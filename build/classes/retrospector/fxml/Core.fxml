@@ -22,7 +22,7 @@
 <?import javafx.scene.text.Text?>
 <?import org.controlsfx.control.Rating?>
 
-<TabPane fx:id="anchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="425.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="retrospector.fxml.CoreController">
+<TabPane fx:id="anchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1300.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="retrospector.fxml.CoreController">
   <tabs>
     <Tab fx:id="searchTab" text="Search">
          <content>
@@ -31,12 +31,19 @@
                   <TextField fx:id="searchBox" style="-fx-background-image: url('http://www.clipartbest.com/cliparts/dir/aXn/diraXnR6T.png'); -fx-background-repeat: no-repeat; -fx-background-position: right center; -fx-background-size: 20;" />
                   <TableView fx:id="searchTable" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                     <columns>
-                      <TableColumn fx:id="searchTitleColumn" prefWidth="216.0" text="Title" />
-                      <TableColumn fx:id="searchCreatorColumn" prefWidth="102.0" text="Creator" />
-                        <TableColumn fx:id="searchSeasonColumn" prefWidth="64.0" text="Season" />
-                        <TableColumn fx:id="searchEpisodeColumn" prefWidth="65.0" text="Episode" />
-                        <TableColumn fx:id="searchRatingColumn" prefWidth="59.0" text="Rating" />
-                        <TableColumn fx:id="searchReviewsColumn" prefWidth="73.0" text="Reviews" />
+                      <TableColumn fx:id="searchTitleColumn" prefWidth="256.0" text="Title" />
+                      <TableColumn fx:id="searchCreatorColumn" prefWidth="256.0" text="Creator" />
+                        <TableColumn fx:id="searchSeasonColumn" prefWidth="160.0" text="Season" />
+                        <TableColumn fx:id="searchEpisodeColumn" prefWidth="160.0" text="Episode" />
+                        <TableColumn fx:id="searchCategoryColumn" prefWidth="160.0" text="Category" />
+                        <TableColumn fx:id="searchReviewsColumn" prefWidth="68.0" text="Reviews" />
+                        <TableColumn fx:id="searchRatingColumns" minWidth="0.0" prefWidth="131.0" text="Rating">
+                           <columns>
+                              <TableColumn fx:id="searchOriginalRColumn" text="Original" />
+                              <TableColumn fx:id="searchMeanRColumn" prefWidth="59.0" text="Mean" />
+                              <TableColumn fx:id="searchCurrentRColumn" text="Current" />
+                           </columns>
+                        </TableColumn>
                     </columns>
                   </TableView>
                   <HBox>
@@ -68,7 +75,7 @@
                <children>
                   <VBox alignment="CENTER" GridPane.columnIndex="1">
                      <children>
-                        <HBox>
+                        <HBox fx:id="mediaTitleBox">
                            <children>
                               <TextField fx:id="mediaTitle" promptText="Title" HBox.hgrow="ALWAYS" />
                               <Button fx:id="mediaNewMedia" mnemonicParsing="false" text="New" />
@@ -80,13 +87,13 @@
                               <TextField fx:id="mediaCreator" promptText="Creator" />
                            </children>
                         </HBox>
-                        <HBox>
+                        <HBox fx:id="mediaSeasonBox">
                            <children>
                               <TextField fx:id="mediaSeason" promptText="Season" HBox.hgrow="ALWAYS" />
                               <Button fx:id="mediaAddSeason" mnemonicParsing="false" text="Add" />
                            </children>
                         </HBox>
-                        <HBox>
+                        <HBox fx:id="mediaEpisodeBox">
                            <children>
                               <TextField fx:id="mediaEpisode" promptText="Episode" HBox.hgrow="ALWAYS" />
                               <Button fx:id="mediaAddEpisode" mnemonicParsing="false" text="Add" />
@@ -205,7 +212,7 @@
                   </VBox>
                   <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="3.0" GridPane.columnSpan="3" GridPane.rowIndex="1">
                      <children>
-                        <Slider fx:id="reviewRater" blockIncrement="0.1" majorTickUnit="1.0" max="10.0" min="1.0" minorTickCount="10" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="6.0" />
+                        <Slider fx:id="reviewRater" blockIncrement="1.0" majorTickUnit="1.0" max="10.0" min="1.0" minorTickCount="0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="6.0" />
                         <TextField fx:id="reviewUser" maxWidth="300.0" promptText="User" />
                         <DatePicker fx:id="reviewDate" maxWidth="300.0" promptText="Date" VBox.vgrow="NEVER" />
                         <TextArea fx:id="reviewDescription" maxWidth="300.0" prefHeight="200.0" prefWidth="200.0" promptText="Review" wrapText="true" VBox.vgrow="ALWAYS" />
@@ -256,7 +263,6 @@
                         <ToggleButton fx:id="chartReviews" mnemonicParsing="false" prefWidth="150.0" text="Reviews" />
                         <ToggleButton fx:id="chartTime" maxWidth="150.0" mnemonicParsing="false" text="Time" />
                         <ToggleButton fx:id="chartUsers" maxWidth="150.0" mnemonicParsing="false" text="Users" />
-                        <Button fx:id="chartShow" maxWidth="150.0" mnemonicParsing="false" text="Show" />
                      </children>
                   </VBox>
                   <VBox fx:id="chartVBox" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowSpan="2" />

@@ -31,16 +31,17 @@
                   <TextField fx:id="searchBox" style="-fx-background-image: url('http://www.clipartbest.com/cliparts/dir/aXn/diraXnR6T.png'); -fx-background-repeat: no-repeat; -fx-background-position: right center; -fx-background-size: 20;" />
                   <TableView fx:id="searchTable" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                     <columns>
-                      <TableColumn fx:id="searchTitleColumn" prefWidth="366.0" text="Title" />
-                      <TableColumn fx:id="searchCreatorColumn" prefWidth="226.0" text="Creator" />
-                        <TableColumn fx:id="searchSeasonColumn" prefWidth="200.0" text="Season" />
-                        <TableColumn fx:id="searchEpisodeColumn" prefWidth="200.0" text="Episode" />
+                      <TableColumn fx:id="searchTitleColumn" prefWidth="256.0" text="Title" />
+                      <TableColumn fx:id="searchCreatorColumn" prefWidth="256.0" text="Creator" />
+                        <TableColumn fx:id="searchSeasonColumn" prefWidth="160.0" text="Season" />
+                        <TableColumn fx:id="searchEpisodeColumn" prefWidth="160.0" text="Episode" />
+                        <TableColumn fx:id="searchCategoryColumn" prefWidth="160.0" text="Category" />
                         <TableColumn fx:id="searchReviewsColumn" prefWidth="68.0" text="Reviews" />
-                        <TableColumn fx:id="searchRatingColumn3" minWidth="0.0" prefWidth="169.0" text="Rating">
+                        <TableColumn fx:id="searchRatingColumns" minWidth="0.0" prefWidth="131.0" text="Rating">
                            <columns>
-                              <TableColumn fx:id="searchRatingColumn" text="Original" />
-                              <TableColumn fx:id="searchRatingColumn1" prefWidth="59.0" text="Mean" />
-                              <TableColumn fx:id="searchRatingColumn2" text="Current" />
+                              <TableColumn fx:id="searchOriginalRColumn" text="Original" />
+                              <TableColumn fx:id="searchMeanRColumn" prefWidth="59.0" text="Mean" />
+                              <TableColumn fx:id="searchCurrentRColumn" text="Current" />
                            </columns>
                         </TableColumn>
                     </columns>
@@ -74,7 +75,7 @@
                <children>
                   <VBox alignment="CENTER" GridPane.columnIndex="1">
                      <children>
-                        <HBox>
+                        <HBox fx:id="mediaTitleBox">
                            <children>
                               <TextField fx:id="mediaTitle" promptText="Title" HBox.hgrow="ALWAYS" />
                               <Button fx:id="mediaNewMedia" mnemonicParsing="false" text="New" />
@@ -86,13 +87,13 @@
                               <TextField fx:id="mediaCreator" promptText="Creator" />
                            </children>
                         </HBox>
-                        <HBox>
+                        <HBox fx:id="mediaSeasonBox">
                            <children>
                               <TextField fx:id="mediaSeason" promptText="Season" HBox.hgrow="ALWAYS" />
                               <Button fx:id="mediaAddSeason" mnemonicParsing="false" text="Add" />
                            </children>
                         </HBox>
-                        <HBox>
+                        <HBox fx:id="mediaEpisodeBox">
                            <children>
                               <TextField fx:id="mediaEpisode" promptText="Episode" HBox.hgrow="ALWAYS" />
                               <Button fx:id="mediaAddEpisode" mnemonicParsing="false" text="Add" />
