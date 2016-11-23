@@ -20,6 +20,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.Axis;
@@ -88,11 +89,11 @@ public class CoreController implements Initializable {
     @FXML
     private TableColumn<Media, ?> searchRatingColumns;
     @FXML
-    private TableColumn<Media, String> searchOriginalRColumn;
+    private TableColumn<Media, BigDecimal> searchOriginalRColumn;
     @FXML
-    private TableColumn<Media, String> searchMeanRColumn;
+    private TableColumn<Media, BigDecimal> searchMeanRColumn;
     @FXML
-    private TableColumn<Media, String> searchCurrentRColumn;
+    private TableColumn<Media, BigDecimal> searchCurrentRColumn;
     @FXML
     private Tab mediaTab;
     @FXML
@@ -233,7 +234,9 @@ public class CoreController implements Initializable {
     
     public void initSearchTab(){
         FilteredList<Media> media = new FilteredList(DataManager.getMedia(),x->true);
-        searchTable.setItems(media);
+        SortedList<Media> mediaSortable = new SortedList<>(media);
+        searchTable.setItems(mediaSortable);
+        mediaSortable.comparatorProperty().bind(searchTable.comparatorProperty());
         searchTitleColumn.setCellValueFactory(new PropertyValueFactory<Media,String>("Title"));
         searchSeasonColumn.setCellValueFactory(new PropertyValueFactory<Media,String>("SeasonId"));
         searchEpisodeColumn.setCellValueFactory(new PropertyValueFactory<Media,String>("EpisodeId"));
@@ -245,22 +248,22 @@ public class CoreController implements Initializable {
                 return new ReadOnlyObjectWrapper(p.getValue().getReviews().size());
             }
         });
-        searchMeanRColumn.setCellValueFactory(new Callback<CellDataFeatures<Media,String>, ObservableValue<String>>() {
+        searchMeanRColumn.setCellValueFactory(new Callback<CellDataFeatures<Media,BigDecimal>, ObservableValue<BigDecimal>>() {
             @Override
-            public ObservableValue<String> call(CellDataFeatures<Media,String> p) {
-                return new ReadOnlyObjectWrapper(ratingFormat.format(p.getValue().getAverageRating()));
+            public ObservableValue<BigDecimal> call(CellDataFeatures<Media,BigDecimal> p) {
+                return new ReadOnlyObjectWrapper(p.getValue().getAverageRating());
             }
         });
-        searchOriginalRColumn.setCellValueFactory(new Callback<CellDataFeatures<Media,String>, ObservableValue<String>>() {
+        searchOriginalRColumn.setCellValueFactory(new Callback<CellDataFeatures<Media,BigDecimal>, ObservableValue<BigDecimal>>() {
             @Override
-            public ObservableValue<String> call(CellDataFeatures<Media,String> p) {
-                return new ReadOnlyObjectWrapper(ratingFormat.format(p.getValue().getOriginalRating()));
+            public ObservableValue<BigDecimal> call(CellDataFeatures<Media,BigDecimal> p) {
+                return new ReadOnlyObjectWrapper(p.getValue().getOriginalRating());
             }
         });
-        searchCurrentRColumn.setCellValueFactory(new Callback<CellDataFeatures<Media,String>, ObservableValue<String>>() {
+        searchCurrentRColumn.setCellValueFactory(new Callback<CellDataFeatures<Media,BigDecimal>, ObservableValue<BigDecimal>>() {
             @Override
-            public ObservableValue<String> call(CellDataFeatures<Media,String> p) {
-                return new ReadOnlyObjectWrapper(ratingFormat.format(p.getValue().getCurrentRating()));
+            public ObservableValue<BigDecimal> call(CellDataFeatures<Media,BigDecimal> p) {
+                return new ReadOnlyObjectWrapper(p.getValue().getCurrentRating());
             }
         });
         searchTable.getSelectionModel().selectedItemProperty().addListener( (observe, old, neo) -> {
