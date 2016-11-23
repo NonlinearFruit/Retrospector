@@ -151,7 +151,7 @@ public class Media {
                 .filter(r->DataManager.getDefaultUser().equals(r.getUser()))
                 .sorted( (x,y) -> -1*Long.signum(x.getDate().toEpochDay()-y.getDate().toEpochDay()) )
                 .findFirst()
-                .get()
+                .orElse(new Review(BigDecimal.ZERO))
                 .getRating();
     }
     
@@ -166,7 +166,7 @@ public class Media {
                 .filter(r->DataManager.getDefaultUser().equals(r.getUser()))
                 .sorted( (x,y) -> Long.signum(x.getDate().toEpochDay()-y.getDate().toEpochDay()) )
                 .findFirst()
-                .get()
+                .orElse(new Review(BigDecimal.ZERO))
                 .getRating();
     }
     

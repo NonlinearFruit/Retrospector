@@ -5,6 +5,7 @@
  */
 package retrospector.fxml;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
@@ -46,6 +47,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.scene.web.WebView;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 import org.controlsfx.control.Rating;
@@ -61,7 +63,7 @@ import retrospector.util.UtilityCloset;
 public class CoreController implements Initializable {
 
     @FXML
-    private TabPane anchor;
+    private TabPane anchorCenter;
     @FXML
     private Tab searchTab;
     @FXML
@@ -200,10 +202,15 @@ public class CoreController implements Initializable {
     private Tab chartTab;
     @FXML
     private ChoiceBox<Chartagories> chartChoiceBox;
+    @FXML
+    private Tab tropeTab;
+    @FXML
+    private WebView tropeWebView;
     
     private Media currentMedia;
     private Review currentReview;
     private DecimalFormat ratingFormat =  new DecimalFormat("#.#");
+    private String tropeHome = "http://tvtropes.org";
 
     /**
      * Initializes the controller class.
@@ -214,22 +221,31 @@ public class CoreController implements Initializable {
         initMediaTab();
         initReviewTab();
         initChartTab();
-        anchor.getSelectionModel().selectedItemProperty().addListener((observe,old,neo)->{
+        initTropeTab();
+        anchorCenter.getSelectionModel().selectedItemProperty().addListener((observe,old,neo)->{
             if(neo.getText().equals("Search"))
                 updateSearchTab();
             else if(neo.getText().equals("Media"))
                 updateMediaTab();
             else if(neo.getText().equals("Review"))
                 updateReviewTab();
-            else
+            else if(neo.getText().equals("Chart"))
                 updateChartTab();
+            else
+                updateTropes();
         });
+        
+        try{
+            new URL(tropeHome).openConnection();
+        }catch(IOException e){tropeTab.setDisable(true);}
+        
         updateSearchTab();
     }    
     
     public void updateSearchTab(){
         searchTable.refresh();
-        searchTable.getSelectionModel().select(0);
+        if(searchTable.getItems().size()>0)
+            searchTable.getSelectionModel().select(0);
     }
     
     public void initSearchTab(){
@@ -270,8 +286,8 @@ public class CoreController implements Initializable {
             setMedia(neo);
         });
         
-        searchBox.setOnKeyReleased(e->{
-            String query = searchBox.getText();
+        searchBox.textProperty().addListener((observa,old,neo)->{
+            String query = neo.toLowerCase();
             if(query==null || query.equals(""))
                 media.setPredicate(x->true);
             else{
@@ -280,13 +296,13 @@ public class CoreController implements Initializable {
                     boolean pass = true;
                     for (String q : queries) {
                         if(     
-                                !x.getTitle().contains(q) &&
-                                !x.getCreator().contains(q) &&
-                                !x.getSeasonId().contains(q) &&
-                                !x.getEpisodeId().contains(q) &&
-                                !x.getDescription().contains(q) &&
-                                !x.getCategory().toString().contains(q) &&
-                                !x.getType().toString().contains(q)
+                                !x.getTitle().toLowerCase().contains(q) &&
+                                !x.getCreator().toLowerCase().contains(q) &&
+                                !x.getSeasonId().toLowerCase().contains(q) &&
+                                !x.getEpisodeId().toLowerCase().contains(q) &&
+                                !x.getDescription().toLowerCase().contains(q) &&
+                                !x.getCategory().toString().toLowerCase().contains(q) &&
+                                !x.getType().toString().toLowerCase().contains(q)
                         )
                             pass = false;
                     }
@@ -299,10 +315,10 @@ public class CoreController implements Initializable {
             Media neo = new Media();
             DataManager.getMedia().add(neo);
             setMedia(neo);
-            anchor.getSelectionModel().select(mediaTab);
+            anchorCenter.getSelectionModel().select(mediaTab);
         });
         searchEditMedia.setOnAction(e->{
-            anchor.getSelectionModel().select(mediaTab);
+            anchorCenter.getSelectionModel().select(mediaTab);
         });
         searchDeleteMedia.setOnAction(e->{
             DataManager.getMedia().remove(currentMedia);
@@ -329,13 +345,15 @@ public class CoreController implements Initializable {
         
         mediaReviewTable.setItems(FXCollections.observableArrayList(currentMedia.getReviews()));
         mediaReviewTable.refresh();
+        if(mediaReviewTable.getItems().size()>0)
+            mediaReviewTable.getSelectionModel().select(0);
     }
     
     public void initMediaTab(){
         mediaStars.setPartialRating(true);
         mediaStars.setDisable(true);
         mediaStars.setMax(DataManager.getMaxRating()/2);
-        mediaStars.setRating(DataManager.getDefaultRating());
+        mediaStars.setRating(DataManager.getDefaultRating()/2);
         mediaRating.setText(ratingFormat.format(DataManager.getDefaultRating()));
         mediaMaxRating.setText(ratingFormat.format(DataManager.getMaxRating()));
         mediaCategory.setItems(FXCollections.observableArrayList(Media.Category.values()));
@@ -346,19 +364,19 @@ public class CoreController implements Initializable {
         mediaType.getSelectionModel().selectedItemProperty().addListener((observe,old,neo)->{
             switch(neo){
                 case SERIES:
-                    mediaSeason.setVisible(true);
-                    mediaEpisode.setVisible(true);
-                    mediaEpisode.toFront();
+                    mediaSeasonBox.setVisible(true);
+                    mediaEpisodeBox.setVisible(true);
+                    mediaEpisodeBox.toFront();
                     break;
                 case MINISERIES:
-                    mediaSeason.setVisible(false);
-                    mediaEpisode.setVisible(true);
-                    mediaSeason.toFront();
+                    mediaSeasonBox.setVisible(false);
+                    mediaEpisodeBox.setVisible(true);
+                    mediaSeasonBox.toFront();
                     break;
                 case SINGLE:
                 default:
-                    mediaSeason.setVisible(false);
-                    mediaEpisode.setVisible(false);
+                    mediaSeasonBox.setVisible(false);
+                    mediaEpisodeBox.setVisible(false);
             }
         });
         
@@ -373,10 +391,10 @@ public class CoreController implements Initializable {
             Review review = new Review();
             currentMedia.getReviews().add(review);
             setReview(review);
-            anchor.getSelectionModel().select(reviewTab);
+            anchorCenter.getSelectionModel().select(reviewTab);
         });
         mediaEditReview.setOnAction(e->{
-            anchor.getSelectionModel().select(reviewTab);
+            anchorCenter.getSelectionModel().select(reviewTab);
         });
         mediaDeleteReview.setOnAction(e->{
             currentMedia.getReviews().remove(currentReview);
@@ -391,14 +409,47 @@ public class CoreController implements Initializable {
             currentMedia.setCategory(mediaCategory.getValue());
             currentMedia.setType(mediaType.getValue());
             currentMedia.setDescription(mediaDescription.getText());
-            anchor.getSelectionModel().select(searchTab);
+//            anchor.getSelectionModel().select(searchTab); // <-- This is annoying
         });
         mediaDelete.setOnAction(e->{
             DataManager.getReviews().remove(currentMedia);
-            anchor.getSelectionModel().select(searchTab);
+            anchorCenter.getSelectionModel().select(searchTab);
         });
         mediaCancel.setOnAction(e->{
-            anchor.getSelectionModel().select(searchTab);
+            anchorCenter.getSelectionModel().select(searchTab);
+        });
+        
+        mediaNewMedia.setOnAction(e->{
+            Media media = new Media();
+            DataManager.getMedia().add(media);
+            currentMedia = media;
+            updateMediaTab();
+        });
+        
+        mediaAddSeason.setOnAction(e->{
+            Media media = new Media(
+                    currentMedia.getTitle(), 
+                    currentMedia.getCreator(), 
+                    currentMedia.getCategory(), 
+                    currentMedia.getType()
+            );
+            media.setDescription(currentMedia.getDescription());
+            DataManager.getMedia().add(media);
+            currentMedia = media;
+            updateMediaTab();
+        });
+        mediaAddEpisode.setOnAction(e->{
+            Media media = new Media(
+                    currentMedia.getTitle(), 
+                    currentMedia.getCreator(), 
+                    currentMedia.getCategory(), 
+                    currentMedia.getType()
+            );
+            media.setDescription(currentMedia.getDescription());
+            media.setSeasonId(currentMedia.getSeasonId());
+            DataManager.getMedia().add(media);
+            currentMedia = media;
+            updateMediaTab();
         });
     }
     
@@ -433,15 +484,23 @@ public class CoreController implements Initializable {
         currentReview.setRating(BigDecimal.valueOf(reviewRater.getValue()).round(new MathContext(2, RoundingMode.HALF_UP)));
             currentReview.setUser(reviewUser.getText());
             currentReview.setReview(reviewDescription.getText());
-            anchor.getSelectionModel().select(mediaTab);
+            anchorCenter.getSelectionModel().select(mediaTab);
         });
         reviewDelete.setOnAction(e->{
             currentMedia.getReviews().remove(currentReview);
-            anchor.getSelectionModel().select(mediaTab);
+            anchorCenter.getSelectionModel().select(mediaTab);
         });
         reviewCancel.setOnAction(e->{
-            anchor.getSelectionModel().select(mediaTab);
+            anchorCenter.getSelectionModel().select(mediaTab);
         });
+    }
+
+    private void updateTropes() {
+        // Do nothing
+    }
+
+    private void initTropeTab() {
+        tropeWebView.getEngine().load(tropeHome);
     }
     
     public static enum Chartagories{

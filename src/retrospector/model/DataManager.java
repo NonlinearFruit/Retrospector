@@ -43,24 +43,24 @@ public class DataManager {
                         add(new Review(BigDecimal.valueOf(6.0),LocalDate.of(2015, Month.MARCH, 14)));
                 }}),
                 new Media("The Walking Dead","",Media.Category.TV_SERIES,Media.Type.SERIES, new ArrayList<Review>(){{
-                        add(new Review(BigDecimal.valueOf(10.0)));
-                        add(new Review(BigDecimal.valueOf(9)));
-                        add(new Review(BigDecimal.valueOf(9)));
+                        add(new Review(BigDecimal.valueOf(1.0),LocalDate.of(1999,4,4)));
+                        add(new Review(BigDecimal.valueOf(2),LocalDate.of(2012,5,5)));
+                        add(new Review(BigDecimal.valueOf(9.0),LocalDate.of(2014, Month.MARCH, 14)));
                 }}),
                 new Media("NCIS","",Media.Category.TV_SERIES,Media.Type.SERIES, new ArrayList<Review>(){{
-                        add(new Review(BigDecimal.valueOf(10.0)));
-                        add(new Review(BigDecimal.valueOf(9)));
-                        add(new Review(BigDecimal.valueOf(9)));
+                        add(new Review(BigDecimal.valueOf(8.0),LocalDate.of(2001,4,5)));
+                        add(new Review(BigDecimal.valueOf(4),LocalDate.of(2010,5,5)));
+                        add(new Review(BigDecimal.valueOf(9.0),LocalDate.of(2011, Month.MARCH, 14)));
                 }}),
                 new Media("Gotham","",Media.Category.TV_SERIES,Media.Type.SERIES, new ArrayList<Review>(){{
-                        add(new Review(BigDecimal.valueOf(10.0)));
-                        add(new Review(BigDecimal.valueOf(9)));
-                        add(new Review(BigDecimal.valueOf(9)));
+                        add(new Review(BigDecimal.valueOf(4.0),LocalDate.of(1993,5,12)));
+                        add(new Review(BigDecimal.valueOf(4),LocalDate.of(1994,12,8)));
+                        add(new Review(BigDecimal.valueOf(3.0),LocalDate.of(1998, 1, 31)));
                 }}),
                 new Media("The Last Airbender","",Media.Category.TV_SERIES,Media.Type.SERIES, new ArrayList<Review>(){{
-                        add(new Review(BigDecimal.valueOf(10.0)));
-                        add(new Review(BigDecimal.valueOf(9)));
-                        add(new Review(BigDecimal.valueOf(9)));
+                        add(new Review(BigDecimal.valueOf(8.0),LocalDate.of(2012,4,4)));
+                        add(new Review(BigDecimal.valueOf(7),LocalDate.of(2013,5,5)));
+                        add(new Review(BigDecimal.valueOf(6.0),LocalDate.of(2014, Month.MARCH, 14)));
                 }})
         );
 
