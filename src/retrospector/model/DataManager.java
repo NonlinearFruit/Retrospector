@@ -5,64 +5,27 @@
  */
 package retrospector.model;
 
-import java.io.File;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.LocalDate;
-import java.time.Month;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Stream;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Date;
+import java.sql.ResultSet;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import retrospector.model.Media.Category;
+import retrospector.model.Media.Type;
 import retrospector.util.PropertyManager;
-import retrospector.util.UtilityCloset;
 
 /**
  *
  * @author nonfrt
  */
 public class DataManager {
-    
-    public static final String saveFolder = "saves"+File.separator;
-    
-    public static ObservableList<Media> media = FXCollections.observableArrayList(
-                new Media("The Imitation Game","",Media.Category.MOVIE,Media.Type.SINGLE, new ArrayList<Review>(){{
-                        add(new Review(BigDecimal.valueOf(4)));
-                        add(new Review(BigDecimal.valueOf(6.0)));
-                        add(new Review(BigDecimal.valueOf(8.0)));
-                }}),
-                new Media("Ender's Game","",Media.Category.MOVIE,Media.Type.SINGLE, new ArrayList<Review>(){{
-                        add(new Review(BigDecimal.valueOf(8.0),LocalDate.of(1990,4,4)));
-                        add(new Review(BigDecimal.valueOf(7),LocalDate.of(2020,5,5)));
-                        add(new Review(BigDecimal.valueOf(6.0),LocalDate.of(2015, Month.MARCH, 14)));
-                }}),
-                new Media("The Walking Dead","",Media.Category.TV_SERIES,Media.Type.SERIES, new ArrayList<Review>(){{
-                        add(new Review(BigDecimal.valueOf(1.0),LocalDate.of(1999,4,4)));
-                        add(new Review(BigDecimal.valueOf(2),LocalDate.of(2012,5,5)));
-                        add(new Review(BigDecimal.valueOf(9.0),LocalDate.of(2014, Month.MARCH, 14)));
-                }}),
-                new Media("NCIS","",Media.Category.TV_SERIES,Media.Type.SERIES, new ArrayList<Review>(){{
-                        add(new Review(BigDecimal.valueOf(8.0),LocalDate.of(2001,4,5)));
-                        add(new Review(BigDecimal.valueOf(4),LocalDate.of(2010,5,5)));
-                        add(new Review(BigDecimal.valueOf(9.0),LocalDate.of(2011, Month.MARCH, 14)));
-                }}),
-                new Media("Gotham","",Media.Category.TV_SERIES,Media.Type.SERIES, new ArrayList<Review>(){{
-                        add(new Review(BigDecimal.valueOf(4.0),LocalDate.of(1993,5,12)));
-                        add(new Review(BigDecimal.valueOf(4),LocalDate.of(1994,12,8)));
-                        add(new Review(BigDecimal.valueOf(3.0),LocalDate.of(1998, 1, 31)));
-                }}),
-                new Media("The Last Airbender","",Media.Category.TV_SERIES,Media.Type.SERIES, new ArrayList<Review>(){{
-                        add(new Review(BigDecimal.valueOf(8.0),LocalDate.of(2012,4,4)));
-                        add(new Review(BigDecimal.valueOf(7),LocalDate.of(2013,5,5)));
-                        add(new Review(BigDecimal.valueOf(6.0),LocalDate.of(2014, Month.MARCH, 14)));
-                }})
-        );
+    static String connString = "jdbc:hsqldb:file:testdb1";
+    static Connection conn = null;
+    static ObservableList<Media> media = null;
 
     public static String getDefaultUser(){
         return PropertyManager.loadProperties().getDefaultUser();
@@ -76,70 +39,318 @@ public class DataManager {
         return PropertyManager.loadProperties().getDefaultRating();
     }
     
+    
+    public static Connection getConnection(){
+        try{
+            if(conn==null)
+                conn = DriverManager.getConnection(connString,"SA","");
+        } catch(SQLException e){System.err.println("Connection failed.");}
+        return conn;
+            
+    }
+    
     public static ObservableList<Media> getMedia(){
+        if(media!=null)
+            return media;
+        Statement stmt;
+        ResultSet rs = null;
+        ResultSet rs2 = null;
+        media = FXCollections.observableArrayList();
+
+        try{
+            stmt = getConnection().createStatement();
+            rs = stmt.executeQuery("select * from media");
+            while (rs.next()) {
+                try{
+                    Media medium = new Media();
+                    medium.setId(rs.getInt("id"));
+                    medium.setTitle(rs.getString("title"));
+                    medium.setCreator(rs.getString("creator"));
+                    medium.setSeasonId(rs.getString("season"));
+                    medium.setEpisodeId(rs.getString("episode"));
+                    medium.setDescription(rs.getString("description"));
+                    medium.setCategory(Category.valueOf(rs.getString("category")));
+                    medium.setType(Type.valueOf(rs.getString("type")));
+                    try{
+                        rs2 = stmt.executeQuery("select * from review where mediaID="+medium.getId());
+                        while(rs2.next()){
+                            try{
+                                Review review = new Review();
+                                review.setId(rs2.getInt("id"));
+                                review.setMediaId(rs2.getInt("mediaID"));
+                                review.setUser(rs2.getString("user"));
+                                review.setDate(rs2.getDate("date").toLocalDate());
+                                review.setReview(rs2.getString("review"));
+                                review.setRating(rs2.getBigDecimal("rate"));
+
+                                medium.getReviews().add(review);
+                            } catch(SQLException e){System.err.println("Get review failed. (getMedia)");}
+                        }
+                    } catch(SQLException e){System.err.println("Get review list failed. (getMedia)");}
+                    media.add(medium);
+                } catch(SQLException e){System.err.println("Get media failed. (getMedia)");}
+            }
+        } catch(SQLException e){System.err.println("Get media list failed. (getMedia)");}
         return media;
     }
     
     public static ObservableList<Review> getReviews(){
+        Statement stmt;
+        ResultSet rs = null;
+
         ObservableList<Review> reviews = FXCollections.observableArrayList();
-        for (Media media : getMedia()) {
-            reviews.addAll(media.getReviews());
-        }
+        try {
+            stmt = getConnection().createStatement();       
+            rs = stmt.executeQuery("select * from review");
+            while (rs.next()) {
+                try {
+                    Review review = new Review();
+                    review.setId(rs.getInt("id"));
+                    review.setMediaId(rs.getInt("mediaID"));
+                    review.setUser(rs.getString("user"));
+                    review.setDate(rs.getDate("date").toLocalDate());
+                    review.setReview(rs.getString("review"));
+                    review.setRating(rs.getBigDecimal("rate"));
+
+                    reviews.add(review);
+                } catch (SQLException e) {System.err.println("Get review failed. (getReviews)");}
+            }
+        } catch (SQLException e) {System.err.println("Get review list failed. (getReviews)");}
         return reviews;
     }
     
     public static ObservableList<String> getUsers(){
+        Statement stmt;
+        ResultSet rs = null;
+
         ObservableList<String> users = FXCollections.observableArrayList();
-        for (Review review : getReviews()) {
-            if(!users.contains(review.getUser()))
-                users.add(review.getUser());
-        }
+        try {
+            stmt = getConnection().createStatement();       
+            rs = stmt.executeQuery("select distinct user from review");
+            while (rs.next()) {
+                try {
+                    users.add(rs.getString(1));
+                } catch (SQLException e) {System.err.println("Get user failed. (getUsers)");}
+            }
+        } catch (SQLException e) {System.err.println("Get user list failed. (getUsers)");}
         return users;
     }
     
-    public static void save(List<Media> media){
-        try{
-            String location = UtilityCloset.getPath2JarFolder()+saveFolder;
-            int countM = 0;
-            for (Media medium : media) {
-                int countR = 0;
-                String file = location+"Media"+countM+".txt";
-                UtilityCloset.writeFile(file, UtilityCloset.mediaToString(medium));
-                countM += 1;
-                for (Review review : medium.getReviews()) {
-                    String reviewFile = location+"Media"+countM+"-R"+countR+".txt";
-                    UtilityCloset.writeFile(reviewFile,UtilityCloset.reviewToString(review));
-                    countR += 1;
-                }
-            }
-        }
-        catch(URISyntaxException ex){
-            System.err.println("Jar location could not be found");
+    /**
+     * Start the DB. Also creates the DB if it is not found
+     */
+    public static void startDB(){
+        String createMedia = ""
+        + "create table if not exists media ("
+        + "id integer not null generated always as identity (start with 1, increment by 1),   "
+        + "title varchar(1000000),"
+        + "creator varchar(1000000),"
+        + "season varchar(1000000),"
+        + "episode varchar(1000000),"
+        + "description varchar(1000000),"
+        + "category varchar(1000000),"
+        + "type varchar(1000000),"
+        + "constraint primary_key_media primary key (id))";
+      
+        String createReview = ""
+        + "create table if not exists review ("
+        + "id integer not null generated always as identity (start with 1, increment by 1),   "
+        + "mediaID integer not null,   "
+        + "user varchar(1000000),"
+        + "date date,"
+        + "review varchar(1000000),"
+        + "rate int,"
+        + "constraint primary_key_review primary key (id),"
+        + "constraint foreign_key_review foreign key (mediaID) references media (id) on delete cascade)";
+      
+        try {
+            Statement stmt;
+            stmt = getConnection().createStatement();
+            stmt.execute(createMedia);
+            stmt.execute(createReview);
+        } catch (SQLException ex) {
+            System.out.println("Create error in startDB in connection" + ex);
         }
     }
     
-    public static ObservableList<Media> load(){
-        ObservableList<Media> media = FXCollections.observableArrayList();
-        try{
-            String location = UtilityCloset.getPath2JarFolder()+saveFolder;
-            try(Stream<Path> paths = Files.walk(Paths.get(location))) {
-                paths.filter(Files::isRegularFile)
-                    .forEach(System.out::println);
-            } catch(IOException e) {
-                System.err.println("Jar location could not be I/O-ed");
-            }
-        } catch(URISyntaxException ex) {
-            System.err.println("Jar location could not be found");
+    /**
+     * Close the DB connection
+     */
+    public static void endDB(){
+        try {
+            DriverManager.getConnection(connString+";shutdown=true","SA","");
+            System.out.println("HSQLDB shut down normally");
+        } catch (SQLException ex) {
+            System.err.println("HSQLDB did not shut down normally");
+            System.err.println(ex.getMessage());
         }
-        return media;
     }
     
-    public static void clearSaves(){
-        try{
-            Arrays.stream(new File(UtilityCloset.getPath2JarFolder()+saveFolder).listFiles())
-                    .forEach(file->file.delete());
-        } catch(Exception e) {
-            System.err.println("Jar location could not be I/O-ed");
+    /**
+     * Create a new media in the DB
+     * @param media 
+     */
+    public static int createDB(Media media){
+        int id = -1;
+        try {
+            PreparedStatement pstmt;
+
+            pstmt = getConnection().prepareStatement(
+                    "insert into media(title,creator,season,episode,description,category,type) values(?,?,?,?,?,?,?)",
+                    Statement.RETURN_GENERATED_KEYS);
+            pstmt.setString(1, media.getTitle());
+            pstmt.setString(2, media.getCreator());
+            pstmt.setString(3, media.getSeasonId());
+            pstmt.setString(4, media.getEpisodeId());
+            pstmt.setString(5, media.getDescription());
+            pstmt.setString(6, media.getCategory().toString());
+            pstmt.setString(7, media.getType().toString());
+            id = pstmt.executeUpdate();
+            
+            media.setId(id);
+            DataManager.media.add(media);
+        } catch (SQLException ex) {
+            System.err.println("createDB error in connection" + ex);
         }
+        return id;
+    }
+    
+    /**
+     * Create a new review in the DB
+     * @param review 
+     */
+    public static int createDB(Review review){
+        int id = -1;
+        try {
+            PreparedStatement pstmt;
+
+            pstmt = getConnection().prepareStatement(
+                    "insert into review(mediaId,user,date,review,rate) values(?,?,?,?,?)",
+                    Statement.RETURN_GENERATED_KEYS);
+            pstmt.setInt(1, review.getMediaId());
+            pstmt.setString(2, review.getUser());
+            pstmt.setDate(3, Date.valueOf(review.getDate()));
+            pstmt.setString(4, review.getReview());
+            pstmt.setInt(5, review.getRating().intValueExact()); // If ratings ever get decimal again fix this!
+            id = pstmt.executeUpdate();
+            
+            review.setId(id);
+            getMedia(review.getMediaId()).getReviews().add(review);
+        } catch (SQLException ex) {
+            System.err.println("createDB error in connection" + ex);
+        }
+        return id;
+    }
+    
+    /**
+     * Update an existing media in DB
+     * @param media 
+     */
+    public static void updateDB(Media media){
+        try {
+            PreparedStatement pstmt;
+
+            pstmt = getConnection().prepareStatement("update media set title=?,creator=?,season=?,episode=?,description=?,category=?,type=? where id=?");
+            pstmt.setString(1, media.getTitle());
+            pstmt.setString(2, media.getCreator());
+            pstmt.setString(3, media.getSeasonId());
+            pstmt.setString(4, media.getEpisodeId());
+            pstmt.setString(5, media.getDescription());
+            pstmt.setString(6, media.getCategory().toString());
+            pstmt.setString(7, media.getType().toString());
+            pstmt.setInt(8, media.getId());
+            pstmt.executeUpdate();
+            
+            getMedia(media.getId()).clone(media);
+        } catch (SQLException ex) {
+            System.err.println("updateDB error in connection" + ex);
+        }
+    }
+    
+    /**
+     * Update an existing media in DB
+     * @param review 
+     */
+    public static void updateDB(Review review){
+        try {
+            PreparedStatement pstmt;
+
+            pstmt = getConnection().prepareStatement("update review set mediaId=?,user=?,date=?,review=?,rate=? where id=?");
+            pstmt.setInt(1, review.getMediaId());
+            pstmt.setString(2, review.getUser());
+            pstmt.setDate(3, Date.valueOf(review.getDate()));
+            pstmt.setString(4, review.getReview());
+            pstmt.setInt(5, review.getRating().intValueExact()); // If ratings ever get decimal again fix this!
+            pstmt.setInt(6, review.getId()); 
+            pstmt.executeUpdate();
+            
+            getReview(review.getId()).clone(review);
+        } catch (SQLException ex) {
+            System.err.println("in connection" + ex);
+        }
+    }
+    
+    /**
+     * Delete media from DB
+     * @param media 
+     */
+    public static void deleteDB(Media media){
+        try {
+            PreparedStatement pstmt;
+
+            pstmt = getConnection().prepareStatement("delete from media where id=?");
+            pstmt.setInt(1, media.getId()); 
+            pstmt.executeUpdate();
+            
+            getMedia().remove(media);
+        } catch (SQLException ex) {
+            System.err.println("in connection" + ex);
+        }
+    }
+    
+    /**
+     * Delete review from DB
+     * @param review 
+     */
+    public static void deleteDB(Review review){
+        try {
+            PreparedStatement pstmt;
+
+            pstmt = getConnection().prepareStatement("delete from review where id=?");
+            pstmt.setInt(1, review.getId()); 
+            pstmt.executeUpdate();
+            
+            getMedia(review.getMediaId()).getReviews().remove(review);
+        } catch (SQLException ex) {
+            System.err.println("in connection" + ex);
+        }
+    }
+    
+    /**
+     * Gets the media from the observable list
+     * @param id
+     * @return 
+     */
+    public static Media getMedia(int id){
+        return getMedia()
+                .stream()
+                .filter(review->review.getId()==id)
+                .findFirst()
+                .get();
+    }
+    
+    /**
+     * Gets the review from the observable list
+     * @param id
+     * @return 
+     */
+    public static Review getReview(int id){
+        System.out.println(id);
+        return getMedia()
+                .stream()
+                .flatMap(media->media.getReviews().stream())
+                .filter(review->review.getId()==id)
+                .findFirst()
+                .get();
     }
 }

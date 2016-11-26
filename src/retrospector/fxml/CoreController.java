@@ -313,7 +313,7 @@ public class CoreController implements Initializable {
         
         searchNewMedia.setOnAction(e->{
             Media neo = new Media();
-            DataManager.getMedia().add(neo);
+            neo.setId(DataManager.createDB(neo));
             setMedia(neo);
             anchorCenter.getSelectionModel().select(mediaTab);
         });
@@ -321,7 +321,7 @@ public class CoreController implements Initializable {
             anchorCenter.getSelectionModel().select(mediaTab);
         });
         searchDeleteMedia.setOnAction(e->{
-            DataManager.getMedia().remove(currentMedia);
+            DataManager.deleteDB(currentMedia);
             updateSearchTab();
         });
     }
@@ -389,7 +389,8 @@ public class CoreController implements Initializable {
         
         mediaNewReview.setOnAction(e->{
             Review review = new Review();
-            currentMedia.getReviews().add(review);
+            review.setMediaId(currentMedia.getId());
+            review.setId(DataManager.createDB(review));
             setReview(review);
             anchorCenter.getSelectionModel().select(reviewTab);
         });
@@ -397,7 +398,7 @@ public class CoreController implements Initializable {
             anchorCenter.getSelectionModel().select(reviewTab);
         });
         mediaDeleteReview.setOnAction(e->{
-            currentMedia.getReviews().remove(currentReview);
+            DataManager.deleteDB(currentReview);
             updateMediaTab();
         });
         
@@ -409,10 +410,11 @@ public class CoreController implements Initializable {
             currentMedia.setCategory(mediaCategory.getValue());
             currentMedia.setType(mediaType.getValue());
             currentMedia.setDescription(mediaDescription.getText());
+            DataManager.updateDB(currentMedia);
 //            anchor.getSelectionModel().select(searchTab); // <-- This is annoying
         });
         mediaDelete.setOnAction(e->{
-            DataManager.getReviews().remove(currentMedia);
+            DataManager.deleteDB(currentMedia);
             anchorCenter.getSelectionModel().select(searchTab);
         });
         mediaCancel.setOnAction(e->{
@@ -421,8 +423,10 @@ public class CoreController implements Initializable {
         
         mediaNewMedia.setOnAction(e->{
             Media media = new Media();
-            DataManager.getMedia().add(media);
-            currentMedia = media;
+            media.setId(DataManager.createDB(media));
+            if(media.getId()==-1)
+                System.err.println("Media got a -1 id (mediaNewMedia#setOnAction");
+            setMedia(media);
             updateMediaTab();
         });
         
@@ -434,8 +438,10 @@ public class CoreController implements Initializable {
                     currentMedia.getType()
             );
             media.setDescription(currentMedia.getDescription());
-            DataManager.getMedia().add(media);
-            currentMedia = media;
+            media.setId(DataManager.createDB(media));
+            if(media.getId()==-1)
+                System.err.println("Media got a -1 id (mediaAddSeason#setOnAction");
+            setMedia(media);
             updateMediaTab();
         });
         mediaAddEpisode.setOnAction(e->{
@@ -447,8 +453,10 @@ public class CoreController implements Initializable {
             );
             media.setDescription(currentMedia.getDescription());
             media.setSeasonId(currentMedia.getSeasonId());
-            DataManager.getMedia().add(media);
-            currentMedia = media;
+            media.setId(DataManager.createDB(media));
+            if(media.getId()==-1)
+                System.err.println("Media got a -1 id (mediaAddEpisode#setOnAction");
+            setMedia(media);
             updateMediaTab();
         });
     }
@@ -481,13 +489,14 @@ public class CoreController implements Initializable {
         
         reviewSave.setOnAction(e->{
             currentReview.setDate(reviewDate.getValue());
-        currentReview.setRating(BigDecimal.valueOf(reviewRater.getValue()).round(new MathContext(2, RoundingMode.HALF_UP)));
+            currentReview.setRating(BigDecimal.valueOf(reviewRater.getValue()).round(new MathContext(2, RoundingMode.HALF_UP)));
             currentReview.setUser(reviewUser.getText());
             currentReview.setReview(reviewDescription.getText());
+            DataManager.updateDB(currentReview);
             anchorCenter.getSelectionModel().select(mediaTab);
         });
         reviewDelete.setOnAction(e->{
-            currentMedia.getReviews().remove(currentReview);
+            DataManager.deleteDB(currentReview);
             anchorCenter.getSelectionModel().select(mediaTab);
         });
         reviewCancel.setOnAction(e->{

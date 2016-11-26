@@ -17,6 +17,24 @@ public class Review {
     private String user;
     private String review;
     private BigDecimal rating;
+    private Integer mediaId;
+    private Integer id;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getMediaId() {
+        return mediaId;
+    }
+
+    public void setMediaId(Integer mediaId) {
+        this.mediaId = mediaId;
+    }
 
     public Review(){
         this(BigDecimal.valueOf(DataManager.getDefaultRating()));
@@ -96,5 +114,14 @@ public class Review {
         String date = getDate()==null? "??": getDate().toString();
         
         return rating+" by "+user+" on "+date;
+    }
+    
+    public void clone(Review review){
+        setId(review.getId());
+        setMediaId(review.getMediaId());
+        setUser(review.getUser());
+        setReview(review.getReview());
+        setDate(review.getDate());
+        setRating(review.getRating());
     }
 }

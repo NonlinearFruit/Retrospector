@@ -28,6 +28,15 @@ public class Media {
     private Type type;
     private String seasonId;
     private String episodeId;
+    private Integer id;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
     
     public Media(){
         this("");
@@ -177,5 +186,18 @@ public class Media {
         String episode = getEpisodeId()==null||getEpisodeId().equals("")? "": ": "+getEpisodeId();
         String creator = getCreator()==null||getCreator().equals("")? "??": getCreator();
         return title+season+episode+" by "+creator;
+    }
+    
+    public void clone(Media media){
+        setId(media.getId());
+        setTitle(media.getTitle());
+        setCreator(media.getCreator());
+        setSeasonId(media.getSeasonId());
+        setEpisodeId(media.getEpisodeId());
+        setDescription(media.getDescription());
+        setCategory(media.getCategory());
+        setType(media.getType());
+        getReviews().clear();
+        getReviews().addAll(media.getReviews());
     }
 }
