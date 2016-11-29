@@ -76,7 +76,7 @@ public class DataManager {
                                 Review review = new Review();
                                 review.setId(rs2.getInt("id"));
                                 review.setMediaId(rs2.getInt("mediaID"));
-                                review.setUser(rs2.getString("user"));
+                                review.setUser(rs2.getString("reviewer"));
                                 review.setDate(rs2.getDate("date").toLocalDate());
                                 review.setReview(rs2.getString("review"));
                                 review.setRating(rs2.getBigDecimal("rate"));
@@ -105,7 +105,7 @@ public class DataManager {
                     Review review = new Review();
                     review.setId(rs.getInt("id"));
                     review.setMediaId(rs.getInt("mediaID"));
-                    review.setUser(rs.getString("user"));
+                    review.setUser(rs.getString("reviewer"));
                     review.setDate(rs.getDate("date").toLocalDate());
                     review.setReview(rs.getString("review"));
                     review.setRating(rs.getBigDecimal("rate"));
@@ -124,13 +124,13 @@ public class DataManager {
         ObservableList<String> users = FXCollections.observableArrayList();
         try {
             stmt = getConnection().createStatement();       
-            rs = stmt.executeQuery("select distinct user from review");
+            rs = stmt.executeQuery("select distinct reviewer from review");
             while (rs.next()) {
                 try {
                     users.add(rs.getString(1));
-                } catch (SQLException e) {System.err.println("Get user failed. (getUsers)");}
+                } catch (SQLException e) {System.err.println("Get reviewer failed. (getUsers)");}
             }
-        } catch (SQLException e) {System.err.println("Get user list failed. (getUsers)");}
+        } catch (SQLException e) {System.err.println("Get reviewer list failed. (getUsers)");}
         return users;
     }
     
@@ -154,7 +154,7 @@ public class DataManager {
         + "create table if not exists review ("
         + "id integer not null generated always as identity (start with 1, increment by 1),   "
         + "mediaID integer not null,   "
-        + "user varchar(1000000),"
+        + "reviewer varchar(1000000),"
         + "date date,"
         + "review varchar(1000000),"
         + "rate int,"
@@ -231,7 +231,7 @@ public class DataManager {
             PreparedStatement pstmt;
 
             pstmt = getConnection().prepareStatement(
-                    "insert into review(mediaId,user,date,review,rate) values(?,?,?,?,?)",
+                    "insert into review(mediaId,reviewer,date,review,rate) values(?,?,?,?,?)",
                     Statement.RETURN_GENERATED_KEYS);
             pstmt.setInt(1, review.getMediaId());
             pstmt.setString(2, review.getUser());
@@ -288,7 +288,7 @@ public class DataManager {
         try {
             PreparedStatement pstmt;
 
-            pstmt = getConnection().prepareStatement("update review set mediaId=?,user=?,date=?,review=?,rate=? where id=?");
+            pstmt = getConnection().prepareStatement("update review set mediaId=?,reviewer=?,date=?,review=?,rate=? where id=?");
             pstmt.setInt(1, review.getMediaId());
             pstmt.setString(2, review.getUser());
             pstmt.setDate(3, Date.valueOf(review.getDate()));
@@ -369,7 +369,7 @@ public class DataManager {
                             Review review = new Review();
                             review.setId(rs2.getInt("id"));
                             review.setMediaId(rs2.getInt("mediaID"));
-                            review.setUser(rs2.getString("user"));
+                            review.setUser(rs2.getString("reviewer"));
                             review.setDate(rs2.getDate("date").toLocalDate());
                             review.setReview(rs2.getString("review"));
                             review.setRating(rs2.getBigDecimal("rate"));
@@ -400,7 +400,7 @@ public class DataManager {
             try {
                 review.setId(rs.getInt("id"));
                 review.setMediaId(rs.getInt("mediaID"));
-                review.setUser(rs.getString("user"));
+                review.setUser(rs.getString("reviewer"));
                 review.setDate(rs.getDate("date").toLocalDate());
                 review.setReview(rs.getString("review"));
                 review.setRating(rs.getBigDecimal("rate"));
