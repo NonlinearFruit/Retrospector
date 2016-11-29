@@ -16,7 +16,9 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ResourceBundle;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -207,10 +209,11 @@ public class CoreController implements Initializable {
     @FXML
     private WebView tropeWebView;
     
-    private Media currentMedia;
-    private Review currentReview;
+    private ObjectProperty<Media> currentMedia = new SimpleObjectProperty<>();
+    private ObjectProperty<Review> currentReview = new SimpleObjectProperty<>();
     private DecimalFormat ratingFormat =  new DecimalFormat("#.#");
     private String tropeHome = "http://tvtropes.org";
+    private ObservableList<Media> media;
 
     /**
      * Initializes the controller class.
@@ -235,6 +238,25 @@ public class CoreController implements Initializable {
                 updateTropes();
         });
         
+        currentMedia.addListener((observe, old, neo)->{
+            if(neo==null){
+                mediaTab.setDisable(true);
+                reviewTab.setDisable(true);
+            } else {
+                mediaTab.setDisable(false);
+            }
+        });
+        
+        currentReview.addListener((observe,old,neo)->{
+            if(neo==null){
+                reviewTab.setDisable(true);
+            } else {
+                reviewTab.setDisable(false);
+            }
+        });
+        mediaTab.setDisable(true);
+        reviewTab.setDisable(true);
+        
         try{
             new URL(tropeHome).openConnection();
         }catch(IOException e){tropeTab.setDisable(true);}
@@ -243,14 +265,19 @@ public class CoreController implements Initializable {
     }    
     
     public void updateSearchTab(){
+        media.clear();
+        media.addAll(DataManager.getMedia());
         searchTable.refresh();
-        if(searchTable.getItems().size()>0)
+        if(searchTable.getItems().contains(getMedia()))
+            searchTable.getSelectionModel().select(getMedia());
+        else if(searchTable.getItems().size()>0)
             searchTable.getSelectionModel().select(0);
     }
     
     public void initSearchTab(){
-        FilteredList<Media> media = new FilteredList(DataManager.getMedia(),x->true);
-        SortedList<Media> mediaSortable = new SortedList<>(media);
+        media = DataManager.getMedia();
+        FilteredList<Media> mediaFiltered = new FilteredList(media,x->true);
+        SortedList<Media> mediaSortable = new SortedList<>(mediaFiltered);
         searchTable.setItems(mediaSortable);
         mediaSortable.comparatorProperty().bind(searchTable.comparatorProperty());
         searchTitleColumn.setCellValueFactory(new PropertyValueFactory<Media,String>("Title"));
@@ -289,10 +316,10 @@ public class CoreController implements Initializable {
         searchBox.textProperty().addListener((observa,old,neo)->{
             String query = neo.toLowerCase();
             if(query==null || query.equals(""))
-                media.setPredicate(x->true);
+                mediaFiltered.setPredicate(x->true);
             else{
                 String[] queries = query.split(":");
-                media.setPredicate(x->{
+                mediaFiltered.setPredicate(x->{
                     boolean pass = true;
                     for (String q : queries) {
                         if(     
@@ -321,29 +348,34 @@ public class CoreController implements Initializable {
             anchorCenter.getSelectionModel().select(mediaTab);
         });
         searchDeleteMedia.setOnAction(e->{
-            DataManager.deleteDB(currentMedia);
+            DataManager.deleteDB(getMedia());
             updateSearchTab();
         });
     }
     
     public void setMedia(Media media){
-        currentMedia = media;
+        currentMedia.set(media);
+    }
+    
+    public Media getMedia(){
+        return currentMedia.get();
     }
     
     public void updateMediaTab(){
-        mediaTitle.setText(currentMedia.getTitle());
-        mediaCreator.setText(currentMedia.getCreator());
-        mediaSeason.setText(currentMedia.getSeasonId());
-        mediaEpisode.setText(currentMedia.getEpisodeId());
-        BigDecimal rating = currentMedia.getAverageRating();
+        setMedia(DataManager.getMedia(getMedia().getId()));
+        mediaTitle.setText(getMedia().getTitle());
+        mediaCreator.setText(getMedia().getCreator());
+        mediaSeason.setText(getMedia().getSeasonId());
+        mediaEpisode.setText(getMedia().getEpisodeId());
+        BigDecimal rating = getMedia().getAverageRating();
         mediaStars.setRating(rating.divide(BigDecimal.valueOf(2)).doubleValue());
         mediaRating.setText(ratingFormat.format(rating));
         
-        mediaCategory.setValue(currentMedia.getCategory());
-        mediaType.setValue(currentMedia.getType());
-        mediaDescription.setText(currentMedia.getDescription());
+        mediaCategory.setValue(getMedia().getCategory());
+        mediaType.setValue(getMedia().getType());
+        mediaDescription.setText(getMedia().getDescription());
         
-        mediaReviewTable.setItems(FXCollections.observableArrayList(currentMedia.getReviews()));
+        mediaReviewTable.setItems(FXCollections.observableArrayList(getMedia().getReviews()));
         mediaReviewTable.refresh();
         if(mediaReviewTable.getItems().size()>0)
             mediaReviewTable.getSelectionModel().select(0);
@@ -389,7 +421,7 @@ public class CoreController implements Initializable {
         
         mediaNewReview.setOnAction(e->{
             Review review = new Review();
-            review.setMediaId(currentMedia.getId());
+            review.setMediaId(getMedia().getId());
             review.setId(DataManager.createDB(review));
             setReview(review);
             anchorCenter.getSelectionModel().select(reviewTab);
@@ -398,23 +430,27 @@ public class CoreController implements Initializable {
             anchorCenter.getSelectionModel().select(reviewTab);
         });
         mediaDeleteReview.setOnAction(e->{
-            DataManager.deleteDB(currentReview);
+            DataManager.deleteDB(getReview());
             updateMediaTab();
         });
         
         mediaSave.setOnAction(e->{
-            currentMedia.setTitle(mediaTitle.getText());
-            currentMedia.setCreator(mediaCreator.getText());
-            currentMedia.setSeasonId(mediaSeason.getText());
-            currentMedia.setEpisodeId(mediaEpisode.getText());
-            currentMedia.setCategory(mediaCategory.getValue());
-            currentMedia.setType(mediaType.getValue());
-            currentMedia.setDescription(mediaDescription.getText());
-            DataManager.updateDB(currentMedia);
+            Media m = new Media();
+            m.clone(getMedia());
+            System.out.println("Media ID: "+m.getId());
+            m.setTitle(mediaTitle.getText());
+            m.setCreator(mediaCreator.getText());
+            m.setSeasonId(mediaSeason.getText());
+            m.setEpisodeId(mediaEpisode.getText());
+            m.setCategory(mediaCategory.getValue());
+            m.setType(mediaType.getValue());
+            m.setDescription(mediaDescription.getText());
+            DataManager.updateDB(m);
+            setMedia(m);
 //            anchor.getSelectionModel().select(searchTab); // <-- This is annoying
         });
         mediaDelete.setOnAction(e->{
-            DataManager.deleteDB(currentMedia);
+            DataManager.deleteDB(getMedia());
             anchorCenter.getSelectionModel().select(searchTab);
         });
         mediaCancel.setOnAction(e->{
@@ -424,56 +460,58 @@ public class CoreController implements Initializable {
         mediaNewMedia.setOnAction(e->{
             Media media = new Media();
             media.setId(DataManager.createDB(media));
-            if(media.getId()==-1)
-                System.err.println("Media got a -1 id (mediaNewMedia#setOnAction");
+            if(media.getId()<2)
+                System.err.println("Media got a <2 id (mediaNewMedia#setOnAction");
             setMedia(media);
             updateMediaTab();
         });
         
         mediaAddSeason.setOnAction(e->{
             Media media = new Media(
-                    currentMedia.getTitle(), 
-                    currentMedia.getCreator(), 
-                    currentMedia.getCategory(), 
-                    currentMedia.getType()
+                    getMedia().getTitle(), 
+                    getMedia().getCreator(), 
+                    getMedia().getCategory(), 
+                    getMedia().getType()
             );
-            media.setDescription(currentMedia.getDescription());
-            media.setId(DataManager.createDB(media));
-            if(media.getId()==-1)
+            media.setDescription(getMedia().getDescription());
+            setMedia(DataManager.getMedia(DataManager.createDB(media)));
+            if(getMedia().getId()==-1)
                 System.err.println("Media got a -1 id (mediaAddSeason#setOnAction");
-            setMedia(media);
             updateMediaTab();
         });
         mediaAddEpisode.setOnAction(e->{
             Media media = new Media(
-                    currentMedia.getTitle(), 
-                    currentMedia.getCreator(), 
-                    currentMedia.getCategory(), 
-                    currentMedia.getType()
+                    getMedia().getTitle(), 
+                    getMedia().getCreator(), 
+                    getMedia().getCategory(), 
+                    getMedia().getType()
             );
-            media.setDescription(currentMedia.getDescription());
-            media.setSeasonId(currentMedia.getSeasonId());
-            media.setId(DataManager.createDB(media));
-            if(media.getId()==-1)
+            media.setDescription(getMedia().getDescription());
+            media.setSeasonId(getMedia().getSeasonId());
+            setMedia(DataManager.getMedia(DataManager.createDB(media)));
+            if(getMedia().getId()==-1)
                 System.err.println("Media got a -1 id (mediaAddEpisode#setOnAction");
-            setMedia(media);
             updateMediaTab();
         });
     }
     
     public void setReview(Review review){
-        currentReview = review;
+        currentReview.set(review);
+    }
+    
+    public Review getReview(){
+        return currentReview.get();
     }
     
     public void updateReviewTab(){
-        reviewTitle.setText(currentMedia.getTitle());
-        reviewCreator.setText(currentMedia.getCreator());
-        reviewSeason.setText(currentMedia.getSeasonId());
-        reviewEpisode.setText(currentMedia.getEpisodeId());
-        reviewRater.setValue(currentReview.getRating().doubleValue());
-        reviewDescription.setText(currentReview.getReview());
-        reviewUser.setText(currentReview.getUser());
-        reviewDate.setValue(currentReview.getDate());
+        reviewTitle.setText(getMedia().getTitle());
+        reviewCreator.setText(getMedia().getCreator());
+        reviewSeason.setText(getMedia().getSeasonId());
+        reviewEpisode.setText(getMedia().getEpisodeId());
+        reviewRater.setValue(getReview().getRating().doubleValue());
+        reviewDescription.setText(getReview().getReview());
+        reviewUser.setText(getReview().getUser());
+        reviewDate.setValue(getReview().getDate());
     }
     
     public void initReviewTab(){
@@ -488,15 +526,16 @@ public class CoreController implements Initializable {
         );
         
         reviewSave.setOnAction(e->{
-            currentReview.setDate(reviewDate.getValue());
-            currentReview.setRating(BigDecimal.valueOf(reviewRater.getValue()).round(new MathContext(2, RoundingMode.HALF_UP)));
-            currentReview.setUser(reviewUser.getText());
-            currentReview.setReview(reviewDescription.getText());
-            DataManager.updateDB(currentReview);
+            getReview().setDate(reviewDate.getValue());
+            getReview().setRating(BigDecimal.valueOf(reviewRater.getValue()).round(new MathContext(2, RoundingMode.HALF_UP)));
+            getReview().setUser(reviewUser.getText());
+            getReview().setReview(reviewDescription.getText());
+            DataManager.updateDB(getReview());
+            setReview(DataManager.getReview(getReview().getId()));
             anchorCenter.getSelectionModel().select(mediaTab);
         });
         reviewDelete.setOnAction(e->{
-            DataManager.deleteDB(currentReview);
+            DataManager.deleteDB(getReview());
             anchorCenter.getSelectionModel().select(mediaTab);
         });
         reviewCancel.setOnAction(e->{
@@ -531,25 +570,25 @@ public class CoreController implements Initializable {
         switch(chartChoiceBox.getSelectionModel().getSelectedItem()){
             case CATEGORY:
                 for (Media media : DataManager.getMedia()) {
-                    if(UtilityCloset.isSameMedia(Chartagories.CATEGORY, currentMedia, media))
+                    if(UtilityCloset.isSameMedia(Chartagories.CATEGORY, getMedia(), media))
                         setOfReviews.addAll(media.getReviews());
                 }
                 break;
             case SEASON:
                 for (Media media : DataManager.getMedia()) {
-                    if(UtilityCloset.isSameMedia(Chartagories.SEASON, currentMedia, media))
+                    if(UtilityCloset.isSameMedia(Chartagories.SEASON, getMedia(), media))
                         setOfReviews.addAll(media.getReviews());
                 }
                 break;
             case ALL_SEASONS:
                 for (Media media : DataManager.getMedia()) {
-                    if(UtilityCloset.isSameMedia(Chartagories.ALL_SEASONS, currentMedia, media))
+                    if(UtilityCloset.isSameMedia(Chartagories.ALL_SEASONS, getMedia(), media))
                         setOfReviews.addAll(media.getReviews());
                 }
                 break;
             case CURRENT_MEDIA:
             default:
-                setOfReviews.addAll(currentMedia.getReviews());
+                setOfReviews.addAll(getMedia().getReviews());
         }
         
         // User :: Review :: Rating :: Time
@@ -763,6 +802,10 @@ public class CoreController implements Initializable {
         chartTotalReviews.setText(String.valueOf(DataManager.getReviews().size()));
         chartTotalUsers.setText(String.valueOf(DataManager.getUsers().size()));
         
+        if(DataManager.getReviews().size()<1){
+            chartTotalRuntime.setText("0 days");
+            return;
+        }
         LocalDate oldest = DataManager.getReviews().get(0).getDate();
         for (Review review : DataManager.getReviews()) {
             if(review.getDate().isBefore(oldest))

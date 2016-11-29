@@ -1,0 +1,18 @@
+/*C3*/SET SCHEMA PUBLIC
+create table if not exists media (id integer not null generated always as identity (start with 1, increment by 1),   title varchar(1000000),creator varchar(1000000),season varchar(1000000),episode varchar(1000000),description varchar(1000000),category varchar(1000000),type varchar(1000000),constraint primary_key_media primary key (id))
+create table if not exists review (id integer not null generated always as identity (start with 1, increment by 1),   mediaID integer not null,   user varchar(1000000),date date,review varchar(1000000),rate int,constraint primary_key_review primary key (id),constraint foreign_key_review foreign key (mediaID) references media (id) on delete cascade)
+INSERT INTO REVIEW VALUES(5,28,'Ben','2016-11-28','',6)
+COMMIT
+DELETE FROM REVIEW WHERE ID=5
+INSERT INTO REVIEW VALUES(5,28,'Ben','2016-11-27','Probably my favorite episode from all 13 seasons. Really hard on the heart strings and has some twists plus game changers mixed in.',9)
+COMMIT
+INSERT INTO MEDIA VALUES(40,'','','','','','MOVIE','SINGLE')
+COMMIT
+DELETE FROM MEDIA WHERE ID=40
+INSERT INTO MEDIA VALUES(40,'Ben''s Brilliant Brian Blender','','','','','MOVIE','SINGLE')
+COMMIT
+INSERT INTO MEDIA VALUES(41,'','','','','','MOVIE','SINGLE')
+COMMIT
+DELETE FROM MEDIA WHERE ID=41
+INSERT INTO MEDIA VALUES(41,'Theo''s Theatric Trauma Tragedy','','','','','MOVIE','SINGLE')
+COMMIT

@@ -12,6 +12,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Date;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import retrospector.model.Media.Category;
@@ -25,7 +27,6 @@ import retrospector.util.PropertyManager;
 public class DataManager {
     static String connString = "jdbc:hsqldb:file:testdb1";
     static Connection conn = null;
-    static ObservableList<Media> media = null;
 
     public static String getDefaultUser(){
         return PropertyManager.loadProperties().getDefaultUser();
@@ -50,12 +51,10 @@ public class DataManager {
     }
     
     public static ObservableList<Media> getMedia(){
-        if(media!=null)
-            return media;
         Statement stmt;
         ResultSet rs = null;
         ResultSet rs2 = null;
-        media = FXCollections.observableArrayList();
+        ObservableList<Media> list = FXCollections.observableArrayList();
 
         try{
             stmt = getConnection().createStatement();
@@ -87,11 +86,11 @@ public class DataManager {
                             } catch(SQLException e){System.err.println("Get review failed. (getMedia)");}
                         }
                     } catch(SQLException e){System.err.println("Get review list failed. (getMedia)");}
-                    media.add(medium);
+                    list.add(medium);
                 } catch(SQLException e){System.err.println("Get media failed. (getMedia)");}
             }
         } catch(SQLException e){System.err.println("Get media list failed. (getMedia)");}
-        return media;
+        return  list;
     }
     
     public static ObservableList<Review> getReviews(){
@@ -205,10 +204,14 @@ public class DataManager {
             pstmt.setString(5, media.getDescription());
             pstmt.setString(6, media.getCategory().toString());
             pstmt.setString(7, media.getType().toString());
-            id = pstmt.executeUpdate();
+            int updated = pstmt.executeUpdate();
             
-            media.setId(id);
-            DataManager.media.add(media);
+            ResultSet rs = pstmt.getGeneratedKeys();
+            boolean key = rs.next();
+            if(updated==1 && key){
+                id = rs.getInt(1);
+            }
+            
         } catch (SQLException ex) {
             System.err.println("createDB error in connection" + ex);
         }
@@ -232,10 +235,15 @@ public class DataManager {
             pstmt.setDate(3, Date.valueOf(review.getDate()));
             pstmt.setString(4, review.getReview());
             pstmt.setInt(5, review.getRating().intValueExact()); // If ratings ever get decimal again fix this!
-            id = pstmt.executeUpdate();
+            int updated = pstmt.executeUpdate();
             
-            review.setId(id);
-            getMedia(review.getMediaId()).getReviews().add(review);
+            ResultSet rs = pstmt.getGeneratedKeys();
+            boolean key = rs.next();
+            if(updated==1 && key){
+                id = rs.getInt(1);
+            }
+            
+            
         } catch (SQLException ex) {
             System.err.println("createDB error in connection" + ex);
         }
@@ -256,14 +264,16 @@ public class DataManager {
             pstmt.setString(3, media.getSeasonId());
             pstmt.setString(4, media.getEpisodeId());
             pstmt.setString(5, media.getDescription());
-            pstmt.setString(6, media.getCategory().toString());
-            pstmt.setString(7, media.getType().toString());
-            pstmt.setInt(8, media.getId());
+            pstmt.setString(6, media.getCategory().toString());                  
+            pstmt.setString(7, media.getType().toString());                  
+            pstmt.setInt(8, media.getId());                  
             pstmt.executeUpdate();
-            
-            getMedia(media.getId()).clone(media);
+             
+            if(media.getId()<1)
+                System.err.println("Bad media update");
         } catch (SQLException ex) {
             System.err.println("updateDB error in connection" + ex);
+            ex.printStackTrace();
         }
     }
     
@@ -284,7 +294,8 @@ public class DataManager {
             pstmt.setInt(6, review.getId()); 
             pstmt.executeUpdate();
             
-            getReview(review.getId()).clone(review);
+            if(review.getId()==-1)
+                System.err.println("Bad review update");
         } catch (SQLException ex) {
             System.err.println("in connection" + ex);
         }
@@ -302,7 +313,6 @@ public class DataManager {
             pstmt.setInt(1, media.getId()); 
             pstmt.executeUpdate();
             
-            getMedia().remove(media);
         } catch (SQLException ex) {
             System.err.println("in connection" + ex);
         }
@@ -320,7 +330,6 @@ public class DataManager {
             pstmt.setInt(1, review.getId()); 
             pstmt.executeUpdate();
             
-            getMedia(review.getMediaId()).getReviews().remove(review);
         } catch (SQLException ex) {
             System.err.println("in connection" + ex);
         }
@@ -332,11 +341,44 @@ public class DataManager {
      * @return 
      */
     public static Media getMedia(int id){
-        return getMedia()
-                .stream()
-                .filter(review->review.getId()==id)
-                .findFirst()
-                .get();
+        Statement stmt;
+        ResultSet rs = null;
+        ResultSet rs2 = null;
+        Media medium = new Media();
+
+        try {
+            stmt = getConnection().createStatement();       
+            rs = stmt.executeQuery("select * from media where id="+id);
+            rs.next();
+            try{
+                medium.setId(rs.getInt("id"));
+                medium.setTitle(rs.getString("title"));
+                medium.setCreator(rs.getString("creator"));
+                medium.setSeasonId(rs.getString("season"));
+                medium.setEpisodeId(rs.getString("episode"));
+                medium.setDescription(rs.getString("description"));
+                medium.setCategory(Category.valueOf(rs.getString("category")));
+                medium.setType(Type.valueOf(rs.getString("type")));
+                try{
+                    rs2 = stmt.executeQuery("select * from review where mediaID="+medium.getId());
+                    while(rs2.next()){
+                        try{
+                            Review review = new Review();
+                            review.setId(rs2.getInt("id"));
+                            review.setMediaId(rs2.getInt("mediaID"));
+                            review.setUser(rs2.getString("user"));
+                            review.setDate(rs2.getDate("date").toLocalDate());
+                            review.setReview(rs2.getString("review"));
+                            review.setRating(rs2.getBigDecimal("rate"));
+
+                            medium.getReviews().add(review);
+                        } catch(SQLException e){System.err.println("Get review failed. (getMedia)");}
+                    }
+                } catch(SQLException e){System.err.println("Get review list failed. (getMedia)");}
+            } catch(SQLException e){System.err.println("Get media failed. (getMedia)");}
+        } catch (SQLException e) {System.err.println("Get review list failed. (getReviews)");}
+        
+        return medium;
     }
     
     /**
@@ -345,12 +387,23 @@ public class DataManager {
      * @return 
      */
     public static Review getReview(int id){
-        System.out.println(id);
-        return getMedia()
-                .stream()
-                .flatMap(media->media.getReviews().stream())
-                .filter(review->review.getId()==id)
-                .findFirst()
-                .get();
+        Statement stmt;
+        ResultSet rs = null;
+        Review review = new Review();
+        try {
+            stmt = getConnection().createStatement();       
+            rs = stmt.executeQuery("select * from review where id="+id);
+            rs.next();
+            try {
+                review.setId(rs.getInt("id"));
+                review.setMediaId(rs.getInt("mediaID"));
+                review.setUser(rs.getString("user"));
+                review.setDate(rs.getDate("date").toLocalDate());
+                review.setReview(rs.getString("review"));
+                review.setRating(rs.getBigDecimal("rate"));
+
+            } catch (SQLException e) {System.err.println("Get review failed. (getReviews)");}
+        } catch (SQLException e) {System.err.println("Get review list failed. (getReviews)");}
+        return review;
     }
 }

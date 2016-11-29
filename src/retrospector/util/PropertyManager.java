@@ -26,6 +26,7 @@ public class PropertyManager {
         private String defaultUser;
         private Integer maxRating;
         private Integer defaultRating;
+        private String[] categories;
         
         public Configuration(){
             defaultUser = "Ben";
@@ -61,6 +62,14 @@ public class PropertyManager {
 
         public void setDefaultRating(Integer defaultRating) {
             this.defaultRating = defaultRating;
+        }
+
+        public String[] getCategories() {
+            return categories;
+        }
+
+        public void setCategories(String[] categories) {
+            this.categories = categories;
         }
         
     }
