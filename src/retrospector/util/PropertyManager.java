@@ -21,7 +21,7 @@ public class PropertyManager {
     private static Configuration config = null;
 
     public static class Configuration{
-        public static enum prop{DEFAULT_USER,MAX_RATING,DEFAULT_RATING};
+        public static enum prop{DEFAULT_USER,MAX_RATING,DEFAULT_RATING,CATEGORIES};
         
         private String defaultUser;
         private Integer maxRating;
@@ -32,12 +32,27 @@ public class PropertyManager {
             defaultUser = "Ben";
             maxRating = 10;
             defaultRating = 6;
+            categories = new String[]{
+                "Movie",
+                "TV Series",
+                "Book",
+                "Comic",
+                "Podcast",
+                "YouTube",
+                "Poem",
+                "Music",
+                "Video Game",
+                "Tabletop Game",
+                "Product",
+                "Other"
+            };
         }
         
-        public Configuration(String user, Integer maxRate, Integer defaultRate){
+        public Configuration(String user, Integer maxRate, Integer defaultRate, String[] category){
             defaultUser = user;
             maxRating = maxRate;
             defaultRating = defaultRate;
+            categories = category;
         }
 
         public String getDefaultUser() {
@@ -80,6 +95,7 @@ public class PropertyManager {
         prop.setProperty(Configuration.prop.DEFAULT_USER.name(), config.getDefaultUser());
         prop.setProperty(Configuration.prop.MAX_RATING.name(), config.getMaxRating().toString());
         prop.setProperty(Configuration.prop.DEFAULT_RATING.name(), config.getDefaultRating().toString());
+        prop.setProperty(Configuration.prop.CATEGORIES.name(), String.join(",",config.getCategories()));
         FileOutputStream out = new FileOutputStream(getPath2JarFolder()+configPath);
         saveProperties(prop, out);
     }
@@ -94,7 +110,8 @@ public class PropertyManager {
             config = new Configuration(
                     prop.getProperty(Configuration.prop.DEFAULT_USER.name()),
                     Integer.parseInt(prop.getProperty(Configuration.prop.MAX_RATING.name())),
-                    Integer.parseInt(prop.getProperty(Configuration.prop.DEFAULT_RATING.name()))
+                    Integer.parseInt(prop.getProperty(Configuration.prop.DEFAULT_RATING.name())),
+                    prop.getProperty(Configuration.prop.CATEGORIES.name()).split(",")
             );
             return config;
         } catch(IOException|NumberFormatException|URISyntaxException e) {

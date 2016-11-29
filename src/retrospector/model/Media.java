@@ -11,20 +11,21 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import retrospector.util.PropertyManager;
 
 /**
  *
  * @author nonfrt
  */
 public class Media {
-    public static enum Category{MOVIE,TV_SERIES,BOOK,PODCAST,YOUTUBE,POEM,MUSIC,VIDEO_GAME,TABLETOP_GAME,PRODUCT,OTHER}
+    // public static enum Category{MOVIE,TV_SERIES,BOOK,PODCAST,YOUTUBE,POEM,MUSIC,VIDEO_GAME,TABLETOP_GAME,PRODUCT,OTHER}
     public static enum Type{MINISERIES,SERIES,SINGLE}
     
     private List<Review> reviews;
     private String title;
     private String description;
     private String creator;
-    private Category category;
+    private String category;
     private Type type;
     private String seasonId;
     private String episodeId;
@@ -47,18 +48,18 @@ public class Media {
     }
     
     public Media(String title, String creator){
-        this(title, creator, Category.MOVIE);
+        this(title, creator, PropertyManager.loadProperties().getCategories()[0]);
     }
     
-    public Media(String title, String creator, Category category){
+    public Media(String title, String creator, String category){
         this(title, creator, category, Type.SINGLE);
     }
     
-    public Media(String title, String creator, Category category, Type type){
+    public Media(String title, String creator, String category, Type type){
         this(title, creator, category, type, new ArrayList<>());
     }
     
-    public Media(String title, String creator, Category category, Type type, List<Review> reviews){
+    public Media(String title, String creator, String category, Type type, List<Review> reviews){
         setTitle(title);
         setCreator(creator);
         setCategory(category);
@@ -101,11 +102,11 @@ public class Media {
         this.creator = creator;
     }
 
-    public Category getCategory() {
+    public String getCategory() {
         return category;
     }
 
-    public void setCategory(Category category) {
+    public void setCategory(String category) {
         this.category = category;
     }
 

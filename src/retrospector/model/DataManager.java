@@ -12,11 +12,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Date;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Locale.Category;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import retrospector.model.Media.Category;
 import retrospector.model.Media.Type;
 import retrospector.util.PropertyManager;
 
@@ -68,7 +66,7 @@ public class DataManager {
                     medium.setSeasonId(rs.getString("season"));
                     medium.setEpisodeId(rs.getString("episode"));
                     medium.setDescription(rs.getString("description"));
-                    medium.setCategory(Category.valueOf(rs.getString("category")));
+                    medium.setCategory(rs.getString("category"));
                     medium.setType(Type.valueOf(rs.getString("type")));
                     try{
                         rs2 = stmt.executeQuery("select * from review where mediaID="+medium.getId());
@@ -202,7 +200,7 @@ public class DataManager {
             pstmt.setString(3, media.getSeasonId());
             pstmt.setString(4, media.getEpisodeId());
             pstmt.setString(5, media.getDescription());
-            pstmt.setString(6, media.getCategory().toString());
+            pstmt.setString(6, media.getCategory());
             pstmt.setString(7, media.getType().toString());
             int updated = pstmt.executeUpdate();
             
@@ -357,7 +355,7 @@ public class DataManager {
                 medium.setSeasonId(rs.getString("season"));
                 medium.setEpisodeId(rs.getString("episode"));
                 medium.setDescription(rs.getString("description"));
-                medium.setCategory(Category.valueOf(rs.getString("category")));
+                medium.setCategory(rs.getString("category"));
                 medium.setType(Type.valueOf(rs.getString("type")));
                 try{
                     rs2 = stmt.executeQuery("select * from review where mediaID="+medium.getId());

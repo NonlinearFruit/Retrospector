@@ -54,7 +54,7 @@ import javafx.util.Callback;
 import javafx.util.StringConverter;
 import org.controlsfx.control.Rating;
 import retrospector.model.*;
-import retrospector.model.Media.Category;
+import retrospector.util.PropertyManager;
 import retrospector.util.UtilityCloset;
 
 /**
@@ -89,7 +89,7 @@ public class CoreController implements Initializable {
     @FXML
     private TableColumn<Media, Integer> searchReviewsColumn;
     @FXML
-    private TableColumn<Media, Category> searchCategoryColumn;
+    private TableColumn<Media, String> searchCategoryColumn;
     @FXML
     private TableColumn<Media, ?> searchRatingColumns;
     @FXML
@@ -115,7 +115,7 @@ public class CoreController implements Initializable {
     @FXML
     private Text mediaMaxRating;
     @FXML
-    private ChoiceBox<Media.Category> mediaCategory;
+    private ChoiceBox<String> mediaCategory;
     @FXML
     private ChoiceBox<Media.Type> mediaType;
     @FXML
@@ -284,7 +284,7 @@ public class CoreController implements Initializable {
         searchSeasonColumn.setCellValueFactory(new PropertyValueFactory<Media,String>("SeasonId"));
         searchEpisodeColumn.setCellValueFactory(new PropertyValueFactory<Media,String>("EpisodeId"));
         searchCreatorColumn.setCellValueFactory(new PropertyValueFactory<Media,String>("Creator"));
-        searchCategoryColumn.setCellValueFactory(new PropertyValueFactory<Media,Category>("Category"));
+        searchCategoryColumn.setCellValueFactory(new PropertyValueFactory<Media,String>("Category"));
         searchReviewsColumn.setCellValueFactory(new Callback<CellDataFeatures<Media,Integer>, ObservableValue<Integer>>() {
             @Override
             public ObservableValue<Integer> call(CellDataFeatures<Media,Integer> p) {
@@ -388,7 +388,7 @@ public class CoreController implements Initializable {
         mediaStars.setRating(DataManager.getDefaultRating()/2);
         mediaRating.setText(ratingFormat.format(DataManager.getDefaultRating()));
         mediaMaxRating.setText(ratingFormat.format(DataManager.getMaxRating()));
-        mediaCategory.setItems(FXCollections.observableArrayList(Media.Category.values()));
+        mediaCategory.setItems(FXCollections.observableArrayList(PropertyManager.loadProperties().getCategories()));
         mediaCategory.getSelectionModel().selectedItemProperty().addListener((observe,old,neo)->{
             
         });
