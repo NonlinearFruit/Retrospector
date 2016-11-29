@@ -5,6 +5,7 @@
  */
 package retrospector.model;
 
+import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -12,18 +13,18 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Date;
 import java.sql.ResultSet;
-import java.util.Locale.Category;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import retrospector.model.Media.Type;
 import retrospector.util.PropertyManager;
+import retrospector.util.UtilityCloset;
 
 /**
  *
  * @author nonfrt
  */
 public class DataManager {
-    static String connString = "jdbc:hsqldb:file:testdb1";
+    static String connString = "jdbc:hsqldb:file:";
     static Connection conn = null;
 
     public static String getDefaultUser(){
@@ -159,14 +160,18 @@ public class DataManager {
         + "rate int,"
         + "constraint primary_key_review primary key (id),"
         + "constraint foreign_key_review foreign key (mediaID) references media (id) on delete cascade)";
+        
       
         try {
+            connString += UtilityCloset.getPath2JarFolder()+"Retrospector";
             Statement stmt;
             stmt = getConnection().createStatement();
             stmt.execute(createMedia);
             stmt.execute(createReview);
         } catch (SQLException ex) {
             System.out.println("Create error in startDB in connection" + ex);
+        } catch (URISyntaxException ex) {
+            System.out.println("DataManager#startDB \t adding getPath2JarFolder to connString failed:: \n" + ex);
         }
     }
     
