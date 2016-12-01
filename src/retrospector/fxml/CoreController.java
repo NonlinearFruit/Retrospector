@@ -14,7 +14,9 @@ import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -31,6 +33,7 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart.Data;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Button;
@@ -54,7 +57,7 @@ import javafx.util.Callback;
 import javafx.util.StringConverter;
 import org.controlsfx.control.Rating;
 import retrospector.model.*;
-import retrospector.util.PropertyManager;
+import static retrospector.model.Media.Type.SERIES;
 import retrospector.util.UtilityCloset;
 
 /**
@@ -242,8 +245,10 @@ public class CoreController implements Initializable {
             if(neo==null){
                 mediaTab.setDisable(true);
                 reviewTab.setDisable(true);
+                chartTab.setDisable(true);
             } else {
                 mediaTab.setDisable(false);
+                chartTab.setDisable(false);
             }
         });
         
@@ -256,6 +261,7 @@ public class CoreController implements Initializable {
         });
         mediaTab.setDisable(true);
         reviewTab.setDisable(true);
+        chartTab.setDisable(true);
         
         try{
             new URL(tropeHome).openConnection();
@@ -388,7 +394,7 @@ public class CoreController implements Initializable {
         mediaStars.setRating(DataManager.getDefaultRating()/2);
         mediaRating.setText(ratingFormat.format(DataManager.getDefaultRating()));
         mediaMaxRating.setText(ratingFormat.format(DataManager.getMaxRating()));
-        mediaCategory.setItems(FXCollections.observableArrayList(PropertyManager.loadProperties().getCategories()));
+        mediaCategory.setItems(FXCollections.observableArrayList(DataManager.getCategories()));
         mediaCategory.getSelectionModel().selectedItemProperty().addListener((observe,old,neo)->{
             
         });
@@ -552,7 +558,7 @@ public class CoreController implements Initializable {
     }
     
     public static enum Chartagories{
-        CATEGORY,CURRENT_MEDIA,SEASON,ALL_SEASONS
+        CURRENT_MEDIA,MINISERIES,SEASON,SERIES,CREATOR,CATEGORY
     }
     
     public void updateChartTab(){
@@ -567,57 +573,64 @@ public class CoreController implements Initializable {
         chartVBox.getChildren().clear();
         
         ObservableList<Review> setOfReviews = FXCollections.observableArrayList();
-        switch(chartChoiceBox.getSelectionModel().getSelectedItem()){
-            case CATEGORY:
-                for (Media media : DataManager.getMedia()) {
-                    if(UtilityCloset.isSameMedia(Chartagories.CATEGORY, getMedia(), media))
-                        setOfReviews.addAll(media.getReviews());
-                }
-                break;
-            case SEASON:
-                for (Media media : DataManager.getMedia()) {
-                    if(UtilityCloset.isSameMedia(Chartagories.SEASON, getMedia(), media))
-                        setOfReviews.addAll(media.getReviews());
-                }
-                break;
-            case ALL_SEASONS:
-                for (Media media : DataManager.getMedia()) {
-                    if(UtilityCloset.isSameMedia(Chartagories.ALL_SEASONS, getMedia(), media))
-                        setOfReviews.addAll(media.getReviews());
-                }
-                break;
-            case CURRENT_MEDIA:
-            default:
-                setOfReviews.addAll(getMedia().getReviews());
-        }
+
+        Chartagories category = chartChoiceBox.getSelectionModel().getSelectedItem();
+        if(category.equals(Chartagories.CURRENT_MEDIA))
+            setOfReviews.addAll(getMedia().getReviews());
+        else
+            for (Media media : DataManager.getMedia()) {
+                if(UtilityCloset.isSameMedia(category, getMedia(), media))
+                    setOfReviews.addAll(media.getReviews());
+            }
         
         // User :: Review :: Rating :: Time
         
         // 0    :: 0      :: 0      :: 0
         if(!users && !reviews && !ratings && !time){
-            
+            PieChart chart = new PieChart();
+            chart.setTitle("Media per Category");
+            chart.setData(
+                    FXCollections.observableArrayList(
+                        Arrays.asList(
+                                DataManager.getCategories()).stream()
+                                .map(c->
+                                        new PieChart.Data(
+                                                c, 
+                                                DataManager.getMedia().stream()
+                                                    .filter(m->c.equals(m.getCategory()))
+                                                    .count()
+                                            )
+                                    )
+                                .collect(Collectors.toList()
+                            )
+                        )
+            );
+            chartVBox.getChildren().add(chart);
         }
         
         // 0    :: 0      :: 0      :: 1
         if(!users && !reviews && !ratings && time){
-            
+            chartVBox.getChildren().add(new Text("Not implemented yet"));
         }
         
         // 0    :: 0      :: 1      :: 0
         if(!users && !reviews && ratings && !time){
-            
+            chartVBox.getChildren().add(new Text("Average Rating: "+
+                    setOfReviews.stream()
+                    .collect(Collectors.averagingInt(r->r.getRating().intValueExact()))
+                    ));
         }
         
         // 0    :: 0      :: 1      :: 1 see 0111
         
         // 0    :: 1      :: 0      :: 0
         if(!users && reviews && !ratings && !time){
-            
+            chartVBox.getChildren().add(new Text("Number of Reviews: "+setOfReviews.size()));
         }
         
         // 0    :: 1      :: 0      :: 1
         if(!users && reviews && !ratings && time){
-            
+            chartVBox.getChildren().add(new Text("Not implemented yet"));
         }
         
         // 0    :: 1      :: 1      :: 0
@@ -683,12 +696,18 @@ public class CoreController implements Initializable {
         
         // 1    :: 0      :: 0      :: 0
         if(users && !reviews && !ratings && !time){
-            
+            chartVBox.getChildren().add(new Text("Number of users: "+
+                    setOfReviews.stream()
+                    .map(r->r.getUser())
+                    .distinct()
+                    .toArray()
+                    .length
+            ));
         }
         
         // 1    :: 0      :: 0      :: 1
         if(users && !reviews && !ratings && time){
-            
+            chartVBox.getChildren().add(new Text("Not implemented yet"));
         }
         
         // 1    :: 0      :: 1      :: 0
@@ -715,17 +734,17 @@ public class CoreController implements Initializable {
         
         // 1    :: 0      :: 1      :: 1
         if(users && !reviews && ratings && time){
-            
+            chartVBox.getChildren().add(new Text("Not implemented yet"));
         }
         
         // 1    :: 1      :: 0      :: 0
         if(users && reviews && !ratings && !time){
-            
+            chartVBox.getChildren().add(new Text("Not implemented yet"));
         }
         
         // 1    :: 1      :: 0      :: 1
         if(users && reviews && !ratings && time){
-            
+            chartVBox.getChildren().add(new Text("Not implemented yet"));
         }
         
         // 1    :: 1      :: 1      :: 0
@@ -798,7 +817,7 @@ public class CoreController implements Initializable {
             chartVBox.getChildren().add(graph);
         }
         // Stats at Bottom
-        chartTotalMedia.setText(String.valueOf(DataManager.getReviews().size()));
+        chartTotalMedia.setText(String.valueOf(DataManager.getMedia().size()));
         chartTotalReviews.setText(String.valueOf(DataManager.getReviews().size()));
         chartTotalUsers.setText(String.valueOf(DataManager.getUsers().size()));
         

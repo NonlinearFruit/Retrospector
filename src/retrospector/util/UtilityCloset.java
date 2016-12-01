@@ -81,20 +81,24 @@ public class UtilityCloset {
             case CATEGORY:
                 isSame = categoryOne.equals(categoryTwo);
                 break;
-            case SEASON:
+            case CREATOR:
+                isSame = creatorOne.equals(creatorTwo);
+                break;
+            case SERIES:
+            case MINISERIES:
                 if(
                         titleOne.equals(titleTwo) &&
                         creatorOne.equals(creatorTwo) &&
-                        seasonOne.equals(seasonTwo) &&
                         categoryOne.equals(categoryTwo) &&
                         typeOne.equals(typeTwo)
                 )
                     isSame = true;
                 break;
-            case ALL_SEASONS:
+            case SEASON:
                 if(
                         titleOne.equals(titleTwo) &&
                         creatorOne.equals(creatorTwo) &&
+                        seasonOne.equals(seasonTwo) &&
                         categoryOne.equals(categoryTwo) &&
                         typeOne.equals(typeTwo)
                 )

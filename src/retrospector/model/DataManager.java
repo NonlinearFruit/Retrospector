@@ -39,6 +39,10 @@ public class DataManager {
         return PropertyManager.loadProperties().getDefaultRating();
     }
     
+    public static String[] getCategories(){
+        return PropertyManager.loadProperties().getCategories();
+    }
+    
     
     public static Connection getConnection(){
         try{
