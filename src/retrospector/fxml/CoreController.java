@@ -12,6 +12,7 @@ import java.math.RoundingMode;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
@@ -37,8 +38,10 @@ import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart.Data;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.ListView;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -48,6 +51,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.TableColumn.CellDataFeatures;
+import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -58,6 +62,7 @@ import javafx.util.StringConverter;
 import org.controlsfx.control.Rating;
 import retrospector.model.*;
 import static retrospector.model.Media.Type.SERIES;
+import retrospector.util.Stroolean;
 import retrospector.util.UtilityCloset;
 
 /**
@@ -211,12 +216,54 @@ public class CoreController implements Initializable {
     private Tab tropeTab;
     @FXML
     private WebView tropeWebView;
+    @FXML
+    private ListView<Stroolean> listIncludeList;
+    @FXML
+    private TableView<Media> listTable;
+    @FXML
+    private ToggleButton listTop10;
+    @FXML
+    private ToggleButton listTop100;
+    @FXML
+    private ToggleButton listTop1000;
+    @FXML
+    private TextField listYear;
+    @FXML
+    private DatePicker listStartDate;
+    @FXML
+    private DatePicker listEndDate;
+    @FXML
+    private TextField listUser;
+    @FXML
+    private TableColumn<Media, String> listTitleColumn;
+    @FXML
+    private TableColumn<Media, String> listCreatorColumn;
+    @FXML
+    private TableColumn<Media, String> listSeasonColumn;
+    @FXML
+    private TableColumn<Media, String> listEpisodeColumn;
+    @FXML
+    private TableColumn<Media, String> listCategoryColumn;
+    @FXML
+    private TableColumn<Media, Integer> listReviewsColumn;
+    @FXML
+    private TableColumn<Media, BigDecimal> listRatingColumn;
+    @FXML
+    private CheckBox listCustomDateRange;
+    @FXML
+    private ToggleButton listGroupCreator;
+    @FXML
+    private ToggleButton listGroupTitle;
+    @FXML
+    private ToggleButton listGroupSeason;
+    @FXML
+    private ToggleButton listGroupEpisode;
     
     private ObjectProperty<Media> currentMedia = new SimpleObjectProperty<>();
     private ObjectProperty<Review> currentReview = new SimpleObjectProperty<>();
     private DecimalFormat ratingFormat =  new DecimalFormat("#.#");
     private String tropeHome = "http://tvtropes.org";
-    private ObservableList<Media> media;
+    private ObservableList<Media> searchTableData;
 
     /**
      * Initializes the controller class.
@@ -227,6 +274,7 @@ public class CoreController implements Initializable {
         initMediaTab();
         initReviewTab();
         initChartTab();
+        initListTab();
         initTropeTab();
         anchorCenter.getSelectionModel().selectedItemProperty().addListener((observe,old,neo)->{
             if(neo.getText().equals("Search"))
@@ -237,6 +285,8 @@ public class CoreController implements Initializable {
                 updateReviewTab();
             else if(neo.getText().equals("Chart"))
                 updateChartTab();
+            else if(neo.getText().equals("List"))
+                updateListTab();
             else
                 updateTropes();
         });
@@ -271,8 +321,8 @@ public class CoreController implements Initializable {
     }    
     
     public void updateSearchTab(){
-        media.clear();
-        media.addAll(DataManager.getMedia());
+        searchTableData.clear();
+        searchTableData.addAll(DataManager.getMedia());
         searchTable.refresh();
         if(searchTable.getItems().contains(getMedia()))
             searchTable.getSelectionModel().select(getMedia());
@@ -281,8 +331,8 @@ public class CoreController implements Initializable {
     }
     
     public void initSearchTab(){
-        media = DataManager.getMedia();
-        FilteredList<Media> mediaFiltered = new FilteredList(media,x->true);
+        searchTableData = DataManager.getMedia();
+        FilteredList<Media> mediaFiltered = new FilteredList(searchTableData,x->true);
         SortedList<Media> mediaSortable = new SortedList<>(mediaFiltered);
         searchTable.setItems(mediaSortable);
         mediaSortable.comparatorProperty().bind(searchTable.comparatorProperty());
@@ -547,18 +597,6 @@ public class CoreController implements Initializable {
         reviewCancel.setOnAction(e->{
             anchorCenter.getSelectionModel().select(mediaTab);
         });
-    }
-
-    private void updateTropes() {
-        // Do nothing
-    }
-
-    private void initTropeTab() {
-        tropeWebView.getEngine().load(tropeHome);
-    }
-    
-    public static enum Chartagories{
-        CURRENT_MEDIA,MINISERIES,SEASON,SERIES,CREATOR,CATEGORY
     }
     
     public void updateChartTab(){
@@ -855,4 +893,211 @@ public class CoreController implements Initializable {
         });
     }
     
+    
+    private ObservableList<Stroolean> strooleans = FXCollections.observableArrayList();
+    private ObservableList<Media> listTableData = FXCollections.observableArrayList();
+    
+    public void updateListTab(){
+        listTableData.clear();
+        if(!listGroupCreator.isSelected())
+            return;
+        
+        boolean creator = listGroupCreator.isSelected();
+        boolean title = listGroupTitle.isSelected();
+        boolean season = listGroupSeason.isSelected();
+        boolean episode = listGroupEpisode.isSelected();
+        Chartagories chartagory = episode? Chartagories.CURRENT_MEDIA:
+                                  season?  Chartagories.SEASON:
+                                  title?   Chartagories.SERIES:
+                                           Chartagories.CREATOR;
+        
+        Integer top = listTop10.isSelected()?  10:
+                      listTop100.isSelected()? 100:
+                                               1000;
+        
+        LocalDate start = listCustomDateRange.isSelected()? listStartDate.getValue() : LocalDate.of(Integer.parseInt(listYear.getText())-1, 12, 31);
+        LocalDate end = listCustomDateRange.isSelected()? listEndDate.getValue() : LocalDate.of(Integer.parseInt(listYear.getText())+1, 1, 1);
+        
+        String user = listUser.getText();
+        
+        for (Media media : DataManager.getMedia()) {
+            for (Stroolean stroolean : strooleans) {
+                if(stroolean.isBoolean() && media.getCategory().equals(stroolean.getString())){
+                    boolean homeless = true;
+                    for (Media data : listTableData) {
+                        Media temp = new Media();
+                        temp.clone(media);
+                        temp.setCategory(data.getCategory());
+                        temp.setType(data.getType());
+                        if(UtilityCloset.isSameMedia(chartagory, data, temp)){
+                            homeless = false;
+                            for (Review review : media.getReviews()) {
+                                if(review.getDate().isBefore(end) && 
+                                   review.getDate().isAfter(start)&&
+                                   review.getUser().equals(user)){
+                                        data.getReviews().add(review);
+                                }
+                            }
+                            break;
+                        }
+                    }
+                    if(homeless){
+                        Media m = new Media();
+                        if(creator)
+                            m.setCreator(media.getCreator());
+                        if(title)
+                            m.setTitle(media.getTitle());
+                        if(season)
+                            m.setSeasonId(media.getSeasonId());
+                        if(episode)
+                            m.setEpisodeId(media.getEpisodeId());
+                        m.setCategory(media.getCategory());
+                        for (Review review : media.getReviews()) {
+                            if(review.getDate().isBefore(end) && 
+                               review.getDate().isAfter(start)&&
+                               review.getUser().equals(user)){
+                                    m.getReviews().add(review);
+                            }
+                        }
+                        listTableData.add(m);
+                    }
+                }
+            }
+        }
+        listTable.setItems(
+                FXCollections.observableArrayList(
+                    listTableData.stream()
+                    .sorted((x,y)->y.getAverageRating().compareTo(x.getAverageRating()))
+                    .limit(top)
+                    .collect(Collectors.toList())
+                )
+        );
+        listTable.refresh();
+    }
+    
+    public void initListTab(){
+        // Include
+        for (String category : DataManager.getCategories()) {
+            Stroolean c = new Stroolean(category);
+            c.booleanProperty().addListener((observe,old,neo)->updateListTab());
+            strooleans.add(c);
+            listIncludeList.getItems().add(c);
+        }
+        listIncludeList.setCellFactory(CheckBoxListCell.forListView(Stroolean::booleanProperty));
+        
+        // Group By
+        listGroupCreator.setSelected(true);
+        listGroupCreator.selectedProperty().addListener((observe,old,neo)->{
+            if(neo){
+                // Nothing to select, top of the food chain
+            } else {
+                listGroupTitle.setSelected(false);
+                listGroupSeason.setSelected(false);
+                listGroupEpisode.setSelected(false);
+            }
+            updateListTab();
+        });
+        listGroupTitle.selectedProperty().addListener((observe,old,neo)->{
+            if(neo){
+                listGroupCreator.setSelected(true);
+            } else {
+                listGroupSeason.setSelected(false);
+                listGroupEpisode.setSelected(false);
+            }
+            updateListTab();
+        });
+        listGroupSeason.selectedProperty().addListener((observe,old,neo)->{
+            if(neo){
+                listGroupCreator.setSelected(true);
+                listGroupTitle.setSelected(true);
+            } else {
+                listGroupEpisode.setSelected(false);
+            }
+            updateListTab();
+        });
+        listGroupEpisode.selectedProperty().addListener((observe,old,neo)->{
+            if(neo){
+                listGroupCreator.setSelected(true);
+                listGroupTitle.setSelected(true);
+                listGroupSeason.setSelected(true);
+            } else {
+                // Nothing to deselect, bottom of the food chain
+            }
+            updateListTab();
+        });
+        
+        
+        // Top 10/0/0
+        listTop10.setSelected(true);
+        listTop10.selectedProperty().addListener((observe,old,neo)->{
+            updateListTab();
+            if(neo){
+                listTop100.setSelected(false);
+                listTop1000.setSelected(false);
+            }
+        });
+        listTop100.selectedProperty().addListener((observe,old,neo)->{
+            updateListTab();
+            if(neo){
+                listTop10.setSelected(false);
+                listTop1000.setSelected(false);
+            }
+        });
+        listTop1000.selectedProperty().addListener((observe,old,neo)->{
+            updateListTab();
+            if(neo){
+                listTop100.setSelected(false);
+                listTop10.setSelected(false);
+            }
+        });
+        
+        // Dates
+        listYear.setText(String.valueOf(LocalDate.now().getYear()));
+        listYear.setOnAction(e->updateListTab());
+        listStartDate.setValue(LocalDate.now().withMonth(1).withDayOfMonth(1));
+        listStartDate.valueProperty().addListener((observe,old,neo)->updateListTab());
+        listEndDate.setValue(LocalDate.now().withMonth(12).withDayOfMonth(31));
+        listEndDate.valueProperty().addListener((observe,old,neo)->updateListTab());
+        listCustomDateRange.selectedProperty().addListener((observe,old,neo)->updateListTab());
+        listYear.disableProperty().bind(listCustomDateRange.selectedProperty());
+        listStartDate.disableProperty().bind(Bindings.not(listCustomDateRange.selectedProperty()));
+        listEndDate.disableProperty().bind(Bindings.not(listCustomDateRange.selectedProperty()));
+        
+        // User
+        listUser.setText(DataManager.getDefaultUser());
+        listUser.setOnAction(e->updateListTab());
+        
+        // Table
+        listTable.setItems(listTableData);
+        listTitleColumn.setCellValueFactory(new PropertyValueFactory<Media, String>("Title"));
+        listSeasonColumn.setCellValueFactory(new PropertyValueFactory<Media, String>("SeasonId"));
+        listEpisodeColumn.setCellValueFactory(new PropertyValueFactory<Media, String>("EpisodeId"));
+        listCreatorColumn.setCellValueFactory(new PropertyValueFactory<Media, String>("Creator"));
+        listCategoryColumn.setCellValueFactory(new PropertyValueFactory<Media, String>("Category"));
+        listReviewsColumn.setCellValueFactory(new Callback<CellDataFeatures<Media, Integer>, ObservableValue<Integer>>() {
+            @Override
+            public ObservableValue<Integer> call(CellDataFeatures<Media, Integer> p) {
+                return new ReadOnlyObjectWrapper(p.getValue().getReviews().size());
+            }
+        });
+        listRatingColumn.setCellValueFactory(new Callback<CellDataFeatures<Media, BigDecimal>, ObservableValue<BigDecimal>>() {
+            @Override
+            public ObservableValue<BigDecimal> call(CellDataFeatures<Media, BigDecimal> p) {
+                return new ReadOnlyObjectWrapper(p.getValue().getAverageRating());
+            }
+        });
+    }
+    
+
+    private void updateTropes() {
+        // Do nothing
+    }
+
+    private void initTropeTab() {
+        tropeWebView.getEngine().load(tropeHome);
+    }
+    
+    public static enum Chartagories{
+        CURRENT_MEDIA,MINISERIES,SEASON,SERIES,CREATOR,CATEGORY
+    }
 }
