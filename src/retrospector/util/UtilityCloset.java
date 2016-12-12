@@ -84,8 +84,7 @@ public class UtilityCloset {
             case CREATOR:
                 isSame = creatorOne.equals(creatorTwo);
                 break;
-            case SERIES:
-            case MINISERIES:
+            case TITLE:
                 if(
                         titleOne.equals(titleTwo) &&
                         creatorOne.equals(creatorTwo) &&

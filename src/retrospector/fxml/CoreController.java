@@ -908,7 +908,7 @@ public class CoreController implements Initializable {
         boolean episode = listGroupEpisode.isSelected();
         Chartagories chartagory = episode? Chartagories.CURRENT_MEDIA:
                                   season?  Chartagories.SEASON:
-                                  title?   Chartagories.SERIES:
+                                  title?   Chartagories.TITLE:
                                            Chartagories.CREATOR;
         
         Integer top = listTop10.isSelected()?  10:
@@ -1098,6 +1098,6 @@ public class CoreController implements Initializable {
     }
     
     public static enum Chartagories{
-        CURRENT_MEDIA,MINISERIES,SEASON,SERIES,CREATOR,CATEGORY
+        CURRENT_MEDIA,SEASON,TITLE,CREATOR,CATEGORY
     }
 }
