@@ -12,7 +12,6 @@ import java.math.RoundingMode;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
-import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
@@ -28,7 +27,10 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.chart.Axis;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
@@ -42,6 +44,8 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -57,6 +61,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.web.WebView;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 import org.controlsfx.control.Rating;
@@ -81,7 +86,7 @@ public class CoreController implements Initializable {
     @FXML
     private TableView<Media> searchTable;
     @FXML
-    private Button searchNewMedia;
+    private MenuButton searchNewMedia;
     @FXML
     private Button searchEditMedia;
     @FXML
@@ -264,6 +269,10 @@ public class CoreController implements Initializable {
     private DecimalFormat ratingFormat =  new DecimalFormat("#.#");
     private String tropeHome = "http://tvtropes.org";
     private ObservableList<Media> searchTableData;
+    @FXML
+    private MenuItem searchQuickEntry;
+    @FXML
+    private MenuItem searchStandardEntry;
 
     /**
      * Initializes the controller class.
@@ -296,9 +305,13 @@ public class CoreController implements Initializable {
                 mediaTab.setDisable(true);
                 reviewTab.setDisable(true);
                 chartTab.setDisable(true);
+                searchEditMedia.setDisable(true);
+                searchDeleteMedia.setDisable(true);
             } else {
                 mediaTab.setDisable(false);
                 chartTab.setDisable(false);
+                searchEditMedia.setDisable(false);
+                searchDeleteMedia.setDisable(false);
             }
         });
         
@@ -312,7 +325,8 @@ public class CoreController implements Initializable {
         mediaTab.setDisable(true);
         reviewTab.setDisable(true);
         chartTab.setDisable(true);
-        
+        searchEditMedia.setDisable(true);
+        searchDeleteMedia.setDisable(true);
         try{
             new URL(tropeHome).openConnection();
         }catch(IOException e){tropeTab.setDisable(true);}
@@ -395,6 +409,26 @@ public class CoreController implements Initializable {
         });
         
         searchNewMedia.setOnAction(e->{
+            Media neo = new Media();
+            neo.setId(DataManager.createDB(neo));
+            setMedia(neo);
+            anchorCenter.getSelectionModel().select(mediaTab);
+        });
+        searchQuickEntry.setOnAction(e->{
+                  try{
+                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("QuickEntry.fxml"));
+                    Parent root1 = (Parent) fxmlLoader.load();
+                    QuickEntryController qec = fxmlLoader.getController();
+                    qec.setCore(this);
+                    Stage stage = new Stage();
+//                    stage.initModality(Modality.APPLICATION_MODAL);
+//                    stage.initStyle(StageStyle.UNDECORATED);
+                    stage.setTitle("Quick Entry");
+                    stage.setScene(new Scene(root1));  
+                    stage.show();
+                  } catch(Exception ex) {}
+        });
+        searchStandardEntry.setOnAction(e->{
             Media neo = new Media();
             neo.setId(DataManager.createDB(neo));
             setMedia(neo);

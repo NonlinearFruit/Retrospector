@@ -6,8 +6,10 @@
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.SplitMenuButton?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
@@ -53,7 +55,12 @@
                   </TableView>
                   <HBox>
                      <children>
-                        <Button fx:id="searchNewMedia" mnemonicParsing="false" text="New" />
+                        <SplitMenuButton fx:id="searchNewMedia" mnemonicParsing="false" text="New">
+                          <items>
+                            <MenuItem fx:id="searchQuickEntry" mnemonicParsing="false" text="Quick Entry" />
+                            <MenuItem fx:id="searchStandardEntry" mnemonicParsing="false" text="Standard Entry" />
+                          </items>
+                        </SplitMenuButton>
                         <Button fx:id="searchEditMedia" mnemonicParsing="false" text="Edit" />
                         <Button fx:id="searchDeleteMedia" mnemonicParsing="false" text="Delete" />
                      </children>

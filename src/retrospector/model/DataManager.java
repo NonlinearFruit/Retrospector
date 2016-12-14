@@ -217,6 +217,12 @@ public class DataManager {
             boolean key = rs.next();
             if(updated==1 && key){
                 id = rs.getInt(1);
+                for (Review review : media.getReviews()) {
+                    review.setMediaId(id);
+                    createDB(review);
+                }
+            } else if(media.getReviews().size()>0) {
+                System.err.println("Reviews not Saved! :(");
             }
             
         } catch (SQLException ex) {
