@@ -70,6 +70,7 @@ import org.controlsfx.control.Rating;
 import retrospector.model.*;
 import static retrospector.model.Media.Type.SERIES;
 import retrospector.util.NaturalOrderComparator;
+import retrospector.util.PropertyManager;
 import retrospector.util.Stroolean;
 import retrospector.util.UtilityCloset;
 
@@ -293,7 +294,8 @@ public class CoreController implements Initializable {
         initReviewTab();
         initChartTab();
         initListTab();
-        initTropeTab();
+        if(PropertyManager.loadProperties().isEnableTrope())initTropeTab();
+        else anchorCenter.getTabs().remove(tropeTab);
         anchorCenter.getSelectionModel().selectedItemProperty().addListener((observe,old,neo)->{
             if(neo.getText().equals("Search"))
                 updateSearchTab();
@@ -973,7 +975,9 @@ public class CoreController implements Initializable {
                                                1000;
         
         LocalDate start = listCustomDateRange.isSelected()? listStartDate.getValue() : LocalDate.of(Integer.parseInt(listYear.getText())-1, 12, 31);
+            start = listUseAllTime.isSelected()? LocalDate.MIN : start;
         LocalDate end = listCustomDateRange.isSelected()? listEndDate.getValue() : LocalDate.of(Integer.parseInt(listYear.getText())+1, 1, 1);
+            end = listUseAllTime.isSelected()? LocalDate.MAX : end;
         
         String user = listUser.getText();
         
