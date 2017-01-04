@@ -2,11 +2,11 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.SplitMenuButton?>
@@ -38,15 +38,15 @@
                   <TextField fx:id="searchBox" style="-fx-background-image: url('http://www.clipartbest.com/cliparts/dir/aXn/diraXnR6T.png'); -fx-background-repeat: no-repeat; -fx-background-position: right center; -fx-background-size: 20;" />
                   <TableView fx:id="searchTable" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                     <columns>
-                      <TableColumn fx:id="searchTitleColumn" prefWidth="256.0" text="Title" />
+                        <TableColumn fx:id="searchNumberColumn" prefWidth="45.0" text="#" />
+                      <TableColumn fx:id="searchTitleColumn" prefWidth="286.0" text="Title" />
                       <TableColumn fx:id="searchCreatorColumn" prefWidth="256.0" text="Creator" />
                         <TableColumn fx:id="searchSeasonColumn" prefWidth="160.0" text="Season" />
                         <TableColumn fx:id="searchEpisodeColumn" prefWidth="160.0" text="Episode" />
                         <TableColumn fx:id="searchCategoryColumn" prefWidth="160.0" text="Category" />
                         <TableColumn fx:id="searchReviewsColumn" prefWidth="68.0" text="Reviews" />
-                        <TableColumn fx:id="searchRatingColumns" minWidth="0.0" prefWidth="131.0" text="Rating">
+                        <TableColumn fx:id="searchRatingColumns" minWidth="0.0" prefWidth="144.0" text="Rating">
                            <columns>
-                              <TableColumn fx:id="searchOriginalRColumn" text="Original" />
                               <TableColumn fx:id="searchMeanRColumn" prefWidth="59.0" text="Mean" />
                               <TableColumn fx:id="searchCurrentRColumn" text="Current" />
                            </columns>
@@ -155,7 +155,7 @@
                   </VBox>
                   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnSpan="3" GridPane.rowIndex="1">
                      <children>
-                        <VBox prefHeight="200.0" prefWidth="100.0" spacing="3.0" HBox.hgrow="SOMETIMES">
+                        <VBox prefHeight="383.0" spacing="3.0" HBox.hgrow="SOMETIMES">
                            <children>
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Category" />
                               <ChoiceBox fx:id="mediaCategory" prefWidth="150.0" />
@@ -165,9 +165,9 @@
                               <TextArea fx:id="mediaDescription" maxWidth="600.0" prefHeight="200.0" prefWidth="200.0" wrapText="true" VBox.vgrow="ALWAYS" />
                            </children>
                         </VBox>
-                        <VBox prefHeight="242.0" prefWidth="228.0" spacing="3.0" HBox.hgrow="NEVER">
+                        <VBox spacing="3.0" HBox.hgrow="NEVER">
                            <children>
-                              <HBox alignment="CENTER">
+                              <HBox alignment="CENTER" VBox.vgrow="SOMETIMES">
                                  <children>
                                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Reviews" />
                                     <Button fx:id="mediaNewReview" mnemonicParsing="false" text="New" />
@@ -175,11 +175,11 @@
                                     <Button fx:id="mediaDeleteReview" mnemonicParsing="false" text="Delete" />
                                  </children>
                               </HBox>
-                              <TableView fx:id="mediaReviewTable" prefHeight="232.0" prefWidth="228.0" VBox.vgrow="ALWAYS">
+                              <TableView fx:id="mediaReviewTable" prefHeight="354.0" prefWidth="372.0" VBox.vgrow="ALWAYS">
                                  <columns>
-                                    <TableColumn fx:id="mediaRatingColumn" prefWidth="75.0" text="Rating" />
-                                    <TableColumn fx:id="mediaUserColumn" prefWidth="75.0" text="User" />
-                                    <TableColumn fx:id="mediaDateColumn" prefWidth="75.0" text="Date" />
+                                    <TableColumn fx:id="mediaRatingColumn" prefWidth="66.0" text="Rating" />
+                                    <TableColumn fx:id="mediaUserColumn" prefWidth="142.0" text="User" />
+                                    <TableColumn fx:id="mediaDateColumn" prefWidth="163.0" text="Date" />
                                  </columns>
                               </TableView>
                            </children>
@@ -362,12 +362,13 @@
                   </VBox>
                   <TableView fx:id="listTable" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="3" GridPane.rowIndex="1">
                      <columns>
-                        <TableColumn fx:id="listTitleColumn" prefWidth="302.0" text="Title" />
-                        <TableColumn fx:id="listCreatorColumn" prefWidth="277.0" text="Creator" />
-                        <TableColumn fx:id="listSeasonColumn" prefWidth="175.0" text="Season" />
-                        <TableColumn fx:id="listEpisodeColumn" prefWidth="252.0" text="Episode" />
-                        <TableColumn fx:id="listCategoryColumn" prefWidth="135.0" text="Category" />
-                        <TableColumn fx:id="listReviewsColumn" prefWidth="79.0" text="Reviews" />
+                        <TableColumn fx:id="listRankColumn" prefWidth="56.0" text="Rank" />
+                        <TableColumn fx:id="listTitleColumn" prefWidth="373.0" text="Title" />
+                        <TableColumn fx:id="listCreatorColumn" prefWidth="219.0" text="Creator" />
+                        <TableColumn fx:id="listSeasonColumn" prefWidth="188.0" text="Season" />
+                        <TableColumn fx:id="listEpisodeColumn" prefWidth="195.0" text="Episode" />
+                        <TableColumn fx:id="listCategoryColumn" prefWidth="118.0" text="Category" />
+                        <TableColumn fx:id="listReviewsColumn" prefWidth="71.0" text="Reviews" />
                         <TableColumn fx:id="listRatingColumn" minWidth="0.0" prefWidth="59.0" text="Rating" />
                      </columns>
                   </TableView>
@@ -383,6 +384,9 @@
                         </HBox>
                         <HBox alignment="CENTER_LEFT" spacing="3.0" style="-fx-border-color: grey;" VBox.vgrow="NEVER">
                            <children>
+                              <RadioButton fx:id="listUseAllTime" mnemonicParsing="false" text="All Time" />
+                              <Separator orientation="VERTICAL" prefHeight="200.0" />
+                              <RadioButton fx:id="listUseYear" mnemonicParsing="false" />
                               <VBox alignment="CENTER_LEFT" prefHeight="0.0" prefWidth="100.0">
                                  <children>
                                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Year:" />
@@ -390,7 +394,7 @@
                                  </children>
                               </VBox>
                               <Separator orientation="VERTICAL" />
-                              <CheckBox fx:id="listCustomDateRange" mnemonicParsing="false" />
+                              <RadioButton fx:id="listCustomDateRange" mnemonicParsing="false" prefHeight="18.0" prefWidth="2.0" />
                               <VBox alignment="CENTER_LEFT" prefHeight="93.0" prefWidth="162.0">
                                  <children>
                                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Start Date:" />

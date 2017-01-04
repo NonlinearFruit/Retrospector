@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import javafx.beans.binding.Bindings;
@@ -40,12 +41,12 @@ import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart.Data;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -55,6 +56,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.TableColumn.CellDataFeatures;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
@@ -67,6 +69,7 @@ import javafx.util.StringConverter;
 import org.controlsfx.control.Rating;
 import retrospector.model.*;
 import static retrospector.model.Media.Type.SERIES;
+import retrospector.util.NaturalOrderComparator;
 import retrospector.util.Stroolean;
 import retrospector.util.UtilityCloset;
 
@@ -92,6 +95,8 @@ public class CoreController implements Initializable {
     @FXML
     private Button searchDeleteMedia;
     @FXML
+    private TableColumn<Media, Integer> searchNumberColumn;
+    @FXML
     private TableColumn<Media, String> searchTitleColumn;
     @FXML
     private TableColumn<Media, String> searchCreatorColumn;
@@ -106,11 +111,13 @@ public class CoreController implements Initializable {
     @FXML
     private TableColumn<Media, ?> searchRatingColumns;
     @FXML
-    private TableColumn<Media, BigDecimal> searchOriginalRColumn;
-    @FXML
     private TableColumn<Media, BigDecimal> searchMeanRColumn;
     @FXML
     private TableColumn<Media, BigDecimal> searchCurrentRColumn;
+    @FXML
+    private MenuItem searchQuickEntry;
+    @FXML
+    private MenuItem searchStandardEntry;
     @FXML
     private Tab mediaTab;
     @FXML
@@ -254,7 +261,9 @@ public class CoreController implements Initializable {
     @FXML
     private TableColumn<Media, BigDecimal> listRatingColumn;
     @FXML
-    private CheckBox listCustomDateRange;
+    private TableColumn<Media, Integer> listRankColumn;
+    @FXML
+    private RadioButton listCustomDateRange;
     @FXML
     private ToggleButton listGroupCreator;
     @FXML
@@ -263,16 +272,16 @@ public class CoreController implements Initializable {
     private ToggleButton listGroupSeason;
     @FXML
     private ToggleButton listGroupEpisode;
+    @FXML
+    private RadioButton listUseAllTime;
+    @FXML
+    private RadioButton listUseYear;
     
     private ObjectProperty<Media> currentMedia = new SimpleObjectProperty<>();
     private ObjectProperty<Review> currentReview = new SimpleObjectProperty<>();
     private DecimalFormat ratingFormat =  new DecimalFormat("#.#");
     private String tropeHome = "http://tvtropes.org";
     private ObservableList<Media> searchTableData;
-    @FXML
-    private MenuItem searchQuickEntry;
-    @FXML
-    private MenuItem searchStandardEntry;
 
     /**
      * Initializes the controller class.
@@ -350,11 +359,17 @@ public class CoreController implements Initializable {
         SortedList<Media> mediaSortable = new SortedList<>(mediaFiltered);
         searchTable.setItems(mediaSortable);
         mediaSortable.comparatorProperty().bind(searchTable.comparatorProperty());
+        
+        // Link to data properties
         searchTitleColumn.setCellValueFactory(new PropertyValueFactory<Media,String>("Title"));
+        searchCreatorColumn.setCellValueFactory(new PropertyValueFactory<Media,String>("Creator"));
         searchSeasonColumn.setCellValueFactory(new PropertyValueFactory<Media,String>("SeasonId"));
         searchEpisodeColumn.setCellValueFactory(new PropertyValueFactory<Media,String>("EpisodeId"));
-        searchCreatorColumn.setCellValueFactory(new PropertyValueFactory<Media,String>("Creator"));
         searchCategoryColumn.setCellValueFactory(new PropertyValueFactory<Media,String>("Category"));
+        
+        // Values for special columns
+        searchNumberColumn.setSortable(false);
+        searchNumberColumn.setCellValueFactory(p -> new ReadOnlyObjectWrapper(1+searchTable.getItems().indexOf(p.getValue())));
         searchReviewsColumn.setCellValueFactory(new Callback<CellDataFeatures<Media,Integer>, ObservableValue<Integer>>() {
             @Override
             public ObservableValue<Integer> call(CellDataFeatures<Media,Integer> p) {
@@ -367,18 +382,26 @@ public class CoreController implements Initializable {
                 return new ReadOnlyObjectWrapper(p.getValue().getAverageRating());
             }
         });
-        searchOriginalRColumn.setCellValueFactory(new Callback<CellDataFeatures<Media,BigDecimal>, ObservableValue<BigDecimal>>() {
-            @Override
-            public ObservableValue<BigDecimal> call(CellDataFeatures<Media,BigDecimal> p) {
-                return new ReadOnlyObjectWrapper(p.getValue().getOriginalRating());
-            }
-        });
+//        searchOriginalRColumn.setCellValueFactory(new Callback<CellDataFeatures<Media,BigDecimal>, ObservableValue<BigDecimal>>() {
+//            @Override
+//            public ObservableValue<BigDecimal> call(CellDataFeatures<Media,BigDecimal> p) {
+//                return new ReadOnlyObjectWrapper(p.getValue().getOriginalRating());
+//            }
+//        });
         searchCurrentRColumn.setCellValueFactory(new Callback<CellDataFeatures<Media,BigDecimal>, ObservableValue<BigDecimal>>() {
             @Override
             public ObservableValue<BigDecimal> call(CellDataFeatures<Media,BigDecimal> p) {
                 return new ReadOnlyObjectWrapper(p.getValue().getCurrentRating());
             }
         });
+        
+        // Comparors for string columns
+        searchTitleColumn.setComparator(new NaturalOrderComparator());
+        searchCreatorColumn.setComparator(new NaturalOrderComparator());
+        searchSeasonColumn.setComparator(new NaturalOrderComparator());
+        searchEpisodeColumn.setComparator(new NaturalOrderComparator());
+        searchCategoryColumn.setComparator(new NaturalOrderComparator());
+        
         searchTable.getSelectionModel().selectedItemProperty().addListener( (observe, old, neo) -> {
             setMedia(neo);
         });
@@ -665,13 +688,12 @@ public class CoreController implements Initializable {
                     FXCollections.observableArrayList(
                         Arrays.asList(
                                 DataManager.getCategories()).stream()
-                                .map(c->
-                                        new PieChart.Data(
-                                                c, 
-                                                DataManager.getMedia().stream()
+                                .map(c->{
+                                            long count = DataManager.getMedia().stream()
                                                     .filter(m->c.equals(m.getCategory()))
-                                                    .count()
-                                            )
+                                                    .count();
+                                            return new PieChart.Data(c+" - "+count,count);
+                                        }
                                     )
                                 .collect(Collectors.toList()
                             )
@@ -930,6 +952,7 @@ public class CoreController implements Initializable {
     
     private ObservableList<Stroolean> strooleans = FXCollections.observableArrayList();
     private ObservableList<Media> listTableData = FXCollections.observableArrayList();
+    private ToggleGroup dateToggleGroup = new ToggleGroup();
     
     public void updateListTab(){
         listTableData.clear();
@@ -987,10 +1010,13 @@ public class CoreController implements Initializable {
                             m.setEpisodeId(media.getEpisodeId());
                         m.setCategory(media.getCategory());
                         for (Review review : media.getReviews()) {
-                            if(review.getDate().isBefore(end) && 
-                               review.getDate().isAfter(start)&&
-                               review.getUser().equals(user)){
-                                    m.getReviews().add(review);
+                            if(review.getUser().equals(user)){
+                                if(review.getDate().isBefore(end) && 
+                                   review.getDate().isAfter(start)){
+                                        m.getReviews().add(review);
+                                } else if(review.getDate().isEqual(start) || review.getDate().isEqual(end)){
+                                        m.getReviews().add(review);
+                                }
                             }
                         }
                         listTableData.add(m);
@@ -998,14 +1024,12 @@ public class CoreController implements Initializable {
                 }
             }
         }
-        listTable.setItems(
-                FXCollections.observableArrayList(
-                    listTableData.stream()
+        List rankedResults = listTableData.stream()
                     .sorted((x,y)->y.getAverageRating().compareTo(x.getAverageRating()))
                     .limit(top)
-                    .collect(Collectors.toList())
-                )
-        );
+                    .collect(Collectors.toList());
+        listTable.setItems(FXCollections.observableArrayList(rankedResults));
+        listRankColumn.setCellValueFactory(p -> new ReadOnlyObjectWrapper(1+rankedResults.indexOf(p.getValue())));
         listTable.refresh();
     }
     
@@ -1092,8 +1116,13 @@ public class CoreController implements Initializable {
         listStartDate.valueProperty().addListener((observe,old,neo)->updateListTab());
         listEndDate.setValue(LocalDate.now().withMonth(12).withDayOfMonth(31));
         listEndDate.valueProperty().addListener((observe,old,neo)->updateListTab());
+        listUseAllTime.selectedProperty().addListener((observe,old,neo)->updateListTab());
+        listUseYear.selectedProperty().addListener((observe,old,neo)->updateListTab());
         listCustomDateRange.selectedProperty().addListener((observe,old,neo)->updateListTab());
-        listYear.disableProperty().bind(listCustomDateRange.selectedProperty());
+        //  - Enable/Disble
+        dateToggleGroup.getToggles().addAll(listUseYear,listUseAllTime,listCustomDateRange);
+        dateToggleGroup.selectToggle(listUseAllTime);
+        listYear.disableProperty().bind(Bindings.not(listUseYear.selectedProperty()));
         listStartDate.disableProperty().bind(Bindings.not(listCustomDateRange.selectedProperty()));
         listEndDate.disableProperty().bind(Bindings.not(listCustomDateRange.selectedProperty()));
         
@@ -1103,23 +1132,24 @@ public class CoreController implements Initializable {
         
         // Table
         listTable.setItems(listTableData);
+        
+        // Link to Properties
         listTitleColumn.setCellValueFactory(new PropertyValueFactory<Media, String>("Title"));
+        listCreatorColumn.setCellValueFactory(new PropertyValueFactory<Media, String>("Creator"));
         listSeasonColumn.setCellValueFactory(new PropertyValueFactory<Media, String>("SeasonId"));
         listEpisodeColumn.setCellValueFactory(new PropertyValueFactory<Media, String>("EpisodeId"));
-        listCreatorColumn.setCellValueFactory(new PropertyValueFactory<Media, String>("Creator"));
         listCategoryColumn.setCellValueFactory(new PropertyValueFactory<Media, String>("Category"));
-        listReviewsColumn.setCellValueFactory(new Callback<CellDataFeatures<Media, Integer>, ObservableValue<Integer>>() {
-            @Override
-            public ObservableValue<Integer> call(CellDataFeatures<Media, Integer> p) {
-                return new ReadOnlyObjectWrapper(p.getValue().getReviews().size());
-            }
-        });
-        listRatingColumn.setCellValueFactory(new Callback<CellDataFeatures<Media, BigDecimal>, ObservableValue<BigDecimal>>() {
-            @Override
-            public ObservableValue<BigDecimal> call(CellDataFeatures<Media, BigDecimal> p) {
-                return new ReadOnlyObjectWrapper(p.getValue().getAverageRating());
-            }
-        });
+        
+        // Special Table Cells
+        listReviewsColumn.setCellValueFactory(p -> new ReadOnlyObjectWrapper(p.getValue().getReviews().size()) );
+        listRatingColumn.setCellValueFactory(p -> new ReadOnlyObjectWrapper(p.getValue().getAverageRating()) );
+        
+        // Comparors for string columns
+        listTitleColumn.setComparator(new NaturalOrderComparator());
+        listCreatorColumn.setComparator(new NaturalOrderComparator());
+        listSeasonColumn.setComparator(new NaturalOrderComparator());
+        listEpisodeColumn.setComparator(new NaturalOrderComparator());
+        listCategoryColumn.setComparator(new NaturalOrderComparator());
     }
     
 
