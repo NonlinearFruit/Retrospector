@@ -296,14 +296,15 @@ public class CoreController implements Initializable {
         initMediaTab();
         initReviewTab();
         // Chart
-        try{
-            loader = new FXMLLoader(getClass().getResource("/retrospector/fxml/StatsTab.fxml"));
-            statsTab = (StatsTabController) loader.getController();
-            statsTab.update(this);
-            chartTab.setContent(loader.getRoot());
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
+        initChartTab();
+//        try{
+//            loader = new FXMLLoader(getClass().getResource("/retrospector/fxml/StatsTab.fxml"));
+//            statsTab = (StatsTabController) loader.getController();
+//            statsTab.update(this);
+//            chartTab.setContent(loader.getRoot());
+//        } catch(Exception e) {
+//            e.printStackTrace();
+//        }
         
         // List
         initListTab();
@@ -319,8 +320,8 @@ public class CoreController implements Initializable {
                 updateMediaTab();
             else if(neo.getText().equals("Review"))
                 updateReviewTab();
-//            else if(neo.getText().equals("Chart"))
-//                statsTab.update();
+            else if(neo.getText().equals("Chart"))
+                updateChartTab();
             else if(neo.getText().equals("List"))
                 updateListTab();
             else if(neo.getText().equals("Tropes"))
