@@ -47,7 +47,7 @@ public class PropertyManager {
                 "Product",
                 "Other"
             };
-            enableTrope = false;
+            enableTrope = true;
         }
         
         public Configuration(String user, Integer maxRate, Integer defaultRate, String[] category, Boolean trope){

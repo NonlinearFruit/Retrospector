@@ -278,24 +278,40 @@ public class CoreController implements Initializable {
     @FXML
     private RadioButton listUseYear;
     
-    private ObjectProperty<Media> currentMedia = new SimpleObjectProperty<>();
+    public final ObjectProperty<Media> currentMedia = new SimpleObjectProperty<>();
     private ObjectProperty<Review> currentReview = new SimpleObjectProperty<>();
     private DecimalFormat ratingFormat =  new DecimalFormat("#.#");
     private String tropeHome = "http://tvtropes.org";
     private ObservableList<Media> searchTableData;
 
+    private StatsTabController statsTab;
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        FXMLLoader loader = null;
+        
         initSearchTab();
         initMediaTab();
         initReviewTab();
-        initChartTab();
+        // Chart
+        try{
+            loader = new FXMLLoader(getClass().getResource("/retrospector/fxml/StatsTab.fxml"));
+            statsTab = (StatsTabController) loader.getController();
+            statsTab.update(this);
+            chartTab.setContent(loader.getRoot());
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        
+        // List
         initListTab();
+        // Tropes
         if(PropertyManager.loadProperties().isEnableTrope())initTropeTab();
         else anchorCenter.getTabs().remove(tropeTab);
+        
+        
         anchorCenter.getSelectionModel().selectedItemProperty().addListener((observe,old,neo)->{
             if(neo.getText().equals("Search"))
                 updateSearchTab();
@@ -303,11 +319,11 @@ public class CoreController implements Initializable {
                 updateMediaTab();
             else if(neo.getText().equals("Review"))
                 updateReviewTab();
-            else if(neo.getText().equals("Chart"))
-                updateChartTab();
+//            else if(neo.getText().equals("Chart"))
+//                statsTab.update();
             else if(neo.getText().equals("List"))
                 updateListTab();
-            else
+            else if(neo.getText().equals("Tropes"))
                 updateTropes();
         });
         
