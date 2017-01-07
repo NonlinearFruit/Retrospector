@@ -5,6 +5,7 @@
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -12,55 +13,69 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
 <GridPane hgap="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1300.0" vgap="10.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="retrospector.fxml.StatsTabController">
   <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="600.0" />
-    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="200.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="100.0" />
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
   </columnConstraints>
   <rowConstraints>
-    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="250.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="-Infinity" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="250.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="-Infinity" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="250.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
       <PieChart fx:id="chartMediaPerCategory" title="Media per Category" GridPane.columnIndex="2" />
       <VBox prefHeight="200.0" prefWidth="100.0">
          <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Overall" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Overall">
+               <font>
+                  <Font size="25.0" />
+               </font></Text>
             <ListView fx:id="userList" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="200.0" prefWidth="200.0" />
          </children>
       </VBox>
       <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1">
          <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Media" />
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Review" />
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="User" />
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Time" />
-         </children>
-      </VBox>
-      <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1">
-         <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Category" />
-            <ChoiceBox fx:id="categorySelector" prefWidth="150.0" />
-         </children>
-      </VBox>
-      <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-         <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Media" />
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Review" />
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="User" />
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Time" />
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Single" />
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Miniseries" />
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Series" />
+            <Text fx:id="overallMedia" strokeType="OUTSIDE" strokeWidth="0.0" text="Media" />
+            <Text fx:id="overallReview" strokeType="OUTSIDE" strokeWidth="0.0" text="Review" />
+            <Text fx:id="overallUser" strokeType="OUTSIDE" strokeWidth="0.0" text="User" />
+            <Text fx:id="overallTime" strokeType="OUTSIDE" strokeWidth="0.0" text="Time" />
+            <Text fx:id="overallPerMonth" strokeType="OUTSIDE" strokeWidth="0.0" text="Per Month" />
          </children>
       </VBox>
       <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="2">
          <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Media" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Category">
+               <font>
+                  <Font size="25.0" />
+               </font></Text>
+            <ChoiceBox fx:id="categorySelector" prefWidth="150.0" />
+         </children>
+      </VBox>
+      <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+         <children>
+            <Text fx:id="categoryMedia" strokeType="OUTSIDE" strokeWidth="0.0" text="Media" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Review" />
+            <Text fx:id="categoryUser" strokeType="OUTSIDE" strokeWidth="0.0" text="User" />
+            <Text fx:id="categoryTime" strokeType="OUTSIDE" strokeWidth="0.0" text="Time" />
+            <Text fx:id="categorySingle" strokeType="OUTSIDE" strokeWidth="0.0" text="Single" />
+            <Text fx:id="categoryMiniseries" strokeType="OUTSIDE" strokeWidth="0.0" text="Miniseries" />
+            <Text fx:id="categorySeries" strokeType="OUTSIDE" strokeWidth="0.0" text="Series" />
+            <Text fx:id="categoryPerMonth" strokeType="OUTSIDE" strokeWidth="0.0" text="Series" />
+         </children>
+      </VBox>
+      <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="4">
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Media">
+               <font>
+                  <Font size="25.0" />
+               </font></Text>
             <HBox spacing="25.0">
                <children>
                   <VBox>
@@ -80,26 +95,28 @@
             </HBox>
             <TableView fx:id="mediaTable" prefHeight="200.0" prefWidth="200.0">
               <columns>
-                  <TableColumn minWidth="7.0" prefWidth="22.0" text="#" />
-                <TableColumn prefWidth="161.0" text="Title" />
-                <TableColumn prefWidth="110.0" text="Creator" />
-                  <TableColumn prefWidth="105.00003051757812" text="Season" />
-                  <TableColumn prefWidth="119.0" text="Episode" />
-                  <TableColumn prefWidth="92.0" text="Category" />
+                  <TableColumn fx:id="mediaColumnRowNumber" minWidth="7.0" prefWidth="22.0" text="#" />
+                <TableColumn fx:id="mediaColumnTitle" prefWidth="161.0" text="Title" />
+                <TableColumn fx:id="mediaColumnCreator" prefWidth="110.0" text="Creator" />
+                  <TableColumn fx:id="mediaColumnSeason" prefWidth="105.00003051757812" text="Season" />
+                  <TableColumn fx:id="mediaColumnEpisode" prefWidth="119.0" text="Episode" />
+                  <TableColumn fx:id="mediaColumnCategory" prefWidth="92.0" text="Category" />
               </columns>
             </TableView>
          </children>
       </VBox>
-      <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+      <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
          <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Media" />
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Review" />
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="User" />
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Time" />
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Current" />
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="All" />
+            <Text fx:id="mediaMedia" strokeType="OUTSIDE" strokeWidth="0.0" text="Media" />
+            <Text fx:id="mediaReview" strokeType="OUTSIDE" strokeWidth="0.0" text="Review" />
+            <Text fx:id="mediaUser" strokeType="OUTSIDE" strokeWidth="0.0" text="User" />
+            <Text fx:id="mediaTime" strokeType="OUTSIDE" strokeWidth="0.0" text="Time" />
+            <Text fx:id="mediaCurrentRating" strokeType="OUTSIDE" strokeWidth="0.0" text="Current" />
+            <Text fx:id="mediaAllRating" strokeType="OUTSIDE" strokeWidth="0.0" text="All" />
          </children>
       </VBox>
+      <Separator prefWidth="200.0" GridPane.columnSpan="3" GridPane.rowIndex="1" />
+      <Separator prefWidth="200.0" GridPane.columnSpan="3" GridPane.rowIndex="3" />
    </children>
    <padding>
       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
