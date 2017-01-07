@@ -5,37 +5,25 @@
  */
 package retrospector.fxml;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.net.URL;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.chart.Axis;
-import javafx.scene.chart.BarChart;
-import javafx.scene.chart.CategoryAxis;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.PieChart;
-import javafx.scene.chart.XYChart;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableView;
-import javafx.scene.text.Text;
-import javafx.util.StringConverter;
+import javafx.scene.control.cell.CheckBoxListCell;
 import retrospector.model.DataManager;
 import retrospector.model.Media;
-import retrospector.model.Review;
+import retrospector.util.PropertyManager;
 import retrospector.util.Stroolean;
-import retrospector.util.UtilityCloset;
 
 /**
  * FXML Controller class
@@ -44,7 +32,8 @@ import retrospector.util.UtilityCloset;
  */
 public class StatsTabController implements Initializable {
 
-    CoreController core;
+    private List<Stroolean> strooleans = new ArrayList<>();
+    private Media currentMedia;
     
     @FXML
     private PieChart chartMediaPerCategory;
@@ -70,29 +59,49 @@ public class StatsTabController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        chartMediaPerCategory.setData(
-                FXCollections.observableArrayList(
-                        Arrays.asList(
-                                DataManager.getCategories()).stream()
-                        .map(c -> {
-                            long count = DataManager.getMedia().stream()
-                                    .filter(m -> c.equals(m.getCategory()))
-                                    .count();
-                            return new PieChart.Data(c + " - " + count, count);
-                        }
-                        )
-                        .collect(Collectors.toList()
-                        )
-                )
-        );
-    }    
-    
-    public void update(CoreController core){
-        this.core = core;
+        chartMediaPerCategory.setLegendVisible(true);
+        categorySelector.setItems(FXCollections.observableArrayList(PropertyManager.loadProperties().getCategories()));
     }
     
        
+    public void update(Media media){
+        currentMedia = media;
+        checkTitle.setText("Title: "+media.getTitle());
+        checkCreator.setText("Creator: "+media.getCreator());
+        checkSeason.setText("Season: "+media.getSeasonId());
+        checkEpisode.setText("Episode: "+media.getEpisodeId());
+        checkCategory.setText("Category: "+media.getCategory());
+        update();
+    }
     public void update(){
-
+        
+        
+        
+        // Overall
+        
+        userList.getItems().clear();
+        strooleans.clear();
+        for (String category : DataManager.getUsers()) {
+            Stroolean c = new Stroolean(category,true);
+            c.booleanProperty().addListener((observe,old,neo)->update());
+            strooleans.add(c);
+            userList.getItems().add(c);
+        }
+        userList.setCellFactory(CheckBoxListCell.forListView(Stroolean::booleanProperty));
+        
+        chartMediaPerCategory.setData(
+                FXCollections.observableArrayList(
+                    Arrays.asList(DataManager.getCategories())
+                        .stream()
+                        .map(c -> {
+                                long count = DataManager.getMedia().stream()
+                                        .filter(m -> c.equals(m.getCategory()))
+                                        .count();
+                                return new PieChart.Data(c + " - " + count, count);
+                            }
+                        )
+                        .collect(Collectors.toList())
+                )
+        );
     }
 }

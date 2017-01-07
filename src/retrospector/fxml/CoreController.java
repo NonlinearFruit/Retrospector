@@ -67,6 +67,7 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 import org.controlsfx.control.Rating;
+import retrospector.Retrospector;
 import retrospector.model.*;
 import static retrospector.model.Media.Type.SERIES;
 import retrospector.util.NaturalOrderComparator;
@@ -225,10 +226,7 @@ public class CoreController implements Initializable {
     private Tab chartTab;
     @FXML
     private ChoiceBox<Chartagories> chartChoiceBox;
-    @FXML
-    private Tab tropeTab;
-    @FXML
-    private WebView tropeWebView;
+    
     @FXML
     private ListView<Stroolean> listIncludeList;
     @FXML
@@ -278,6 +276,11 @@ public class CoreController implements Initializable {
     @FXML
     private RadioButton listUseYear;
     
+    @FXML
+    private Tab tropeTab;
+    @FXML
+    private WebView tropeWebView;
+    
     public final ObjectProperty<Media> currentMedia = new SimpleObjectProperty<>();
     private ObjectProperty<Review> currentReview = new SimpleObjectProperty<>();
     private DecimalFormat ratingFormat =  new DecimalFormat("#.#");
@@ -285,6 +288,7 @@ public class CoreController implements Initializable {
     private ObservableList<Media> searchTableData;
 
     private StatsTabController statsTab;
+    public void setStatsTab(FXMLLoader ldr){ chartTab.setContent(ldr.getRoot());statsTab = ldr.getController(); }
     /**
      * Initializes the controller class.
      */
@@ -296,15 +300,7 @@ public class CoreController implements Initializable {
         initMediaTab();
         initReviewTab();
         // Chart
-        initChartTab();
-//        try{
-//            loader = new FXMLLoader(getClass().getResource("/retrospector/fxml/StatsTab.fxml"));
-//            statsTab = (StatsTabController) loader.getController();
-//            statsTab.update(this);
-//            chartTab.setContent(loader.getRoot());
-//        } catch(Exception e) {
-//            e.printStackTrace();
-//        }
+//        initChartTab();
         
         // List
         initListTab();
@@ -321,7 +317,8 @@ public class CoreController implements Initializable {
             else if(neo.getText().equals("Review"))
                 updateReviewTab();
             else if(neo.getText().equals("Chart"))
-                updateChartTab();
+                statsTab.update(currentMedia.get());
+//                updateChartTab();
             else if(neo.getText().equals("List"))
                 updateListTab();
             else if(neo.getText().equals("Tropes"))
