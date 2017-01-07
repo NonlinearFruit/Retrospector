@@ -112,6 +112,7 @@ public class QuickEntryController implements Initializable {
             DataManager.createDB(getMedia());
             core.updateSearchTab();
             clear();
+            title.requestFocus();
         });
         newKeepT.setOnAction(e->{
             Media m = getMedia();
@@ -119,6 +120,7 @@ public class QuickEntryController implements Initializable {
             core.updateSearchTab();
             clear();
             title.setText(m.getTitle());
+            creator.requestFocus();
         });
         newKeepCr.setOnAction(e->{
             Media m = getMedia();
@@ -126,6 +128,7 @@ public class QuickEntryController implements Initializable {
             core.updateSearchTab();
             clear();
             creator.setText(m.getCreator());
+            title.requestFocus();
         });
         newKeepCa.setOnAction(e->{
             Media m = getMedia();
@@ -133,6 +136,7 @@ public class QuickEntryController implements Initializable {
             core.updateSearchTab();
             clear();
             category.setValue(m.getCategory());
+            title.requestFocus();
         });
         newKeepTCr.setOnAction(e->{
             Media m = getMedia();
@@ -141,6 +145,7 @@ public class QuickEntryController implements Initializable {
             clear();
             title.setText(m.getTitle());
             creator.setText(m.getCreator());
+            category.requestFocus();
         });
         newKeepTCrCa.setOnAction(e->{
             Media m = getMedia();
@@ -150,6 +155,7 @@ public class QuickEntryController implements Initializable {
             title.setText(m.getTitle());
             creator.setText(m.getCreator());
             category.setValue(m.getCategory());
+            season.requestFocus();
         });
         newKeepTCrCaS.setOnAction(e->{
             Media m = getMedia();
@@ -160,9 +166,11 @@ public class QuickEntryController implements Initializable {
             creator.setText(m.getCreator());
             category.setValue(m.getCategory());
             season.setText(m.getSeasonId());
+            episode.requestFocus();
         });
         discard.setOnAction(e->{
             clear();
+            title.requestFocus();
         });
         clear();
     }
@@ -174,7 +182,6 @@ public class QuickEntryController implements Initializable {
         season.setText("");
         episode.setText("");
         rating.setText("");
-//        date.setText(String.valueOf(LocalDate.now().getYear()%100));
         date.setText("");
     }
     

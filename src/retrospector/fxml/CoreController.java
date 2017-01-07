@@ -593,6 +593,7 @@ public class CoreController implements Initializable {
                 System.err.println("Media got a <2 id (mediaNewMedia#setOnAction");
             setMedia(media);
             updateMediaTab();
+            mediaTitle.requestFocus();
         });
         
         mediaAddSeason.setOnAction(e->{
@@ -607,6 +608,7 @@ public class CoreController implements Initializable {
             if(getMedia().getId()==-1)
                 System.err.println("Media got a -1 id (mediaAddSeason#setOnAction");
             updateMediaTab();
+            mediaSeason.requestFocus();
         });
         mediaAddEpisode.setOnAction(e->{
             Media media = new Media(
@@ -621,6 +623,7 @@ public class CoreController implements Initializable {
             if(getMedia().getId()==-1)
                 System.err.println("Media got a -1 id (mediaAddEpisode#setOnAction");
             updateMediaTab();
+            mediaEpisode.requestFocus();
         });
     }
     
