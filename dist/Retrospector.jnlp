@@ -8,7 +8,7 @@
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="Retrospector.jar" size="75150" download="eager" />
+    <jar href="Retrospector.jar" size="75205" download="eager" />
     <jar href="lib/controlsfx-8.40.12.jar" size="996389" download="eager" />
     <jar href="lib/hsqldb.jar" size="1515894" download="eager" />
   </resources>

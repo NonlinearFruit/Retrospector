@@ -154,6 +154,7 @@ public class StatsTabController implements Initializable {
         categorySelector.setItems(FXCollections.observableArrayList(DataManager.getCategories()));
         categorySelector.setValue(DataManager.getCategories()[0]);
         categorySelector.valueProperty().addListener((observe,old,neo)->updateCategory());
+        chartReviewsPerYear.getData().add(new XYChart.Series(FXCollections.observableArrayList(new XYChart.Data("",0))));
         checkTitle.selectedProperty().addListener((observe,old,neo)->updateMedia());
         checkCreator.selectedProperty().addListener((observe,old,neo)->updateMedia());
         checkSeason.selectedProperty().addListener((observe,old,neo)->updateMedia());
@@ -325,7 +326,6 @@ public class StatsTabController implements Initializable {
         categoryAllRating.setText(String.format("%.2f", aveAll)+" All");
         
         // Chart - # Reviewed / Year
-              
         chartReviewsPerYear.setLegendVisible(false);
         chartReviewsPerYear.getData().clear();
         
@@ -415,5 +415,8 @@ public class StatsTabController implements Initializable {
         mediaPerMonth.setText(String.format("%.2f", perMonth) + " / Month");
         mediaCurrentRating.setText(String.format("%.2f", aveCurrent) + " Current");
         mediaAllRating.setText(String.format("%.2f", aveAll) + " All");
+        
+        // Chart
+        
     }
 }

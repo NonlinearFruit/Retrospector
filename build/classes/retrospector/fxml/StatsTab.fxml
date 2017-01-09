@@ -139,6 +139,14 @@
           <NumberAxis side="LEFT" />
         </yAxis>
       </LineChart>
+      <LineChart fx:id="chartRatingOverTime" title="Rating over Time" GridPane.columnIndex="2" GridPane.rowIndex="4">
+        <xAxis>
+          <CategoryAxis side="BOTTOM" />
+        </xAxis>
+        <yAxis>
+          <NumberAxis side="LEFT" />
+        </yAxis>
+      </LineChart>
    </children>
    <padding>
       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
