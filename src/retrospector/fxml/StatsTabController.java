@@ -9,6 +9,8 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +23,9 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.chart.LineChart;
 import javafx.scene.chart.PieChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListView;
@@ -137,6 +141,8 @@ public class StatsTabController implements Initializable {
     private Text categoryReview;
     @FXML
     private Text mediaSingle;
+    @FXML
+    private LineChart<String, Number> chartReviewsPerYear;
 
     /**
      * Initializes the controller class.
@@ -240,7 +246,7 @@ public class StatsTabController implements Initializable {
         overallSingle.setText(singles+" Single(s)");
         overallMiniseries.setText(minis+" Mini(s)");
         overallSeries.setText(series+" Serie(s)");
-        overallPerMonth.setText(String.format("%.2f", perMonth)+"/ Month");
+        overallPerMonth.setText(String.format("%.2f", perMonth)+" / Month");
         overallCurrentRating.setText(String.format("%.2f", aveCurrent)+" Current");
         overallAllRating.setText(String.format("%.2f", aveAll)+" All");
         
@@ -265,6 +271,7 @@ public class StatsTabController implements Initializable {
         String category = categorySelector.getValue();
             
         // Data Mining - Vars
+        Map<String, Integer> reviewYearMap = new HashMap<>();
         List<String> userSet = new ArrayList<>();
         int media = 0;
         int reviews = 0;
@@ -291,6 +298,7 @@ public class StatsTabController implements Initializable {
                 for (Review r : m.getReviews()) {
                     if(r.getDate().isBefore(earliest))
                         earliest = r.getDate();
+                    reviewYearMap.put(r.getDate().getYear()+"", reviewYearMap.getOrDefault(r.getDate().getYear()+"", 0)+1);
                     aveAll += r.getRating().intValue();
                     userSet.add(r.getUser());
                     reviews++;
@@ -303,6 +311,11 @@ public class StatsTabController implements Initializable {
         days = ChronoUnit.DAYS.between(earliest, LocalDate.now())+1;
         perMonth = days<2? 0 : (media+0.0)/days*30;
         
+        for (int i=earliest.getYear(); i <= LocalDate.now().getYear(); i++) {
+            // Make sure every year since the earliest has a value
+            reviewYearMap.put(i+"", reviewYearMap.getOrDefault(i+"", 0));
+        }
+        
         // Stats
         categoryMedia.setText(media+" Media");
         categoryReview.setText(reviews+" Review(s)");
@@ -311,9 +324,21 @@ public class StatsTabController implements Initializable {
         categorySingle.setText(singles+" Single(s)");
         categoryMiniseries.setText(minis+" Mini(s)");
         categorySeries.setText(series+" Serie(s)");
-        categoryPerMonth.setText(String.format("%.2f", perMonth)+"/ Month");
+        categoryPerMonth.setText(String.format("%.2f", perMonth)+" / Month");
         categoryCurrentRating.setText(String.format("%.2f", aveCurrent)+" Current");
         categoryAllRating.setText(String.format("%.2f", aveAll)+" All");
+        
+        // Chart - # Reviewed / Year
+              
+        chartReviewsPerYear.setLegendVisible(false);
+        chartReviewsPerYear.getData().clear();
+        
+        XYChart.Series data = new XYChart.Series();
+        reviewYearMap.keySet().stream().sorted().forEach( year ->
+            data.getData().add(new XYChart.Data(year,reviewYearMap.get(year)))
+        );
+        
+        chartReviewsPerYear.getData().addAll(data);
     }
     
     private void updateMedia(){
@@ -390,7 +415,7 @@ public class StatsTabController implements Initializable {
         mediaSingle.setText(singles + " Single(s)");
         mediaMiniseries.setText(minis + " Mini(s)");
         mediaSeries.setText(series + " Serie(s)");
-        mediaPerMonth.setText(String.format("%.2f", perMonth) + "/ Month");
+        mediaPerMonth.setText(String.format("%.2f", perMonth) + " / Month");
         mediaCurrentRating.setText(String.format("%.2f", aveCurrent) + " Current");
         mediaAllRating.setText(String.format("%.2f", aveAll) + " All");
     }
