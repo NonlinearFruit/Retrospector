@@ -13,9 +13,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.Set;
 import java.util.stream.Collectors;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.PieChart;
@@ -25,6 +28,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxListCell;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
 import retrospector.model.DataManager;
 import retrospector.model.Media;
@@ -40,6 +44,8 @@ public class StatsTabController implements Initializable {
 
     private List<Stroolean> strooleans = new ArrayList<>();
     private Media currentMedia;
+    private ObservableList<Media> allMedia = FXCollections.observableArrayList();
+    private FilteredList<Media> mediaTableFilter = new FilteredList(allMedia);
     
     @FXML
     private PieChart chartMediaPerCategory;
@@ -129,17 +135,35 @@ public class StatsTabController implements Initializable {
     private Text mediaPerMonth;
     @FXML
     private Text categoryReview;
+    @FXML
+    private Text mediaSingle;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        userList.setVisible(false);
         chartMediaPerCategory.setLegendVisible(true);
         categorySelector.setItems(FXCollections.observableArrayList(DataManager.getCategories()));
         categorySelector.setValue(DataManager.getCategories()[0]);
         categorySelector.valueProperty().addListener((observe,old,neo)->updateCategory());
-        userList.setVisible(false);
+        checkTitle.selectedProperty().addListener((observe,old,neo)->updateMedia());
+        checkCreator.selectedProperty().addListener((observe,old,neo)->updateMedia());
+        checkSeason.selectedProperty().addListener((observe,old,neo)->updateMedia());
+        checkEpisode.selectedProperty().addListener((observe,old,neo)->updateMedia());
+        checkCategory.selectedProperty().addListener((observe,old,neo)->updateMedia());
+        mediaTableFilter = new FilteredList(allMedia);
+        SortedList<Media> mediaSortable = new SortedList<>(mediaTableFilter);
+        mediaTable.setItems(mediaSortable);
+        mediaSortable.comparatorProperty().bind(mediaTable.comparatorProperty());
+        mediaColumnRowNumber.setSortable(false);
+        mediaColumnRowNumber.setCellValueFactory(p -> new ReadOnlyObjectWrapper(1+mediaTable.getItems().indexOf(p.getValue())));
+        mediaColumnTitle.setCellValueFactory(new PropertyValueFactory<Media,String>("Title"));
+        mediaColumnCreator.setCellValueFactory(new PropertyValueFactory<Media,String>("Creator"));
+        mediaColumnSeason.setCellValueFactory(new PropertyValueFactory<Media,String>("SeasonId"));
+        mediaColumnEpisode.setCellValueFactory(new PropertyValueFactory<Media,String>("EpisodeId"));
+        mediaColumnCategory.setCellValueFactory(new PropertyValueFactory<Media,String>("Category"));
     }
     
        
@@ -153,19 +177,19 @@ public class StatsTabController implements Initializable {
         update();
     }
     public void update(){
-        
-       updateOverall();
-       updateCategory();
-       updateMedia();
+        allMedia.clear();
+        allMedia.addAll(DataManager.getMedia());
+        updateOverall();
+        updateCategory();
+        updateMedia();
     }
     
     private void updateOverall(){
         
         // Data Mining - Vars
-        List<Media> considerMedia = DataManager.getMedia();
         List<Review> considerReview = DataManager.getReviews();
         Map<String, Integer> categories = new HashMap<>();
-        int media = considerMedia.size();
+        int media = allMedia.size();
         int reviews = considerReview.size();
         int users = DataManager.getUsers().size();
         double aveAll = 0;
@@ -178,7 +202,7 @@ public class StatsTabController implements Initializable {
         double perMonth = 0;
         
         // Data Mining - Calcs
-        for (Media m : considerMedia) {
+        for (Media m : allMedia) {
             switch(m.getType()){
                 case SINGLE:singles++;break;
                 case MINISERIES:minis++;break;
@@ -195,7 +219,7 @@ public class StatsTabController implements Initializable {
         aveAll = reviews==0? 0 : aveAll/reviews;
         aveCurrent = reviews==0? 0 : aveCurrent/media;
         days = ChronoUnit.DAYS.between(earliest, LocalDate.now())+1;
-        perMonth = days==0? 0 : (media+0.0)/days*30;
+        perMonth = days<2? 0 : (media+0.0)/days*30;
         
         // User List
         userList.getItems().clear();
@@ -241,7 +265,6 @@ public class StatsTabController implements Initializable {
         String category = categorySelector.getValue();
             
         // Data Mining - Vars
-        List<Media> considerMedia = DataManager.getMedia();
         List<String> userSet = new ArrayList<>();
         int media = 0;
         int reviews = 0;
@@ -256,8 +279,7 @@ public class StatsTabController implements Initializable {
         double perMonth = 0;
         
         // Data Mining - Calcs
-        for (Media m : considerMedia) {
-            System.out.println(category);
+        for (Media m : allMedia) {
             if(category.equals(m.getCategory())){
                 switch(m.getType()){
                     case SINGLE:singles++;break;
@@ -279,7 +301,7 @@ public class StatsTabController implements Initializable {
         aveAll = reviews==0? 0 : aveAll/reviews;
         aveCurrent = reviews==0? 0 : aveCurrent/media;
         days = ChronoUnit.DAYS.between(earliest, LocalDate.now())+1;
-        perMonth = days==0? 0 : (media+0.0)/days*30;
+        perMonth = days<2? 0 : (media+0.0)/days*30;
         
         // Stats
         categoryMedia.setText(media+" Media");
@@ -296,5 +318,80 @@ public class StatsTabController implements Initializable {
     
     private void updateMedia(){
         
+        // Media Filtering
+        Boolean title = checkTitle.isSelected();
+        Boolean creator = checkCreator.isSelected();
+        Boolean season = checkSeason.isSelected();
+        Boolean episode = checkEpisode.isSelected();
+        Boolean category = checkCategory.isSelected();
+        
+        // Filter Table
+        mediaTableFilter.setPredicate(m->
+                ( ( checkTitle.isSelected() && currentMedia.getTitle().equals(((Media)m).getTitle()) ) || !checkTitle.isSelected() ) &&
+                ( ( checkCreator.isSelected() && currentMedia.getCreator().equals(((Media)m).getCreator()) ) || !checkCreator.isSelected() ) &&
+                ( ( checkSeason.isSelected() && currentMedia.getSeasonId().equals(((Media)m).getSeasonId()) ) || !checkSeason.isSelected() ) &&
+                ( ( checkEpisode.isSelected() && currentMedia.getEpisodeId().equals(((Media)m).getEpisodeId()) ) || !checkEpisode.isSelected() ) &&
+                ( ( checkCategory.isSelected() && currentMedia.getCategory().equals(((Media)m).getCategory()) ) || !checkCategory.isSelected() )
+        );
+
+        // Data Mining - Vars
+        List<String> userSet = new ArrayList<>();
+        int media = 0;
+        int reviews = 0;
+        long users = 0;
+        double aveAll = 0;
+        double aveCurrent = 0;
+        LocalDate earliest = LocalDate.now();
+        int singles = 0;
+        int minis = 0;
+        int series = 0;
+        long days = 0;
+        double perMonth = 0;
+        
+        // Data Mining - Calcs
+        for (Media m : mediaTable.getItems()) {
+            if (
+                true
+                    ) {
+                switch (m.getType()) {
+                    case SINGLE:
+                        singles++;
+                        break;
+                    case MINISERIES:
+                        minis++;
+                        break;
+                    case SERIES:
+                        series++;
+                        break;
+                }
+                aveCurrent += m.getCurrentRating().intValue();
+                media++;
+                for (Review r : m.getReviews()) {
+                    if (r.getDate().isBefore(earliest)) {
+                        earliest = r.getDate();
+                    }
+                    aveAll += r.getRating().intValue();
+                    userSet.add(r.getUser());
+                    reviews++;
+                }
+            }
+        }
+        users = userSet.stream().distinct().count();
+        aveAll = reviews == 0 ? 0 : aveAll / reviews;
+        aveCurrent = reviews == 0 ? 0 : aveCurrent / media;
+        days = ChronoUnit.DAYS.between(earliest, LocalDate.now()) + 1;
+        perMonth = days<2 ? 0 : (media + 0.0) / days * 30;
+
+        // Stats
+        mediaMedia.setText(media + " Media");
+        mediaReview.setText(reviews + " Review(s)");
+        mediaUser.setText(users + " User(s)");
+        mediaTime.setText(days + " Days");
+        mediaSingle.setText(singles + " Single(s)");
+        mediaMiniseries.setText(minis + " Mini(s)");
+        mediaSeries.setText(series + " Serie(s)");
+        mediaPerMonth.setText(String.format("%.2f", perMonth) + "/ Month");
+        mediaCurrentRating.setText(String.format("%.2f", aveCurrent) + " Current");
+        mediaAllRating.setText(String.format("%.2f", aveAll) + " All");
     }
 }

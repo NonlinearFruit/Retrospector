@@ -118,7 +118,7 @@
             <Text fx:id="mediaReview" strokeType="OUTSIDE" strokeWidth="0.0" text="Review" />
             <Text fx:id="mediaUser" strokeType="OUTSIDE" strokeWidth="0.0" text="User" />
             <Text fx:id="mediaTime" strokeType="OUTSIDE" strokeWidth="0.0" text="Time" />
-            <Text fx:id="mediaSeries" strokeType="OUTSIDE" strokeWidth="0.0" text="Single" />
+            <Text fx:id="mediaSingle" strokeType="OUTSIDE" strokeWidth="0.0" text="Single" />
             <Text fx:id="mediaMiniseries" strokeType="OUTSIDE" strokeWidth="0.0" text="Miniseries" />
             <Text fx:id="mediaSeries" strokeType="OUTSIDE" strokeWidth="0.0" text="Series" />
             <Text fx:id="mediaPerMonth" strokeType="OUTSIDE" strokeWidth="0.0" text="Per Month" />

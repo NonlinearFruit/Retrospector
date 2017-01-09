@@ -35,7 +35,7 @@
          <content>
             <VBox prefHeight="200.0" prefWidth="100.0" spacing="3.0">
                <children>
-                  <TextField fx:id="searchBox" style="-fx-background-image: url('http://www.clipartbest.com/cliparts/dir/aXn/diraXnR6T.png'); -fx-background-repeat: no-repeat; -fx-background-position: right center; -fx-background-size: 20;" />
+                  <TextField fx:id="searchBox" style="-fx-background-image: url('/retrospector/fxml/searchGlass.png'); -fx-background-repeat: no-repeat; -fx-background-position: right center; -fx-background-size: 20;" />
                   <TableView fx:id="searchTable" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                     <columns>
                         <TableColumn fx:id="searchNumberColumn" prefWidth="45.0" text="#" />
