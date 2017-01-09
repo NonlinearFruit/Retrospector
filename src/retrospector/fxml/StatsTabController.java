@@ -311,10 +311,6 @@ public class StatsTabController implements Initializable {
         days = ChronoUnit.DAYS.between(earliest, LocalDate.now())+1;
         perMonth = days<2? 0 : (media+0.0)/days*30;
         
-        for (int i=earliest.getYear(); i <= LocalDate.now().getYear(); i++) {
-            // Make sure every year since the earliest has a value
-            reviewYearMap.put(i+"", reviewYearMap.getOrDefault(i+"", 0));
-        }
         
         // Stats
         categoryMedia.setText(media+" Media");
@@ -334,9 +330,10 @@ public class StatsTabController implements Initializable {
         chartReviewsPerYear.getData().clear();
         
         XYChart.Series data = new XYChart.Series();
-        reviewYearMap.keySet().stream().sorted().forEach( year ->
-            data.getData().add(new XYChart.Data(year,reviewYearMap.get(year)))
-        );
+        for (int i=earliest.getYear(); i <= LocalDate.now().getYear(); i++) {
+            // Make sure every year since the earliest has a value
+            data.getData().add(new XYChart.Data(i+"", reviewYearMap.getOrDefault(i+"", 0)));
+        }
         
         chartReviewsPerYear.getData().addAll(data);
     }
