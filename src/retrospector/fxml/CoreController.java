@@ -70,6 +70,7 @@ import org.controlsfx.control.Rating;
 import retrospector.Retrospector;
 import retrospector.model.*;
 import static retrospector.model.Media.Type.SERIES;
+import retrospector.util.Dumpster;
 import retrospector.util.NaturalOrderComparator;
 import retrospector.util.PropertyManager;
 import retrospector.util.Stroolean;
@@ -294,7 +295,9 @@ public class CoreController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        FXMLLoader loader = null;
+
+        if(DataManager.getMedia().size()==0)
+            Dumpster.createMedia(100000);
         
         initSearchTab();
         initMediaTab();
@@ -1155,11 +1158,11 @@ public class CoreController implements Initializable {
         listTable.setItems(listTableData);
         
         // Link to Properties
-        listTitleColumn.setCellValueFactory(new PropertyValueFactory<Media, String>("Title"));
-        listCreatorColumn.setCellValueFactory(new PropertyValueFactory<Media, String>("Creator"));
-        listSeasonColumn.setCellValueFactory(new PropertyValueFactory<Media, String>("SeasonId"));
-        listEpisodeColumn.setCellValueFactory(new PropertyValueFactory<Media, String>("EpisodeId"));
-        listCategoryColumn.setCellValueFactory(new PropertyValueFactory<Media, String>("Category"));
+        listTitleColumn.setCellValueFactory(new PropertyValueFactory<>("Title"));
+        listCreatorColumn.setCellValueFactory(new PropertyValueFactory<>("Creator"));
+        listSeasonColumn.setCellValueFactory(new PropertyValueFactory<>("SeasonId"));
+        listEpisodeColumn.setCellValueFactory(new PropertyValueFactory<>("EpisodeId"));
+        listCategoryColumn.setCellValueFactory(new PropertyValueFactory<>("Category"));
         
         // Special Table Cells
         listReviewsColumn.setCellValueFactory(p -> new ReadOnlyObjectWrapper(p.getValue().getReviews().size()) );

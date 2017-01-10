@@ -9,8 +9,6 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +21,9 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.chart.Axis;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.CheckBox;
@@ -33,7 +33,9 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.util.StringConverter;
 import retrospector.model.DataManager;
 import retrospector.model.Media;
 import retrospector.model.Review;
@@ -51,6 +53,8 @@ public class StatsTabController implements Initializable {
     private ObservableList<Media> allMedia = FXCollections.observableArrayList();
     private FilteredList<Media> mediaTableFilter = new FilteredList(allMedia);
     
+    @FXML
+    private LineChart<Number, Number> chartRatingOverTime;
     @FXML
     private PieChart chartMediaPerCategory;
     @FXML
@@ -142,19 +146,31 @@ public class StatsTabController implements Initializable {
     @FXML
     private Text mediaSingle;
     @FXML
-    private LineChart<String, Number> chartReviewsPerYear;
+    private LineChart<Number, Number> chartReviewsPerYear;
+    @FXML
+    private NumberAxis chartRotY;
+    @FXML
+    private NumberAxis chartRotX;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        // Overall
         userList.setVisible(false);
         chartMediaPerCategory.setLegendVisible(true);
+        // Category
         categorySelector.setItems(FXCollections.observableArrayList(DataManager.getCategories()));
         categorySelector.setValue(DataManager.getCategories()[0]);
         categorySelector.valueProperty().addListener((observe,old,neo)->updateCategory());
         chartReviewsPerYear.getData().add(new XYChart.Series(FXCollections.observableArrayList(new XYChart.Data("",0))));
+        // Media
+        checkTitle.setSelected(true);
+        checkCreator.setSelected(true);
+        checkSeason.setSelected(true);
+        checkEpisode.setSelected(true);
+        checkCategory.setSelected(true);
         checkTitle.selectedProperty().addListener((observe,old,neo)->updateMedia());
         checkCreator.selectedProperty().addListener((observe,old,neo)->updateMedia());
         checkSeason.selectedProperty().addListener((observe,old,neo)->updateMedia());
@@ -166,11 +182,30 @@ public class StatsTabController implements Initializable {
         mediaSortable.comparatorProperty().bind(mediaTable.comparatorProperty());
         mediaColumnRowNumber.setSortable(false);
         mediaColumnRowNumber.setCellValueFactory(p -> new ReadOnlyObjectWrapper(1+mediaTable.getItems().indexOf(p.getValue())));
-        mediaColumnTitle.setCellValueFactory(new PropertyValueFactory<Media,String>("Title"));
-        mediaColumnCreator.setCellValueFactory(new PropertyValueFactory<Media,String>("Creator"));
-        mediaColumnSeason.setCellValueFactory(new PropertyValueFactory<Media,String>("SeasonId"));
-        mediaColumnEpisode.setCellValueFactory(new PropertyValueFactory<Media,String>("EpisodeId"));
-        mediaColumnCategory.setCellValueFactory(new PropertyValueFactory<Media,String>("Category"));
+        mediaColumnTitle.setCellValueFactory(new PropertyValueFactory<>("Title"));
+        mediaColumnCreator.setCellValueFactory(new PropertyValueFactory<>("Creator"));
+        mediaColumnSeason.setCellValueFactory(new PropertyValueFactory<>("SeasonId"));
+        mediaColumnEpisode.setCellValueFactory(new PropertyValueFactory<>("EpisodeId"));
+        mediaColumnCategory.setCellValueFactory(new PropertyValueFactory<>("Category"));
+        chartRotY.setAutoRanging(false);
+        chartRotY.setLowerBound(0);
+        chartRotY.setUpperBound(10);
+        chartRotY.setTickUnit(2);
+        chartRotY.setMinorTickCount(2);
+        chartRotX.setAutoRanging(false);
+        chartRotX.setTickUnit(1);
+        chartRotX.setMinorTickCount(4);
+        chartRotX.setTickLabelFormatter(new StringConverter<Number>(){
+            @Override
+            public String toString(Number number) {
+                return number.intValue()+"";
+            }
+
+            @Override
+            public Number fromString(String string) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+        });
     }
     
        
@@ -340,6 +375,7 @@ public class StatsTabController implements Initializable {
     
     private void updateMedia(){
         
+        System.out.println("### 0");
         // Media Filtering
         Boolean title = checkTitle.isSelected();
         Boolean creator = checkCreator.isSelected();
@@ -347,6 +383,7 @@ public class StatsTabController implements Initializable {
         Boolean episode = checkEpisode.isSelected();
         Boolean category = checkCategory.isSelected();
         
+        System.out.println("### 1");
         // Filter Table
         mediaTableFilter.setPredicate(m->
                 ( ( checkTitle.isSelected() && currentMedia.getTitle().equals(((Media)m).getTitle()) ) || !checkTitle.isSelected() ) &&
@@ -356,8 +393,10 @@ public class StatsTabController implements Initializable {
                 ( ( checkCategory.isSelected() && currentMedia.getCategory().equals(((Media)m).getCategory()) ) || !checkCategory.isSelected() )
         );
 
+        System.out.println("### 2");
         // Data Mining - Vars
         List<String> userSet = new ArrayList<>();
+        XYChart.Series data = new XYChart.Series();
         int media = 0;
         int reviews = 0;
         long users = 0;
@@ -370,40 +409,41 @@ public class StatsTabController implements Initializable {
         long days = 0;
         double perMonth = 0;
         
+        System.out.println("### 3");
         // Data Mining - Calcs
+        System.out.println("\t3.1");
         for (Media m : mediaTable.getItems()) {
-            if (
-                true
-                    ) {
-                switch (m.getType()) {
-                    case SINGLE:
-                        singles++;
-                        break;
-                    case MINISERIES:
-                        minis++;
-                        break;
-                    case SERIES:
-                        series++;
-                        break;
+            switch (m.getType()) {
+                case SINGLE:
+                    singles++;
+                    break;
+                case MINISERIES:
+                    minis++;
+                    break;
+                case SERIES:
+                    series++;
+                    break;
+            }
+            aveCurrent += m.getCurrentRating().intValue();
+            media++;
+            for (Review r : m.getReviews()) {
+                if (r.getDate().isBefore(earliest)) {
+                    earliest = r.getDate();
                 }
-                aveCurrent += m.getCurrentRating().intValue();
-                media++;
-                for (Review r : m.getReviews()) {
-                    if (r.getDate().isBefore(earliest)) {
-                        earliest = r.getDate();
-                    }
-                    aveAll += r.getRating().intValue();
-                    userSet.add(r.getUser());
-                    reviews++;
-                }
+                aveAll += r.getRating().intValue();
+                userSet.add(r.getUser());
+                reviews++;
+                data.getData().add(new XYChart.Data(r.getDate().getYear() + (r.getDate().getDayOfYear()+0.0)/365.25, r.getRating().intValue()));
             }
         }
+        System.out.println("\t3.2");
         users = userSet.stream().distinct().count();
         aveAll = reviews == 0 ? 0 : aveAll / reviews;
         aveCurrent = reviews == 0 ? 0 : aveCurrent / media;
         days = ChronoUnit.DAYS.between(earliest, LocalDate.now()) + 1;
         perMonth = days<2 ? 0 : (media + 0.0) / days * 30;
 
+        System.out.println("### 4");
         // Stats
         mediaMedia.setText(media + " Media");
         mediaReview.setText(reviews + " Review(s)");
@@ -416,7 +456,13 @@ public class StatsTabController implements Initializable {
         mediaCurrentRating.setText(String.format("%.2f", aveCurrent) + " Current");
         mediaAllRating.setText(String.format("%.2f", aveAll) + " All");
         
+        System.out.println("### 5");
         // Chart
-        
+        chartRatingOverTime.getData().clear();
+        if(data.getData().size()<1500)
+            chartRatingOverTime.getData().add(data);
+        chartRotX.setLowerBound(earliest.getYear());
+        chartRotX.setUpperBound(LocalDate.now().getYear());
+        System.out.println("### 6");
     }
 }

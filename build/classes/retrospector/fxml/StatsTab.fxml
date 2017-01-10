@@ -105,8 +105,8 @@
             </HBox>
             <TableView fx:id="mediaTable" prefHeight="200.0" prefWidth="200.0">
               <columns>
-                  <TableColumn fx:id="mediaColumnRowNumber" minWidth="7.0" prefWidth="22.0" text="#" />
-                <TableColumn fx:id="mediaColumnTitle" prefWidth="161.0" text="Title" />
+                  <TableColumn fx:id="mediaColumnRowNumber" minWidth="7.0" prefWidth="29.0" text="#" />
+                <TableColumn fx:id="mediaColumnTitle" prefWidth="154.0" text="Title" />
                 <TableColumn fx:id="mediaColumnCreator" prefWidth="110.0" text="Creator" />
                   <TableColumn fx:id="mediaColumnSeason" prefWidth="105.00003051757812" text="Season" />
                   <TableColumn fx:id="mediaColumnEpisode" prefWidth="119.0" text="Episode" />
@@ -139,12 +139,12 @@
           <NumberAxis side="LEFT" />
         </yAxis>
       </LineChart>
-      <LineChart fx:id="chartRatingOverTime" title="Rating over Time" GridPane.columnIndex="2" GridPane.rowIndex="4">
+      <LineChart fx:id="chartRatingOverTime" legendVisible="false" title="Ratings over Time" GridPane.columnIndex="2" GridPane.rowIndex="4">
         <xAxis>
-          <CategoryAxis side="BOTTOM" />
+          <NumberAxis fx:id="chartRotX" side="BOTTOM" />
         </xAxis>
         <yAxis>
-          <NumberAxis side="LEFT" />
+          <NumberAxis fx:id="chartRotY" side="LEFT" />
         </yAxis>
       </LineChart>
    </children>
