@@ -375,7 +375,6 @@ public class StatsTabController implements Initializable {
     
     private void updateMedia(){
         
-        System.out.println("### 0");
         // Media Filtering
         Boolean title = checkTitle.isSelected();
         Boolean creator = checkCreator.isSelected();
@@ -383,7 +382,6 @@ public class StatsTabController implements Initializable {
         Boolean episode = checkEpisode.isSelected();
         Boolean category = checkCategory.isSelected();
         
-        System.out.println("### 1");
         // Filter Table
         mediaTableFilter.setPredicate(m->
                 ( ( checkTitle.isSelected() && currentMedia.getTitle().equals(((Media)m).getTitle()) ) || !checkTitle.isSelected() ) &&
@@ -393,7 +391,6 @@ public class StatsTabController implements Initializable {
                 ( ( checkCategory.isSelected() && currentMedia.getCategory().equals(((Media)m).getCategory()) ) || !checkCategory.isSelected() )
         );
 
-        System.out.println("### 2");
         // Data Mining - Vars
         List<String> userSet = new ArrayList<>();
         XYChart.Series data = new XYChart.Series();
@@ -409,9 +406,7 @@ public class StatsTabController implements Initializable {
         long days = 0;
         double perMonth = 0;
         
-        System.out.println("### 3");
         // Data Mining - Calcs
-        System.out.println("\t3.1");
         for (Media m : mediaTable.getItems()) {
             switch (m.getType()) {
                 case SINGLE:
@@ -436,14 +431,12 @@ public class StatsTabController implements Initializable {
                 data.getData().add(new XYChart.Data(r.getDate().getYear() + (r.getDate().getDayOfYear()+0.0)/365.25, r.getRating().intValue()));
             }
         }
-        System.out.println("\t3.2");
         users = userSet.stream().distinct().count();
         aveAll = reviews == 0 ? 0 : aveAll / reviews;
         aveCurrent = reviews == 0 ? 0 : aveCurrent / media;
         days = ChronoUnit.DAYS.between(earliest, LocalDate.now()) + 1;
         perMonth = days<2 ? 0 : (media + 0.0) / days * 30;
 
-        System.out.println("### 4");
         // Stats
         mediaMedia.setText(media + " Media");
         mediaReview.setText(reviews + " Review(s)");
@@ -456,7 +449,6 @@ public class StatsTabController implements Initializable {
         mediaCurrentRating.setText(String.format("%.2f", aveCurrent) + " Current");
         mediaAllRating.setText(String.format("%.2f", aveAll) + " All");
         
-        System.out.println("### 5");
         // Chart
         chartRatingOverTime.getData().clear();
         if(data.getData().size()<1500)

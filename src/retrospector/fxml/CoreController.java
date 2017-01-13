@@ -12,9 +12,6 @@ import java.math.RoundingMode;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -32,14 +29,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.chart.Axis;
-import javafx.scene.chart.BarChart;
-import javafx.scene.chart.CategoryAxis;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.PieChart;
-import javafx.scene.chart.XYChart.Data;
-import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
@@ -60,14 +49,11 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import javafx.util.StringConverter;
 import org.controlsfx.control.Rating;
-import retrospector.Retrospector;
 import retrospector.model.*;
 import static retrospector.model.Media.Type.SERIES;
 import retrospector.util.Dumpster;
@@ -206,28 +192,7 @@ public class CoreController implements Initializable {
     @FXML
     private Tab reviewTab;
     @FXML
-    private ToggleButton chartRatings;
-    @FXML
-    private ToggleButton chartReviews;
-    @FXML
-    private ToggleButton chartTime;
-    @FXML
-    private ToggleButton chartUsers;
-    @FXML
-    private VBox chartVBox;
-    @FXML
-    private Text chartTotalMedia;
-    @FXML
-    private Text chartTotalReviews;
-    @FXML
-    private Text chartTotalUsers;
-    @FXML
-    private Text chartTotalRuntime;
-    @FXML
     private Tab chartTab;
-    @FXML
-    private ChoiceBox<Chartagories> chartChoiceBox;
-    
     @FXML
     private ListView<Stroolean> listIncludeList;
     @FXML
@@ -276,7 +241,6 @@ public class CoreController implements Initializable {
     private RadioButton listUseAllTime;
     @FXML
     private RadioButton listUseYear;
-    
     @FXML
     private Tab tropeTab;
     @FXML
@@ -296,14 +260,13 @@ public class CoreController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
-        if(DataManager.getMedia().size()==0)
-            Dumpster.createMedia(100000);
+        // This is just for test, try not to put it in a really release
+//        if(DataManager.getMedia().size()==0)
+//            Dumpster.createMedia(1000);
         
         initSearchTab();
         initMediaTab();
         initReviewTab();
-        // Chart
-//        initChartTab();
         
         // List
         initListTab();
