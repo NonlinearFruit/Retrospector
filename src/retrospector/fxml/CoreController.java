@@ -29,7 +29,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListView;
@@ -261,8 +264,8 @@ public class CoreController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
 
         // This is just for test, try not to put it in a really release
-//        if(DataManager.getMedia().size()==0)
-//            Dumpster.createMedia(1000);
+        if(DataManager.getMedia().size()==0)
+            Dumpster.createMedia(1000);
         
         initSearchTab();
         initMediaTab();
@@ -443,8 +446,10 @@ public class CoreController implements Initializable {
             anchorCenter.getSelectionModel().select(mediaTab);
         });
         searchDeleteMedia.setOnAction(e->{
-            DataManager.deleteDB(getMedia());
-            updateSearchTab();
+            if(new Alert(AlertType.WARNING,"Are you sure you want to delete this?",ButtonType.NO,ButtonType.YES).showAndWait().get().equals(ButtonType.YES)){
+                DataManager.deleteDB(getMedia());
+                updateSearchTab();
+            }
         });
     }
     
@@ -525,8 +530,10 @@ public class CoreController implements Initializable {
             anchorCenter.getSelectionModel().select(reviewTab);
         });
         mediaDeleteReview.setOnAction(e->{
-            DataManager.deleteDB(getReview());
-            updateMediaTab();
+            if(new Alert(AlertType.WARNING,"Are you sure you want to delete this?",ButtonType.NO,ButtonType.YES).showAndWait().get().equals(ButtonType.YES)){
+                DataManager.deleteDB(getReview());
+                updateMediaTab();
+            }
         });
         
         mediaSave.setOnAction(e->{
@@ -545,8 +552,10 @@ public class CoreController implements Initializable {
 //            anchor.getSelectionModel().select(searchTab); // <-- This is annoying
         });
         mediaDelete.setOnAction(e->{
-            DataManager.deleteDB(getMedia());
-            anchorCenter.getSelectionModel().select(searchTab);
+            if(new Alert(AlertType.WARNING,"Are you sure you want to delete this?",ButtonType.NO,ButtonType.YES).showAndWait().get().equals(ButtonType.YES)){
+                DataManager.deleteDB(getMedia());
+                anchorCenter.getSelectionModel().select(searchTab);
+            }
         });
         mediaCancel.setOnAction(e->{
             anchorCenter.getSelectionModel().select(searchTab);
@@ -633,8 +642,10 @@ public class CoreController implements Initializable {
             anchorCenter.getSelectionModel().select(mediaTab);
         });
         reviewDelete.setOnAction(e->{
-            DataManager.deleteDB(getReview());
-            anchorCenter.getSelectionModel().select(mediaTab);
+            if(new Alert(AlertType.WARNING,"Are you sure you want to delete this?",ButtonType.NO,ButtonType.YES).showAndWait().get().equals(ButtonType.YES)){
+                DataManager.deleteDB(getReview());
+                anchorCenter.getSelectionModel().select(mediaTab);
+            }
         });
         reviewCancel.setOnAction(e->{
             anchorCenter.getSelectionModel().select(mediaTab);

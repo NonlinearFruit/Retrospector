@@ -7,6 +7,7 @@ package retrospector.fxml;
 
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -198,7 +199,14 @@ public class StatsTabController implements Initializable {
         chartRotX.setTickLabelFormatter(new StringConverter<Number>(){
             @Override
             public String toString(Number number) {
-                return number.intValue()+"";
+                double x = number.doubleValue();
+                double decimal = x%1;
+                double year = x - decimal;
+                double days = decimal*365.25;
+                if(days>365 || days<1)
+                    return ((int)year)+"";
+                LocalDate date = LocalDate.ofYearDay((int)year, (int)days);
+                return date.format(DateTimeFormatter.ofPattern("MMM uuuu"));
             }
 
             @Override
@@ -428,7 +436,7 @@ public class StatsTabController implements Initializable {
                 aveAll += r.getRating().intValue();
                 userSet.add(r.getUser());
                 reviews++;
-                data.getData().add(new XYChart.Data(r.getDate().getYear() + (r.getDate().getDayOfYear()+0.0)/365.25, r.getRating().intValue()));
+                data.getData().add(new XYChart.Data(dateToDouble(r.getDate()), r.getRating().intValue()));
             }
         }
         users = userSet.stream().distinct().count();
@@ -453,8 +461,13 @@ public class StatsTabController implements Initializable {
         chartRatingOverTime.getData().clear();
         if(data.getData().size()<1500)
             chartRatingOverTime.getData().add(data);
-        chartRotX.setLowerBound(earliest.getYear());
-        chartRotX.setUpperBound(LocalDate.now().getYear());
-        System.out.println("### 6");
+        chartRotX.setLowerBound(dateToDouble(earliest)-1.0/12);
+        chartRotX.setUpperBound(dateToDouble(LocalDate.now())+1.0/12);
+    }
+    
+    // Takes a date and returns the year with decimal value for the
+    // percentage of the year that is complete.
+    private double dateToDouble(LocalDate date){
+        return date.getYear()+(date.getDayOfYear()+0.0)/365.25;
     }
 }
