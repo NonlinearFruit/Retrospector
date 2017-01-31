@@ -5,9 +5,9 @@
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.chart.StackedBarChart?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ChoiceBox?>
-<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -21,7 +21,8 @@
 
 <GridPane hgap="10.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1300.0" vgap="10.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="retrospector.fxml.StatsTabController">
   <columnConstraints>
-      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="600.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="150.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="450.0" />
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="100.0" />
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
   </columnConstraints>
@@ -33,17 +34,16 @@
       <RowConstraints minHeight="10.0" prefHeight="250.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <PieChart fx:id="chartMediaPerCategory" title="Media per Category" GridPane.columnIndex="2" />
+      <PieChart fx:id="chartMediaPerCategory" title="Media per Category" GridPane.columnIndex="3" />
       <VBox prefHeight="200.0" prefWidth="100.0">
          <children>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Overall">
                <font>
                   <Font size="25.0" />
                </font></Text>
-            <ListView fx:id="userList" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="200.0" prefWidth="200.0" />
          </children>
       </VBox>
-      <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1">
+      <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2">
          <children>
             <Text fx:id="overallMedia" strokeType="OUTSIDE" strokeWidth="0.0" text="Media" />
             <Text fx:id="overallReview" strokeType="OUTSIDE" strokeWidth="0.0" text="Review" />
@@ -68,7 +68,7 @@
             <ChoiceBox fx:id="categorySelector" prefWidth="150.0" />
          </children>
       </VBox>
-      <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+      <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
          <children>
             <Text fx:id="categoryMedia" strokeType="OUTSIDE" strokeWidth="0.0" text="Media" />
             <Text fx:id="categoryReview" strokeType="OUTSIDE" strokeWidth="0.0" text="Review" />
@@ -84,7 +84,7 @@
             <Text fx:id="categoryAllRating" strokeType="OUTSIDE" strokeWidth="0.0" text="All" />
          </children>
       </VBox>
-      <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="4">
+      <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnSpan="2" GridPane.rowIndex="4">
          <children>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Media">
                <font>
@@ -119,7 +119,7 @@
             </TableView>
          </children>
       </VBox>
-      <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+      <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="4">
          <children>
             <Text fx:id="mediaMedia" strokeType="OUTSIDE" strokeWidth="0.0" text="Media" />
             <Text fx:id="mediaReview" strokeType="OUTSIDE" strokeWidth="0.0" text="Review" />
@@ -135,9 +135,9 @@
             <Text fx:id="mediaAllRating" strokeType="OUTSIDE" strokeWidth="0.0" text="All" />
          </children>
       </VBox>
-      <Separator prefWidth="200.0" GridPane.columnSpan="3" GridPane.rowIndex="1" />
-      <Separator prefWidth="200.0" GridPane.columnSpan="3" GridPane.rowIndex="3" />
-      <LineChart fx:id="chartReviewsPerYear" title="Reviews per Year" GridPane.columnIndex="2" GridPane.rowIndex="2">
+      <Separator prefWidth="200.0" GridPane.columnSpan="4" GridPane.rowIndex="1" />
+      <Separator prefWidth="200.0" GridPane.columnSpan="4" GridPane.rowIndex="3" />
+      <LineChart fx:id="chartReviewsPerYear" title="Reviews per Year" GridPane.columnIndex="3" GridPane.rowIndex="2">
         <xAxis>
           <CategoryAxis side="BOTTOM" />
         </xAxis>
@@ -145,7 +145,7 @@
           <NumberAxis side="LEFT" />
         </yAxis>
       </LineChart>
-      <LineChart fx:id="chartRatingOverTime" legendVisible="false" title="Ratings over Time" GridPane.columnIndex="2" GridPane.rowIndex="4">
+      <LineChart fx:id="chartRatingOverTime" legendVisible="false" title="Ratings over Time" GridPane.columnIndex="3" GridPane.rowIndex="4">
         <xAxis>
           <NumberAxis fx:id="chartRotX" side="BOTTOM" />
         </xAxis>
@@ -153,6 +153,22 @@
           <NumberAxis fx:id="chartRotY" side="LEFT" />
         </yAxis>
       </LineChart>
+      <StackedBarChart fx:id="categoryReviewsPerWeekday" title="Reviews per Weekday" GridPane.columnIndex="1" GridPane.rowIndex="2">
+        <xAxis>
+          <CategoryAxis side="BOTTOM" />
+        </xAxis>
+        <yAxis>
+          <NumberAxis side="LEFT" />
+        </yAxis>
+      </StackedBarChart>
+      <StackedBarChart fx:id="overallReviewsPerWeekday" title="Reviews per Weekday" GridPane.columnIndex="1">
+        <xAxis>
+          <CategoryAxis side="BOTTOM" />
+        </xAxis>
+        <yAxis>
+          <NumberAxis side="LEFT" />
+        </yAxis>
+      </StackedBarChart>
    </children>
    <padding>
       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
