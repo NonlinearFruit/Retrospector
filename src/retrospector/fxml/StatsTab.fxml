@@ -49,6 +49,8 @@
             <Text fx:id="overallReview" strokeType="OUTSIDE" strokeWidth="0.0" text="Review" />
             <Text fx:id="overallUser" strokeType="OUTSIDE" strokeWidth="0.0" text="User" />
             <Text fx:id="overallTime" strokeType="OUTSIDE" strokeWidth="0.0" text="Time" />
+            <Text fx:id="overallTitle" strokeType="OUTSIDE" strokeWidth="0.0" text="Title" />
+            <Text fx:id="overallCreator" strokeType="OUTSIDE" strokeWidth="0.0" text="Creator" />
             <Text fx:id="overallSingle" strokeType="OUTSIDE" strokeWidth="0.0" text="Single" />
             <Text fx:id="overallMiniseries" strokeType="OUTSIDE" strokeWidth="0.0" text="Miniseries" />
             <Text fx:id="overallSeries" strokeType="OUTSIDE" strokeWidth="0.0" text="Series" />

@@ -73,7 +73,7 @@ import retrospector.util.UtilityCloset;
 public class CoreController implements Initializable {
 
     @FXML
-    private TabPane anchorCenter;
+    public TabPane anchorCenter;
     @FXML
     private Tab searchTab;
     @FXML
@@ -274,7 +274,12 @@ public class CoreController implements Initializable {
         // List
         initListTab();
         // Tropes
-        if(PropertyManager.loadProperties().isEnableTrope())initTropeTab();
+        if(PropertyManager.loadProperties().isEnableTrope()){
+            initTropeTab();
+            try{
+                new URL(tropeHome).openConnection();
+            }catch(IOException e){tropeTab.setDisable(true);}
+        }
         else anchorCenter.getTabs().remove(tropeTab);
         
         
@@ -287,7 +292,6 @@ public class CoreController implements Initializable {
                 updateReviewTab();
             else if(neo.getText().equals("Chart"))
                 statsTab.update(currentMedia.get());
-//                updateChartTab();
             else if(neo.getText().equals("List"))
                 updateListTab();
             else if(neo.getText().equals("Tropes"))
@@ -321,9 +325,6 @@ public class CoreController implements Initializable {
         chartTab.setDisable(true);
         searchEditMedia.setDisable(true);
         searchDeleteMedia.setDisable(true);
-        try{
-            new URL(tropeHome).openConnection();
-        }catch(IOException e){tropeTab.setDisable(true);}
         
         updateSearchTab();
     }    

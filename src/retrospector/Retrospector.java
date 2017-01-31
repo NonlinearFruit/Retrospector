@@ -5,10 +5,16 @@
  */
 package retrospector;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import retrospector.fxml.CoreController;
 import retrospector.model.DataManager;
@@ -18,6 +24,8 @@ import retrospector.model.DataManager;
  * @author nonfrt
  */
 public class Retrospector extends Application {
+    
+    Map<String,List<double[]>> clicks = new HashMap<>();
     
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -32,6 +40,15 @@ public class Retrospector extends Application {
             core.setStatsTab(statldr);
         
         Scene scene = new Scene(root, 1300, 800);
+        
+        scene.addEventFilter(MouseEvent.MOUSE_PRESSED, e->{
+            String tab = core.anchorCenter.getSelectionModel().getSelectedItem().getText();
+            if(clicks.containsKey(tab))
+                clicks.get(tab).add(new double[]{e.getScreenX(),e.getScreenY()});
+            else
+                clicks.put(tab, Arrays.<double[]>asList(new double[]{e.getScreenX(),e.getScreenY()}));
+            System.out.println(core.anchorCenter.getSelectionModel().getSelectedItem().getText()+": "+e.getScreenX()+" , "+e.getScreenY());
+                });
         
         primaryStage.setTitle("Retrospector");
         primaryStage.setScene(scene);
