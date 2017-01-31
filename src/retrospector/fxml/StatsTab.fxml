@@ -74,6 +74,8 @@
             <Text fx:id="categoryReview" strokeType="OUTSIDE" strokeWidth="0.0" text="Review" />
             <Text fx:id="categoryUser" strokeType="OUTSIDE" strokeWidth="0.0" text="User" />
             <Text fx:id="categoryTime" strokeType="OUTSIDE" strokeWidth="0.0" text="Time" />
+            <Text fx:id="categoryTitle" strokeType="OUTSIDE" strokeWidth="0.0" text="Title" />
+            <Text fx:id="categoryCreator" strokeType="OUTSIDE" strokeWidth="0.0" text="Creator" />
             <Text fx:id="categorySingle" strokeType="OUTSIDE" strokeWidth="0.0" text="Single" />
             <Text fx:id="categoryMiniseries" strokeType="OUTSIDE" strokeWidth="0.0" text="Miniseries" />
             <Text fx:id="categorySeries" strokeType="OUTSIDE" strokeWidth="0.0" text="Series" />
@@ -123,6 +125,8 @@
             <Text fx:id="mediaReview" strokeType="OUTSIDE" strokeWidth="0.0" text="Review" />
             <Text fx:id="mediaUser" strokeType="OUTSIDE" strokeWidth="0.0" text="User" />
             <Text fx:id="mediaTime" strokeType="OUTSIDE" strokeWidth="0.0" text="Time" />
+            <Text fx:id="mediaTitle" strokeType="OUTSIDE" strokeWidth="0.0" text="Title" />
+            <Text fx:id="mediaCreator" strokeType="OUTSIDE" strokeWidth="0.0" text="Creator" />
             <Text fx:id="mediaSingle" strokeType="OUTSIDE" strokeWidth="0.0" text="Single" />
             <Text fx:id="mediaMiniseries" strokeType="OUTSIDE" strokeWidth="0.0" text="Miniseries" />
             <Text fx:id="mediaSeries" strokeType="OUTSIDE" strokeWidth="0.0" text="Series" />
