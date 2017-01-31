@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -26,6 +27,7 @@ import javafx.scene.chart.Axis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.PieChart;
+import javafx.scene.chart.StackedBarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
@@ -58,7 +60,6 @@ public class StatsTabController implements Initializable {
     private LineChart<Number, Number> chartRatingOverTime;
     @FXML
     private PieChart chartMediaPerCategory;
-    @FXML
     private ListView<Stroolean> userList;
     @FXML
     private ChoiceBox<String> categorySelector;
@@ -152,6 +153,22 @@ public class StatsTabController implements Initializable {
     private NumberAxis chartRotY;
     @FXML
     private NumberAxis chartRotX;
+    @FXML
+    private Text overallTitle;
+    @FXML
+    private Text overallCreator;
+    @FXML
+    private Text categoryTitle;
+    @FXML
+    private Text categoryCreator;
+    @FXML
+    private Text mediaTitle;
+    @FXML
+    private Text mediaCreator;
+    @FXML
+    private StackedBarChart<?, ?> categoryReviewsPerWeekday;
+    @FXML
+    private StackedBarChart<?, ?> overallReviewsPerWeekday;
 
     /**
      * Initializes the controller class.
@@ -159,7 +176,6 @@ public class StatsTabController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // Overall
-        userList.setVisible(false);
         chartMediaPerCategory.setLegendVisible(true);
         // Category
         categorySelector.setItems(FXCollections.observableArrayList(DataManager.getCategories()));
@@ -224,20 +240,21 @@ public class StatsTabController implements Initializable {
         checkSeason.setText("Season: "+media.getSeasonId());
         checkEpisode.setText("Episode: "+media.getEpisodeId());
         checkCategory.setText("Category: "+media.getCategory());
+        categorySelector.setValue(media.getCategory());
         update();
     }
     public void update(){
         allMedia.clear();
         allMedia.addAll(DataManager.getMedia());
-        updateOverall();
-        updateCategory();
-        updateMedia();
+        Platform.runLater(()->updateOverall());
+        Platform.runLater(()->updateCategory());
+        Platform.runLater(()->updateMedia());
     }
     
     private void updateOverall(){
         
         // Data Mining - Vars
-        List<Review> considerReview = DataManager.getReviews();
+        List<Review> considerReview = new ArrayList<>();
         Map<String, Integer> categories = new HashMap<>();
         int media = allMedia.size();
         int reviews = considerReview.size();
@@ -260,6 +277,7 @@ public class StatsTabController implements Initializable {
             }
             aveCurrent += m.getCurrentRating().intValue();
             categories.put(m.getCategory(), categories.getOrDefault(m.getCategory(), 0)+1);
+            considerReview.addAll(m.getReviews());
         }
         for (Review r : considerReview) {
             if(r.getDate().isBefore(earliest))
@@ -270,17 +288,6 @@ public class StatsTabController implements Initializable {
         aveCurrent = reviews==0? 0 : aveCurrent/media;
         days = ChronoUnit.DAYS.between(earliest, LocalDate.now())+1;
         perMonth = days<2? 0 : (media+0.0)/days*30;
-        
-        // User List
-        userList.getItems().clear();
-        strooleans.clear();
-        for (String category : DataManager.getUsers()) {
-            Stroolean c = new Stroolean(category,true);
-            c.booleanProperty().addListener((observe,old,neo)->update());
-            strooleans.add(c);
-            userList.getItems().add(c);
-        }
-        userList.setCellFactory(CheckBoxListCell.forListView(Stroolean::booleanProperty));
         
         // Stats
         overallMedia.setText(media+" Media");
