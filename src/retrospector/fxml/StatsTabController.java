@@ -168,10 +168,10 @@ public class StatsTabController implements Initializable {
     private Text mediaTitle;
     @FXML
     private Text mediaCreator;
-    @FXML
-    private StackedBarChart<String, Number> categoryReviewsPerWeekday;
-    @FXML
-    private StackedBarChart<String, Number> overallReviewsPerWeekday;
+//    @FXML
+//    private StackedBarChart<String, Number> categoryReviewsPerWeekday;
+//    @FXML
+//    private StackedBarChart<String, Number> overallReviewsPerWeekday;
 
     /**
      * Initializes the controller class.
@@ -179,9 +179,9 @@ public class StatsTabController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // Bug Work Around
-        overallReviewsPerWeekday.getData().add(new XYChart.Series(FXCollections.observableArrayList(new XYChart.Data("",0))));
+//        overallReviewsPerWeekday.getData().add(new XYChart.Series(FXCollections.observableArrayList(new XYChart.Data("",0))));
         chartReviewsPerYear.getData().add(new XYChart.Series(FXCollections.observableArrayList(new XYChart.Data("",0))));
-        categoryReviewsPerWeekday.getData().add(new XYChart.Series(FXCollections.observableArrayList(new XYChart.Data("",0))));
+//        categoryReviewsPerWeekday.getData().add(new XYChart.Series(FXCollections.observableArrayList(new XYChart.Data("",0))));
         // Overall
         chartMediaPerCategory.setLegendVisible(true);
         // Category
@@ -266,7 +266,7 @@ public class StatsTabController implements Initializable {
         Map<String, Integer> categories = new HashMap<>();
         Map<String, Map<String,Integer>> userWeekdays = new HashMap<>();
         int media = allMedia.size();
-        int reviews = considerReview.size();
+        int reviews = 0;
         int users = DataManager.getUsers().size();
         int titles = 0;
         int creators = 0;
@@ -300,10 +300,11 @@ public class StatsTabController implements Initializable {
             weekdays.put(r.getDate().getDayOfWeek().name().substring(0, 3), weekdays.getOrDefault(r.getDate().getDayOfWeek().name().substring(0, 3), 0)+1);
             aveAll += r.getRating().intValue();
         }
+        reviews = considerReview.size();
         titles = titleSet.size();
         creators = creatorSet.size();
         aveAll = reviews==0? 0 : aveAll/reviews;
-        aveCurrent = reviews==0? 0 : aveCurrent/media;
+        aveCurrent = media==0? 0 : aveCurrent/media;
         days = ChronoUnit.DAYS.between(earliest, LocalDate.now())+1;
         perMonth = days<2? 0 : (media+0.0)/days*30;
         
@@ -322,20 +323,20 @@ public class StatsTabController implements Initializable {
         overallAllRating.setText(String.format("%.2f", aveAll)+" All");
         
         // Chart
-        overallReviewsPerWeekday.setData(FXCollections.observableArrayList(
-                userWeekdays.keySet()
-                .stream()
-                .sorted()
-                .map(user -> new Series<String,Number>(user,FXCollections.observableArrayList(
-                        userWeekdays.get(user).keySet()
-                        .stream()
-                        .sorted((x,y)->new Integer(orderedDaysOfWeek.indexOf(x)).compareTo(new Integer(orderedDaysOfWeek.indexOf(y))))
-                        .map(weekday -> new Data<String,Number>(weekday,userWeekdays.get(user).get(weekday)))
-                        .collect(Collectors.toList())
-                    ))
-                )
-                .collect(Collectors.toList())
-        ));
+//        overallReviewsPerWeekday.setData(FXCollections.observableArrayList(
+//                userWeekdays.keySet()
+//                .stream()
+//                .sorted()
+//                .map(user -> new Series<String,Number>(user,FXCollections.observableArrayList(
+//                        userWeekdays.get(user).keySet()
+//                        .stream()
+//                        .sorted((x,y)->new Integer(orderedDaysOfWeek.indexOf(x)).compareTo(new Integer(orderedDaysOfWeek.indexOf(y))))
+//                        .map(weekday -> new Data<String,Number>(weekday,userWeekdays.get(user).get(weekday)))
+//                        .collect(Collectors.toList())
+//                    ))
+//                )
+//                .collect(Collectors.toList())
+//        ));
         
         chartMediaPerCategory.setData(
                 FXCollections.observableArrayList(
@@ -405,7 +406,7 @@ public class StatsTabController implements Initializable {
         titles = titleSet.size();
         creators = creatorSet.size();
         aveAll = reviews==0? 0 : aveAll/reviews;
-        aveCurrent = reviews==0? 0 : aveCurrent/media;
+        aveCurrent = media==0? 0 : aveCurrent/media;
         days = ChronoUnit.DAYS.between(earliest, LocalDate.now())+1;
         perMonth = days<2? 0 : (media+0.0)/days*30;
         
@@ -436,20 +437,20 @@ public class StatsTabController implements Initializable {
         
         chartReviewsPerYear.getData().addAll(data);
         
-        categoryReviewsPerWeekday.setData(FXCollections.observableArrayList(
-                userWeekdays.keySet()
-                .stream()
-                .sorted()
-                .map(user -> new Series<String,Number>(user,FXCollections.observableArrayList(
-                        userWeekdays.get(user).keySet()
-                        .stream()
-                        .sorted((x,y)->new Integer(orderedDaysOfWeek.indexOf(x)).compareTo(new Integer(orderedDaysOfWeek.indexOf(y))))
-                        .map(weekday -> new Data<String,Number>(weekday,userWeekdays.get(user).get(weekday)))
-                        .collect(Collectors.toList())
-                    ))
-                )
-                .collect(Collectors.toList())
-        ));
+//        categoryReviewsPerWeekday.setData(FXCollections.observableArrayList(
+//                userWeekdays.keySet()
+//                .stream()
+//                .sorted()
+//                .map(user -> new Series<String,Number>(user,FXCollections.observableArrayList(
+//                        userWeekdays.get(user).keySet()
+//                        .stream()
+//                        .sorted((x,y)->new Integer(orderedDaysOfWeek.indexOf(x)).compareTo(new Integer(orderedDaysOfWeek.indexOf(y))))
+//                        .map(weekday -> new Data<String,Number>(weekday,userWeekdays.get(user).get(weekday)))
+//                        .collect(Collectors.toList())
+//                    ))
+//                )
+//                .collect(Collectors.toList())
+//        ));
     }
     
     private void updateMedia(){
@@ -520,7 +521,7 @@ public class StatsTabController implements Initializable {
         titles = titleSet.size();
         creators = creatorSet.size();
         aveAll = reviews == 0 ? 0 : aveAll / reviews;
-        aveCurrent = reviews == 0 ? 0 : aveCurrent / media;
+        aveCurrent = media == 0 ? 0 : aveCurrent / media;
         days = ChronoUnit.DAYS.between(earliest, LocalDate.now()) + 1;
         perMonth = days<2 ? 0 : (media + 0.0) / days * 30;
 
