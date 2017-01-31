@@ -11,9 +11,11 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.stream.Collectors;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -23,20 +25,20 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.chart.Axis;
+import javafx.scene.chart.BarChart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.StackedBarChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.chart.XYChart.Data;
+import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.StringConverter;
 import retrospector.model.DataManager;
@@ -55,6 +57,7 @@ public class StatsTabController implements Initializable {
     private Media currentMedia;
     private ObservableList<Media> allMedia = FXCollections.observableArrayList();
     private FilteredList<Media> mediaTableFilter = new FilteredList(allMedia);
+    private String orderedDaysOfWeek = "MON TUE WED THU FRI SAT SUN";
     
     @FXML
     private LineChart<Number, Number> chartRatingOverTime;
@@ -166,22 +169,25 @@ public class StatsTabController implements Initializable {
     @FXML
     private Text mediaCreator;
     @FXML
-    private StackedBarChart<?, ?> categoryReviewsPerWeekday;
+    private StackedBarChart<String, Number> categoryReviewsPerWeekday;
     @FXML
-    private StackedBarChart<?, ?> overallReviewsPerWeekday;
+    private StackedBarChart<String, Number> overallReviewsPerWeekday;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        // Bug Work Around
+        overallReviewsPerWeekday.getData().add(new XYChart.Series(FXCollections.observableArrayList(new XYChart.Data("",0))));
+        chartReviewsPerYear.getData().add(new XYChart.Series(FXCollections.observableArrayList(new XYChart.Data("",0))));
+        categoryReviewsPerWeekday.getData().add(new XYChart.Series(FXCollections.observableArrayList(new XYChart.Data("",0))));
         // Overall
         chartMediaPerCategory.setLegendVisible(true);
         // Category
         categorySelector.setItems(FXCollections.observableArrayList(DataManager.getCategories()));
         categorySelector.setValue(DataManager.getCategories()[0]);
         categorySelector.valueProperty().addListener((observe,old,neo)->updateCategory());
-        chartReviewsPerYear.getData().add(new XYChart.Series(FXCollections.observableArrayList(new XYChart.Data("",0))));
         // Media
         checkTitle.setSelected(true);
         checkCreator.setSelected(true);
@@ -255,10 +261,15 @@ public class StatsTabController implements Initializable {
         
         // Data Mining - Vars
         List<Review> considerReview = new ArrayList<>();
+        Set<String> titleSet = new HashSet<>();
+        Set<String> creatorSet = new HashSet<>();
         Map<String, Integer> categories = new HashMap<>();
+        Map<String, Map<String,Integer>> userWeekdays = new HashMap<>();
         int media = allMedia.size();
         int reviews = considerReview.size();
         int users = DataManager.getUsers().size();
+        int titles = 0;
+        int creators = 0;
         double aveAll = 0;
         double aveCurrent = 0;
         LocalDate earliest = LocalDate.now();
@@ -276,14 +287,21 @@ public class StatsTabController implements Initializable {
                 case SERIES:series++;break;
             }
             aveCurrent += m.getCurrentRating().intValue();
+            titleSet.add(m.getTitle());
+            creatorSet.add(m.getCreator());
             categories.put(m.getCategory(), categories.getOrDefault(m.getCategory(), 0)+1);
             considerReview.addAll(m.getReviews());
         }
         for (Review r : considerReview) {
             if(r.getDate().isBefore(earliest))
                 earliest = r.getDate();
+            userWeekdays.putIfAbsent(r.getUser(), new HashMap<>());
+            Map<String, Integer> weekdays = userWeekdays.get(r.getUser());
+            weekdays.put(r.getDate().getDayOfWeek().name().substring(0, 3), weekdays.getOrDefault(r.getDate().getDayOfWeek().name().substring(0, 3), 0)+1);
             aveAll += r.getRating().intValue();
         }
+        titles = titleSet.size();
+        creators = creatorSet.size();
         aveAll = reviews==0? 0 : aveAll/reviews;
         aveCurrent = reviews==0? 0 : aveCurrent/media;
         days = ChronoUnit.DAYS.between(earliest, LocalDate.now())+1;
@@ -294,6 +312,8 @@ public class StatsTabController implements Initializable {
         overallReview.setText(reviews+" Review(s)");
         overallUser.setText(users+" User(s)");  
         overallTime.setText(days+" Days");
+        overallTitle.setText(titles + " Titles");
+        overallCreator.setText(creators + " Creators");
         overallSingle.setText(singles+" Single(s)");
         overallMiniseries.setText(minis+" Mini(s)");
         overallSeries.setText(series+" Serie(s)");
@@ -302,6 +322,21 @@ public class StatsTabController implements Initializable {
         overallAllRating.setText(String.format("%.2f", aveAll)+" All");
         
         // Chart
+        overallReviewsPerWeekday.setData(FXCollections.observableArrayList(
+                userWeekdays.keySet()
+                .stream()
+                .sorted()
+                .map(user -> new Series<String,Number>(user,FXCollections.observableArrayList(
+                        userWeekdays.get(user).keySet()
+                        .stream()
+                        .sorted((x,y)->new Integer(orderedDaysOfWeek.indexOf(x)).compareTo(new Integer(orderedDaysOfWeek.indexOf(y))))
+                        .map(weekday -> new Data<String,Number>(weekday,userWeekdays.get(user).get(weekday)))
+                        .collect(Collectors.toList())
+                    ))
+                )
+                .collect(Collectors.toList())
+        ));
+        
         chartMediaPerCategory.setData(
                 FXCollections.observableArrayList(
                     categories.keySet()
@@ -323,10 +358,15 @@ public class StatsTabController implements Initializable {
             
         // Data Mining - Vars
         Map<String, Integer> reviewYearMap = new HashMap<>();
+        Map<String, Map<String,Integer>> userWeekdays = new HashMap<>();
         List<String> userSet = new ArrayList<>();
+        Set<String> titleSet = new HashSet<>();
+        Set<String> creatorSet = new HashSet<>();
         int media = 0;
         int reviews = 0;
         long users = 0;
+        int titles = 0;
+        int creators = 0;
         double aveAll = 0;
         double aveCurrent = 0;
         LocalDate earliest = LocalDate.now();
@@ -345,6 +385,8 @@ public class StatsTabController implements Initializable {
                     case SERIES:series++;break;
                 }
                 aveCurrent += m.getCurrentRating().intValue();
+                titleSet.add(m.getTitle());
+                creatorSet.add(m.getCreator());
                 media++;
                 for (Review r : m.getReviews()) {
                     if(r.getDate().isBefore(earliest))
@@ -352,11 +394,16 @@ public class StatsTabController implements Initializable {
                     reviewYearMap.put(r.getDate().getYear()+"", reviewYearMap.getOrDefault(r.getDate().getYear()+"", 0)+1);
                     aveAll += r.getRating().intValue();
                     userSet.add(r.getUser());
+                    userWeekdays.putIfAbsent(r.getUser(), new HashMap<>());
+                    Map<String, Integer> weekdays = userWeekdays.get(r.getUser());
+                    weekdays.put(r.getDate().getDayOfWeek().name().substring(0, 3), weekdays.getOrDefault(r.getDate().getDayOfWeek().name().substring(0, 3), 0)+1);
                     reviews++;
                 }
             }
         }
         users = userSet.stream().distinct().count();
+        titles = titleSet.size();
+        creators = creatorSet.size();
         aveAll = reviews==0? 0 : aveAll/reviews;
         aveCurrent = reviews==0? 0 : aveCurrent/media;
         days = ChronoUnit.DAYS.between(earliest, LocalDate.now())+1;
@@ -368,6 +415,8 @@ public class StatsTabController implements Initializable {
         categoryReview.setText(reviews+" Review(s)");
         categoryUser.setText(users+" User(s)");
         categoryTime.setText(days+" Days");
+        categoryTitle.setText(titles + " Titles");
+        categoryCreator.setText(creators + " Creators");
         categorySingle.setText(singles+" Single(s)");
         categoryMiniseries.setText(minis+" Mini(s)");
         categorySeries.setText(series+" Serie(s)");
@@ -386,6 +435,21 @@ public class StatsTabController implements Initializable {
         }
         
         chartReviewsPerYear.getData().addAll(data);
+        
+        categoryReviewsPerWeekday.setData(FXCollections.observableArrayList(
+                userWeekdays.keySet()
+                .stream()
+                .sorted()
+                .map(user -> new Series<String,Number>(user,FXCollections.observableArrayList(
+                        userWeekdays.get(user).keySet()
+                        .stream()
+                        .sorted((x,y)->new Integer(orderedDaysOfWeek.indexOf(x)).compareTo(new Integer(orderedDaysOfWeek.indexOf(y))))
+                        .map(weekday -> new Data<String,Number>(weekday,userWeekdays.get(user).get(weekday)))
+                        .collect(Collectors.toList())
+                    ))
+                )
+                .collect(Collectors.toList())
+        ));
     }
     
     private void updateMedia(){
@@ -408,10 +472,14 @@ public class StatsTabController implements Initializable {
 
         // Data Mining - Vars
         List<String> userSet = new ArrayList<>();
+        Set<String> titleSet = new HashSet<>();
+        Set<String> creatorSet = new HashSet<>();
         XYChart.Series data = new XYChart.Series();
         int media = 0;
         int reviews = 0;
         long users = 0;
+        int titles = 0;
+        int creators = 0;
         double aveAll = 0;
         double aveCurrent = 0;
         LocalDate earliest = LocalDate.now();
@@ -435,6 +503,8 @@ public class StatsTabController implements Initializable {
                     break;
             }
             aveCurrent += m.getCurrentRating().intValue();
+            titleSet.add(m.getTitle());
+            creatorSet.add(m.getCreator());
             media++;
             for (Review r : m.getReviews()) {
                 if (r.getDate().isBefore(earliest)) {
@@ -447,6 +517,8 @@ public class StatsTabController implements Initializable {
             }
         }
         users = userSet.stream().distinct().count();
+        titles = titleSet.size();
+        creators = creatorSet.size();
         aveAll = reviews == 0 ? 0 : aveAll / reviews;
         aveCurrent = reviews == 0 ? 0 : aveCurrent / media;
         days = ChronoUnit.DAYS.between(earliest, LocalDate.now()) + 1;
@@ -457,6 +529,8 @@ public class StatsTabController implements Initializable {
         mediaReview.setText(reviews + " Review(s)");
         mediaUser.setText(users + " User(s)");
         mediaTime.setText(days + " Days");
+        mediaTitle.setText(titles + " Titles");
+        mediaCreator.setText(creators + " Creators");
         mediaSingle.setText(singles + " Single(s)");
         mediaMiniseries.setText(minis + " Mini(s)");
         mediaSeries.setText(series + " Serie(s)");

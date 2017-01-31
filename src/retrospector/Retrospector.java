@@ -41,14 +41,14 @@ public class Retrospector extends Application {
         
         Scene scene = new Scene(root, 1300, 800);
         
-        scene.addEventFilter(MouseEvent.MOUSE_PRESSED, e->{
-            String tab = core.anchorCenter.getSelectionModel().getSelectedItem().getText();
-            if(clicks.containsKey(tab))
-                clicks.get(tab).add(new double[]{e.getScreenX(),e.getScreenY()});
-            else
-                clicks.put(tab, Arrays.<double[]>asList(new double[]{e.getScreenX(),e.getScreenY()}));
-            System.out.println(core.anchorCenter.getSelectionModel().getSelectedItem().getText()+": "+e.getScreenX()+" , "+e.getScreenY());
-                });
+//        scene.addEventFilter(MouseEvent.MOUSE_PRESSED, e->{
+//            String tab = core.anchorCenter.getSelectionModel().getSelectedItem().getText();
+//            if(clicks.containsKey(tab))
+//                clicks.get(tab).add(new double[]{e.getScreenX(),e.getScreenY()});
+//            else
+//                clicks.put(tab, Arrays.<double[]>asList(new double[]{e.getScreenX(),e.getScreenY()}));
+//            System.out.println(core.anchorCenter.getSelectionModel().getSelectedItem().getText()+": "+e.getScreenX()+" , "+e.getScreenY());
+//                });
         
         primaryStage.setTitle("Retrospector");
         primaryStage.setScene(scene);

@@ -153,7 +153,7 @@
           <NumberAxis fx:id="chartRotY" side="LEFT" />
         </yAxis>
       </LineChart>
-      <StackedBarChart fx:id="categoryReviewsPerWeekday" title="Reviews per Weekday" GridPane.columnIndex="1" GridPane.rowIndex="2">
+      <StackedBarChart fx:id="overallReviewsPerWeekday" GridPane.columnIndex="1">
         <xAxis>
           <CategoryAxis side="BOTTOM" />
         </xAxis>
@@ -161,7 +161,7 @@
           <NumberAxis side="LEFT" />
         </yAxis>
       </StackedBarChart>
-      <StackedBarChart fx:id="overallReviewsPerWeekday" title="Reviews per Weekday" GridPane.columnIndex="1">
+      <StackedBarChart fx:id="categoryReviewsPerWeekday" GridPane.columnIndex="1" GridPane.rowIndex="2">
         <xAxis>
           <CategoryAxis side="BOTTOM" />
         </xAxis>
