@@ -5,8 +5,6 @@
  */
 package retrospector;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +12,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import retrospector.fxml.CoreController;
 import retrospector.model.DataManager;
@@ -52,6 +50,10 @@ public class Retrospector extends Application {
         
         primaryStage.setTitle("Retrospector");
         primaryStage.setScene(scene);
+        primaryStage.getIcons().add(new Image("file:/retrospector/res/star-half-full-32.png"));
+        primaryStage.getIcons().add(new Image("file:/retrospector/res/star-half-full-64.png"));
+        primaryStage.getIcons().add(new Image("file:/retrospector/res/star-half-full-128.png"));
+        primaryStage.getIcons().add(new Image("file:/retrospector/res/star-half-full-256.png"));
         primaryStage.show();
     }
 
