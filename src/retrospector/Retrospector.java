@@ -50,7 +50,11 @@ public class Retrospector extends Application {
         
         primaryStage.setTitle("Retrospector");
         primaryStage.setScene(scene);
+        primaryStage.getIcons().add(new Image("file:/retrospector/res/star-half-full-16.png"));
+        primaryStage.getIcons().add(new Image("file:/retrospector/res/star-half-full-22.png"));
+        primaryStage.getIcons().add(new Image("file:/retrospector/res/star-half-full-24.png"));
         primaryStage.getIcons().add(new Image("file:/retrospector/res/star-half-full-32.png"));
+        primaryStage.getIcons().add(new Image("file:/retrospector/res/star-half-full-48.png"));
         primaryStage.getIcons().add(new Image("file:/retrospector/res/star-half-full-64.png"));
         primaryStage.getIcons().add(new Image("file:/retrospector/res/star-half-full-128.png"));
         primaryStage.getIcons().add(new Image("file:/retrospector/res/star-half-full-256.png"));
