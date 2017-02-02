@@ -10,14 +10,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Properties;
-import static retrospector.util.UtilityCloset.getPath2JarFolder;
 
 /**
  * Read and write property files.
  * @author nonfrt
  */
 public class PropertyManager {
-    public static final String configPath="Retrospector.config";
+    public static final String retroFolder=System.getProperty("user.home")+"/Retrospector";
+    private static final String configPath=retroFolder+"/Retrospector.config";
     private static Configuration config = null;
 
     public static class Configuration{
@@ -107,7 +107,7 @@ public class PropertyManager {
         prop.setProperty(Configuration.prop.DEFAULT_RATING.name(), config.getDefaultRating().toString());
         prop.setProperty(Configuration.prop.CATEGORIES.name(), String.join(",",config.getCategories()));
         prop.setProperty(Configuration.prop.ENABLE_TROPE.name(), config.isEnableTrope().toString());
-        FileOutputStream out = new FileOutputStream(getPath2JarFolder()+configPath);
+        FileOutputStream out = new FileOutputStream(configPath);
         saveProperties(prop, out);
     }
     
@@ -115,7 +115,7 @@ public class PropertyManager {
         if(PropertyManager.config!=null)
             return config;
         try{
-            FileInputStream in = new FileInputStream(getPath2JarFolder()+configPath);
+            FileInputStream in = new FileInputStream(configPath);
             Properties prop;
             prop = loadProperties(in);
             config = new Configuration(
@@ -126,7 +126,7 @@ public class PropertyManager {
                     Boolean.parseBoolean(prop.getProperty(Configuration.prop.ENABLE_TROPE.name()))
             );
             return config;
-        } catch(IOException|NumberFormatException|URISyntaxException e) {
+        } catch(IOException|NumberFormatException e) {
             System.err.println("Loading Config File Failed!");
             Configuration dfault = new Configuration();
             try{ saveProperties(dfault); } catch(IOException|URISyntaxException ex) {} // Since there isn't a config file, make one!

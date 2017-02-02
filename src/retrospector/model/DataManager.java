@@ -24,7 +24,7 @@ import retrospector.util.UtilityCloset;
  * @author nonfrt
  */
 public class DataManager {
-    static String connString = "jdbc:hsqldb:file:";
+    static String connString = "jdbc:hsqldb:file:"+PropertyManager.retroFolder;
     static Connection conn = null;
 
     public static String getDefaultUser(){
@@ -167,15 +167,14 @@ public class DataManager {
         
       
         try {
-            connString += UtilityCloset.getPath2JarFolder()+"Retrospector";
+            connString += "/Retrospector";
+            System.out.println(connString);
             Statement stmt;
             stmt = getConnection().createStatement();
             stmt.execute(createMedia);
             stmt.execute(createReview);
         } catch (SQLException ex) {
             System.out.println("Create error in startDB in connection" + ex);
-        } catch (URISyntaxException ex) {
-            System.out.println("DataManager#startDB \t adding getPath2JarFolder to connString failed:: \n" + ex);
         }
     }
     

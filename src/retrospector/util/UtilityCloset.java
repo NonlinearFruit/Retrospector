@@ -33,7 +33,7 @@ public class UtilityCloset {
         return string.replaceAll(separator, alternative);
     }
     
-    public static String getPath2JarFolder() throws URISyntaxException{
+    private static String getPath2JarFolder() throws URISyntaxException{
         String path = Retrospector.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
         if(path.indexOf(File.separator)!=-1)
             return path.substring(0,path.lastIndexOf(File.separator)+File.separator.length());

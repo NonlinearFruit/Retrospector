@@ -264,7 +264,6 @@ public class StatsTabController implements Initializable {
         Set<String> titleSet = new HashSet<>();
         Set<String> creatorSet = new HashSet<>();
         Map<String, Integer> categories = new HashMap<>();
-        Map<String, Map<String,Integer>> userWeekdays = new HashMap<>();
         int media = allMedia.size();
         int reviews = 0;
         int users = DataManager.getUsers().size();
@@ -287,7 +286,7 @@ public class StatsTabController implements Initializable {
                 case SERIES:series++;break;
             }
             aveCurrent += m.getCurrentRating().intValue();
-            titleSet.add(m.getTitle());
+            titleSet.add(m.getTitle()+m.getCreator());
             creatorSet.add(m.getCreator());
             categories.put(m.getCategory(), categories.getOrDefault(m.getCategory(), 0)+1);
             considerReview.addAll(m.getReviews());
@@ -295,9 +294,6 @@ public class StatsTabController implements Initializable {
         for (Review r : considerReview) {
             if(r.getDate().isBefore(earliest))
                 earliest = r.getDate();
-            userWeekdays.putIfAbsent(r.getUser(), new HashMap<>());
-            Map<String, Integer> weekdays = userWeekdays.get(r.getUser());
-            weekdays.put(r.getDate().getDayOfWeek().name().substring(0, 3), weekdays.getOrDefault(r.getDate().getDayOfWeek().name().substring(0, 3), 0)+1);
             aveAll += r.getRating().intValue();
         }
         reviews = considerReview.size();
@@ -359,7 +355,6 @@ public class StatsTabController implements Initializable {
             
         // Data Mining - Vars
         Map<String, Integer> reviewYearMap = new HashMap<>();
-        Map<String, Map<String,Integer>> userWeekdays = new HashMap<>();
         List<String> userSet = new ArrayList<>();
         Set<String> titleSet = new HashSet<>();
         Set<String> creatorSet = new HashSet<>();
@@ -386,7 +381,7 @@ public class StatsTabController implements Initializable {
                     case SERIES:series++;break;
                 }
                 aveCurrent += m.getCurrentRating().intValue();
-                titleSet.add(m.getTitle());
+                titleSet.add(m.getTitle()+m.getCreator());
                 creatorSet.add(m.getCreator());
                 media++;
                 for (Review r : m.getReviews()) {
@@ -395,9 +390,6 @@ public class StatsTabController implements Initializable {
                     reviewYearMap.put(r.getDate().getYear()+"", reviewYearMap.getOrDefault(r.getDate().getYear()+"", 0)+1);
                     aveAll += r.getRating().intValue();
                     userSet.add(r.getUser());
-                    userWeekdays.putIfAbsent(r.getUser(), new HashMap<>());
-                    Map<String, Integer> weekdays = userWeekdays.get(r.getUser());
-                    weekdays.put(r.getDate().getDayOfWeek().name().substring(0, 3), weekdays.getOrDefault(r.getDate().getDayOfWeek().name().substring(0, 3), 0)+1);
                     reviews++;
                 }
             }
