@@ -266,7 +266,6 @@ public class CoreController implements Initializable {
         // This is just for test, try not to put it in a really release
 //        if(DataManager.getMedia().size()==0)
 //            Dumpster.createMedia(1000);
-        
         initSearchTab();
         initMediaTab();
         initReviewTab();
