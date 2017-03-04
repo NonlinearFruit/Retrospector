@@ -111,6 +111,10 @@ public class CoreController implements Initializable {
     @FXML
     private MenuItem searchStandardEntry;
     @FXML
+    private Text searchMeanAverage;
+    @FXML
+    private Text searchCurrentAverage;
+    @FXML
     private Tab mediaTab;
     @FXML
     private TextField mediaTitle;
@@ -256,6 +260,7 @@ public class CoreController implements Initializable {
     private ObservableList<Media> searchTableData;
 
     private StatsTabController statsTab;
+    
     public void setStatsTab(FXMLLoader ldr){ chartTab.setContent(ldr.getRoot());statsTab = ldr.getController(); }
     /**
      * Initializes the controller class.
@@ -406,7 +411,7 @@ public class CoreController implements Initializable {
                                 !x.getSeasonId().toLowerCase().contains(q) &&
                                 !x.getEpisodeId().toLowerCase().contains(q) &&
                                 !x.getDescription().toLowerCase().contains(q) &&
-                                !x.getCategory().toString().toLowerCase().contains(q) &&
+                                !x.getCategory().toLowerCase().contains(q) &&
                                 !x.getType().toString().toLowerCase().contains(q)
                         )
                             pass = false;
@@ -414,6 +419,22 @@ public class CoreController implements Initializable {
                     return pass;
                 });
             }
+            int totalNumberReviews = 0;
+            int totalNumberMedia = 0;
+            int totalReviewRating = 0;
+            int totalCurrentRating = 0;
+
+            totalNumberMedia = searchTable.getItems().size();
+            for(Media media : searchTable.getItems()){
+                totalNumberReviews += media.getReviews().size();
+                for (Review review : media.getReviews()) {
+                    totalReviewRating += review.getRating().intValue();
+                }
+                totalCurrentRating += media.getCurrentRating().intValue();
+            }
+
+            searchMeanAverage.setText(String.format("%.2f", totalReviewRating*1.0/totalNumberReviews));
+            searchCurrentAverage.setText(String.format("%.2f", totalCurrentRating*1.0/totalNumberMedia));
         });
         
         searchNewMedia.setOnAction(e->{
@@ -429,8 +450,6 @@ public class CoreController implements Initializable {
                     QuickEntryController qec = fxmlLoader.getController();
                     qec.setCore(this);
                     Stage stage = new Stage();
-//                    stage.initModality(Modality.APPLICATION_MODAL);
-//                    stage.initStyle(StageStyle.UNDECORATED);
                     stage.setTitle("Quick Entry");
                     stage.setScene(new Scene(root1));  
                     stage.show();

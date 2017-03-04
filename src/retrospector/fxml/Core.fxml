@@ -21,6 +21,7 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Line?>
@@ -53,7 +54,7 @@
                         </TableColumn>
                     </columns>
                   </TableView>
-                  <HBox>
+                  <HBox spacing="3.0">
                      <children>
                         <SplitMenuButton fx:id="searchNewMedia" mnemonicParsing="false" text="New">
                           <items>
@@ -63,6 +64,11 @@
                         </SplitMenuButton>
                         <Button fx:id="searchEditMedia" mnemonicParsing="false" text="Edit" />
                         <Button fx:id="searchDeleteMedia" mnemonicParsing="false" text="Delete" />
+                        <Pane HBox.hgrow="ALWAYS" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Mean:" />
+                        <Text fx:id="searchMeanAverage" strokeType="OUTSIDE" strokeWidth="0.0" text="--" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text=" | Current:" />
+                        <Text fx:id="searchCurrentAverage" strokeType="OUTSIDE" strokeWidth="0.0" text="--" />
                      </children>
                   </HBox>
                </children>

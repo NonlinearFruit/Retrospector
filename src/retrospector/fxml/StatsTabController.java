@@ -57,13 +57,11 @@ public class StatsTabController implements Initializable {
     private Media currentMedia;
     private ObservableList<Media> allMedia = FXCollections.observableArrayList();
     private FilteredList<Media> mediaTableFilter = new FilteredList(allMedia);
-    private String orderedDaysOfWeek = "MON TUE WED THU FRI SAT SUN";
     
     @FXML
     private LineChart<Number, Number> chartRatingOverTime;
     @FXML
     private PieChart chartMediaPerCategory;
-    private ListView<Stroolean> userList;
     @FXML
     private ChoiceBox<String> categorySelector;
     @FXML
