@@ -405,15 +405,20 @@ public class CoreController implements Initializable {
                 mediaFiltered.setPredicate(x->{
                     boolean pass = true;
                     for (String q : queries) {
-                        if(     
-                                !x.getTitle().toLowerCase().contains(q) &&
-                                !x.getCreator().toLowerCase().contains(q) &&
-                                !x.getSeasonId().toLowerCase().contains(q) &&
-                                !x.getEpisodeId().toLowerCase().contains(q) &&
-                                !x.getDescription().toLowerCase().contains(q) &&
-                                !x.getCategory().toLowerCase().contains(q) &&
-                                !x.getType().toString().toLowerCase().contains(q)
-                        )
+                        String[] optns = q.split("\\|\\|");
+                        boolean minorPass = false;
+                        for (String optn : optns) {
+                            System.out.println(optn);
+                            if(
+                                    x.getTitle().toLowerCase().contains(optn) ||
+                                    x.getCreator().toLowerCase().contains(optn) ||
+                                    x.getSeasonId().toLowerCase().contains(optn) ||
+                                    x.getEpisodeId().toLowerCase().contains(optn) ||
+                                    x.getCategory().toLowerCase().contains(optn)
+                                    )
+                                minorPass = true;
+                        }
+                        if(!minorPass)
                             pass = false;
                     }
                     return pass;
