@@ -408,13 +408,12 @@ public class CoreController implements Initializable {
                         String[] optns = q.split("\\|\\|");
                         boolean minorPass = false;
                         for (String optn : optns) {
-                            System.out.println(optn);
                             if(
                                     x.getTitle().toLowerCase().contains(optn) ||
                                     x.getCreator().toLowerCase().contains(optn) ||
                                     x.getSeasonId().toLowerCase().contains(optn) ||
                                     x.getEpisodeId().toLowerCase().contains(optn) ||
-                                    x.getCategory().toLowerCase().contains(optn)
+                                    x.getCategory().toLowerCase().contains(optn) 
                                     )
                                 minorPass = true;
                         }
