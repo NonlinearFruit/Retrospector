@@ -5,7 +5,6 @@
  */
 package retrospector.fxml;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
@@ -53,15 +52,12 @@ import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
-import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.controlsfx.control.Rating;
 import retrospector.model.*;
 import static retrospector.model.Media.Type.SERIES;
-import retrospector.util.Dumpster;
 import retrospector.util.NaturalOrderComparator;
-import retrospector.util.PropertyManager;
 import retrospector.util.Stroolean;
 import retrospector.util.UtilityCloset;
 
@@ -76,44 +72,6 @@ public class CoreController implements Initializable {
     public TabPane anchorCenter;
     @FXML
     private Tab searchTab;
-    @FXML
-    private TextField searchBox;
-    @FXML
-    private TableView<Media> searchTable;
-    @FXML
-    private MenuButton searchNewMedia;
-    @FXML
-    private Button searchEditMedia;
-    @FXML
-    private Button searchDeleteMedia;
-    @FXML
-    private TableColumn<Media, Integer> searchNumberColumn;
-    @FXML
-    private TableColumn<Media, String> searchTitleColumn;
-    @FXML
-    private TableColumn<Media, String> searchCreatorColumn;
-    @FXML
-    private TableColumn<Media, String> searchSeasonColumn;
-    @FXML
-    private TableColumn<Media, String> searchEpisodeColumn;
-    @FXML
-    private TableColumn<Media, Integer> searchReviewsColumn;
-    @FXML
-    private TableColumn<Media, String> searchCategoryColumn;
-    @FXML
-    private TableColumn<Media, ?> searchRatingColumns;
-    @FXML
-    private TableColumn<Media, BigDecimal> searchMeanRColumn;
-    @FXML
-    private TableColumn<Media, BigDecimal> searchCurrentRColumn;
-    @FXML
-    private MenuItem searchQuickEntry;
-    @FXML
-    private MenuItem searchStandardEntry;
-    @FXML
-    private Text searchMeanAverage;
-    @FXML
-    private Text searchCurrentAverage;
     @FXML
     private Tab mediaTab;
     @FXML
@@ -252,11 +210,12 @@ public class CoreController implements Initializable {
     public final ObjectProperty<Media> currentMedia = new SimpleObjectProperty<>();
     private ObjectProperty<Review> currentReview = new SimpleObjectProperty<>();
     private DecimalFormat ratingFormat =  new DecimalFormat("#.#");
-    private ObservableList<Media> searchTableData;
 
-    private StatsTabController statsTab;
+    private StatsTabController statsController;
+    private SearchTabController searchController;
     
-    public void setStatsTab(FXMLLoader ldr){ chartTab.setContent(ldr.getRoot());statsTab = ldr.getController(); }
+    public void setStatsController(FXMLLoader ldr){ chartTab.setContent(ldr.getRoot());statsController = ldr.getController(); }
+    public void setSearchController(FXMLLoader ldr){ searchTab.setContent(ldr.getRoot());searchController = ldr.getController();searchController.update(currentMedia.get()); }
     /**
      * Initializes the controller class.
      */
@@ -266,7 +225,6 @@ public class CoreController implements Initializable {
         // This is just for test, try not to put it in a really release
 //        if(DataManager.getMedia().size()==0)
 //            Dumpster.createMedia(1000);
-        initSearchTab();
         initMediaTab();
         initReviewTab();
         
@@ -275,13 +233,13 @@ public class CoreController implements Initializable {
         
         anchorCenter.getSelectionModel().selectedItemProperty().addListener((observe,old,neo)->{
             if(neo.getText().equals("Search"))
-                updateSearchTab();
+                searchController.update(currentMedia.get());
             else if(neo.getText().equals("Media"))
                 updateMediaTab();
             else if(neo.getText().equals("Review"))
                 updateReviewTab();
             else if(neo.getText().equals("Chart"))
-                statsTab.update(currentMedia.get());
+                statsController.update(currentMedia.get());
             else if(neo.getText().equals("List"))
                 updateListTab();
         });
@@ -291,13 +249,9 @@ public class CoreController implements Initializable {
                 mediaTab.setDisable(true);
                 reviewTab.setDisable(true);
                 chartTab.setDisable(true);
-                searchEditMedia.setDisable(true);
-                searchDeleteMedia.setDisable(true);
             } else {
                 mediaTab.setDisable(false);
                 chartTab.setDisable(false);
-                searchEditMedia.setDisable(false);
-                searchDeleteMedia.setDisable(false);
             }
         });
         
@@ -311,153 +265,10 @@ public class CoreController implements Initializable {
         mediaTab.setDisable(true);
         reviewTab.setDisable(true);
         chartTab.setDisable(true);
-        searchEditMedia.setDisable(true);
-        searchDeleteMedia.setDisable(true);
-        
-        updateSearchTab();
     }    
-    
-    public void updateSearchTab(){
-        searchTableData.clear();
-        searchTableData.addAll(DataManager.getMedia());
-        searchTable.refresh();
-        if(searchTable.getItems().contains(getMedia()))
-            searchTable.getSelectionModel().select(getMedia());
-        else if(searchTable.getItems().size()>0)
-            searchTable.getSelectionModel().select(0);
-    }
-    
-    public void initSearchTab(){
-        searchTableData = DataManager.getMedia();
-        FilteredList<Media> mediaFiltered = new FilteredList(searchTableData,x->true);
-        SortedList<Media> mediaSortable = new SortedList<>(mediaFiltered);
-        searchTable.setItems(mediaSortable);
-        mediaSortable.comparatorProperty().bind(searchTable.comparatorProperty());
-        
-        // Link to data properties
-        searchTitleColumn.setCellValueFactory(new PropertyValueFactory<Media,String>("Title"));
-        searchCreatorColumn.setCellValueFactory(new PropertyValueFactory<Media,String>("Creator"));
-        searchSeasonColumn.setCellValueFactory(new PropertyValueFactory<Media,String>("SeasonId"));
-        searchEpisodeColumn.setCellValueFactory(new PropertyValueFactory<Media,String>("EpisodeId"));
-        searchCategoryColumn.setCellValueFactory(new PropertyValueFactory<Media,String>("Category"));
-        
-        // Values for special columns
-        searchNumberColumn.setSortable(false);
-        searchNumberColumn.setCellValueFactory(p -> new ReadOnlyObjectWrapper(1+searchTable.getItems().indexOf(p.getValue())));
-        searchReviewsColumn.setCellValueFactory(new Callback<CellDataFeatures<Media,Integer>, ObservableValue<Integer>>() {
-            @Override
-            public ObservableValue<Integer> call(CellDataFeatures<Media,Integer> p) {
-                return new ReadOnlyObjectWrapper(p.getValue().getReviews().size());
-            }
-        });
-        searchMeanRColumn.setCellValueFactory(new Callback<CellDataFeatures<Media,BigDecimal>, ObservableValue<BigDecimal>>() {
-            @Override
-            public ObservableValue<BigDecimal> call(CellDataFeatures<Media,BigDecimal> p) {
-                return new ReadOnlyObjectWrapper(p.getValue().getAverageRating());
-            }
-        });
-//        searchOriginalRColumn.setCellValueFactory(new Callback<CellDataFeatures<Media,BigDecimal>, ObservableValue<BigDecimal>>() {
-//            @Override
-//            public ObservableValue<BigDecimal> call(CellDataFeatures<Media,BigDecimal> p) {
-//                return new ReadOnlyObjectWrapper(p.getValue().getOriginalRating());
-//            }
-//        });
-        searchCurrentRColumn.setCellValueFactory(new Callback<CellDataFeatures<Media,BigDecimal>, ObservableValue<BigDecimal>>() {
-            @Override
-            public ObservableValue<BigDecimal> call(CellDataFeatures<Media,BigDecimal> p) {
-                return new ReadOnlyObjectWrapper(p.getValue().getCurrentRating());
-            }
-        });
-        
-        // Comparors for string columns
-        searchTitleColumn.setComparator(new NaturalOrderComparator());
-        searchCreatorColumn.setComparator(new NaturalOrderComparator());
-        searchSeasonColumn.setComparator(new NaturalOrderComparator());
-        searchEpisodeColumn.setComparator(new NaturalOrderComparator());
-        searchCategoryColumn.setComparator(new NaturalOrderComparator());
-        
-        searchTable.getSelectionModel().selectedItemProperty().addListener( (observe, old, neo) -> {
-            setMedia(neo);
-        });
-        
-        searchBox.textProperty().addListener((observa,old,neo)->{
-            String query = neo.toLowerCase();
-            if(query==null || query.equals(""))
-                mediaFiltered.setPredicate(x->true);
-            else{
-                String[] queries = query.split(":");
-                mediaFiltered.setPredicate(x->{
-                    boolean pass = true;
-                    for (String q : queries) {
-                        String[] optns = q.split("\\|\\|");
-                        boolean minorPass = false;
-                        for (String optn : optns) {
-                            if(
-                                    x.getTitle().toLowerCase().contains(optn) ||
-                                    x.getCreator().toLowerCase().contains(optn) ||
-                                    x.getSeasonId().toLowerCase().contains(optn) ||
-                                    x.getEpisodeId().toLowerCase().contains(optn) ||
-                                    x.getCategory().toLowerCase().contains(optn) 
-                                    )
-                                minorPass = true;
-                        }
-                        if(!minorPass)
-                            pass = false;
-                    }
-                    return pass;
-                });
-            }
-            int totalNumberReviews = 0;
-            int totalNumberMedia = 0;
-            int totalReviewRating = 0;
-            int totalCurrentRating = 0;
-
-            totalNumberMedia = searchTable.getItems().size();
-            for(Media media : searchTable.getItems()){
-                totalNumberReviews += media.getReviews().size();
-                for (Review review : media.getReviews()) {
-                    totalReviewRating += review.getRating().intValue();
-                }
-                totalCurrentRating += media.getCurrentRating().intValue();
-            }
-
-            searchMeanAverage.setText(String.format("%.2f", totalReviewRating*1.0/totalNumberReviews));
-            searchCurrentAverage.setText(String.format("%.2f", totalCurrentRating*1.0/totalNumberMedia));
-        });
-        
-        searchNewMedia.setOnAction(e->{
-            Media neo = new Media();
-            neo.setId(DataManager.createDB(neo));
-            setMedia(neo);
-            anchorCenter.getSelectionModel().select(mediaTab);
-        });
-        searchQuickEntry.setOnAction(e->{
-                  try{
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("QuickEntry.fxml"));
-                    Parent root1 = (Parent) fxmlLoader.load();
-                    QuickEntryController qec = fxmlLoader.getController();
-                    qec.setCore(this);
-                    Stage stage = new Stage();
-                    stage.setTitle("Quick Entry");
-                    stage.setScene(new Scene(root1));  
-                    stage.show();
-                  } catch(Exception ex) {}
-        });
-        searchStandardEntry.setOnAction(e->{
-            Media neo = new Media();
-            neo.setId(DataManager.createDB(neo));
-            setMedia(neo);
-            anchorCenter.getSelectionModel().select(mediaTab);
-        });
-        searchEditMedia.setOnAction(e->{
-            anchorCenter.getSelectionModel().select(mediaTab);
-        });
-        searchDeleteMedia.setOnAction(e->{
-            if(new Alert(AlertType.WARNING,"Are you sure you want to delete this?",ButtonType.NO,ButtonType.YES).showAndWait().get().equals(ButtonType.YES)){
-                DataManager.deleteDB(getMedia());
-                updateSearchTab();
-            }
-        });
+     
+    public void refresh(){
+        searchController.refresh();
     }
     
     public void setMedia(Media media){

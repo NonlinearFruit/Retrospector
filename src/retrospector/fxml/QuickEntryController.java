@@ -105,19 +105,19 @@ public class QuickEntryController implements Initializable {
         saveClose.setOnAction(e->{
             Media m = getMedia();
             DataManager.createDB(m);
-            core.updateSearchTab();
+            core.refresh();
             saveClose.getScene().getWindow().hide();
         });
         brandNew.setOnAction(e->{
             DataManager.createDB(getMedia());
-            core.updateSearchTab();
+            core.refresh();
             clear();
             title.requestFocus();
         });
         newKeepT.setOnAction(e->{
             Media m = getMedia();
             DataManager.createDB(m);
-            core.updateSearchTab();
+            core.refresh();
             clear();
             title.setText(m.getTitle());
             creator.requestFocus();
@@ -125,7 +125,7 @@ public class QuickEntryController implements Initializable {
         newKeepCr.setOnAction(e->{
             Media m = getMedia();
             DataManager.createDB(m);
-            core.updateSearchTab();
+            core.refresh();
             clear();
             creator.setText(m.getCreator());
             title.requestFocus();
@@ -133,7 +133,7 @@ public class QuickEntryController implements Initializable {
         newKeepCa.setOnAction(e->{
             Media m = getMedia();
             DataManager.createDB(m);
-            core.updateSearchTab();
+            core.refresh();
             clear();
             category.setValue(m.getCategory());
             title.requestFocus();
@@ -141,7 +141,7 @@ public class QuickEntryController implements Initializable {
         newKeepTCr.setOnAction(e->{
             Media m = getMedia();
             DataManager.createDB(m);
-            core.updateSearchTab();
+            core.refresh();
             clear();
             title.setText(m.getTitle());
             creator.setText(m.getCreator());
@@ -150,7 +150,7 @@ public class QuickEntryController implements Initializable {
         newKeepTCrCa.setOnAction(e->{
             Media m = getMedia();
             DataManager.createDB(m);
-            core.updateSearchTab();
+            core.refresh();
             clear();
             title.setText(m.getTitle());
             creator.setText(m.getCreator());
@@ -160,7 +160,7 @@ public class QuickEntryController implements Initializable {
         newKeepTCrCaS.setOnAction(e->{
             Media m = getMedia();
             DataManager.createDB(m);
-            core.updateSearchTab();
+            core.refresh();
             clear();
             title.setText(m.getTitle());
             creator.setText(m.getCreator());
