@@ -27,7 +27,6 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
-<?import javafx.scene.web.WebView?>
 <?import org.controlsfx.control.Rating?>
 
 <TabPane fx:id="anchorCenter" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1300.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="retrospector.fxml.CoreController">
@@ -373,11 +372,6 @@
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </padding>
             </GridPane>
-         </content>
-      </Tab>
-      <Tab fx:id="tropeTab" text="Tropes">
-         <content>
-            <WebView fx:id="tropeWebView" prefHeight="200.0" prefWidth="200.0" />
          </content>
       </Tab>
   </tabs>

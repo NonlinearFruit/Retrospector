@@ -248,15 +248,10 @@ public class CoreController implements Initializable {
     private RadioButton listUseAllTime;
     @FXML
     private RadioButton listUseYear;
-    @FXML
-    private Tab tropeTab;
-    @FXML
-    private WebView tropeWebView;
     
     public final ObjectProperty<Media> currentMedia = new SimpleObjectProperty<>();
     private ObjectProperty<Review> currentReview = new SimpleObjectProperty<>();
     private DecimalFormat ratingFormat =  new DecimalFormat("#.#");
-    private String tropeHome = "http://tvtropes.org";
     private ObservableList<Media> searchTableData;
 
     private StatsTabController statsTab;
@@ -277,15 +272,6 @@ public class CoreController implements Initializable {
         
         // List
         initListTab();
-        // Tropes
-        if(PropertyManager.loadProperties().isEnableTrope()){
-            initTropeTab();
-            try{
-                new URL(tropeHome).openConnection();
-            }catch(IOException e){tropeTab.setDisable(true);}
-        }
-        else anchorCenter.getTabs().remove(tropeTab);
-        
         
         anchorCenter.getSelectionModel().selectedItemProperty().addListener((observe,old,neo)->{
             if(neo.getText().equals("Search"))
@@ -298,8 +284,6 @@ public class CoreController implements Initializable {
                 statsTab.update(currentMedia.get());
             else if(neo.getText().equals("List"))
                 updateListTab();
-            else if(neo.getText().equals("Tropes"))
-                updateTropes();
         });
         
         currentMedia.addListener((observe, old, neo)->{
@@ -879,15 +863,6 @@ public class CoreController implements Initializable {
         listSeasonColumn.setComparator(new NaturalOrderComparator());
         listEpisodeColumn.setComparator(new NaturalOrderComparator());
         listCategoryColumn.setComparator(new NaturalOrderComparator());
-    }
-    
-
-    private void updateTropes() {
-        // Do nothing
-    }
-
-    private void initTropeTab() {
-        tropeWebView.getEngine().load(tropeHome);
     }
     
     public static enum Chartagories{
