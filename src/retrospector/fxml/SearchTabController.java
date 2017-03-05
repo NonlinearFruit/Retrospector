@@ -8,6 +8,7 @@ package retrospector.fxml;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -26,6 +27,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
+import retrospector.fxml.CoreController.TAB;
 import retrospector.model.DataManager;
 import retrospector.model.Media;
 import retrospector.model.Review;
@@ -78,7 +80,8 @@ public class SearchTabController implements Initializable {
     private Text searchCurrentAverage;
     
     private ObservableList<Media> searchTableData;
-    private Media currentMedia;
+    private ObjectProperty<Media> currentMedia;
+    private ObjectProperty<TAB> currentTab;
 
     /**
      * Initializes the controller class.
@@ -98,23 +101,41 @@ public class SearchTabController implements Initializable {
             searchTable.getSelectionModel().select(0);
     }
     
-    public Media getMedia(){
-        return currentMedia;
+    private Media getMedia(){
+        return currentMedia.get();
     }
     
-    public void update(Media m){
-        setMedia(m);
+    protected void setup(ObjectProperty<TAB> t,ObjectProperty<Media> m){
+        currentTab = t;
+        currentMedia = m;
+        
+        currentMedia.addListener((observe,old,neo)->{
+            if(neo==null){
+                searchEditMedia.setDisable(true);
+                searchDeleteMedia.setDisable(true);
+            } else {
+                searchEditMedia.setDisable(false);
+                searchDeleteMedia.setDisable(false);
+            }
+        });
     }
     
     private void setMedia(Media m){
-        currentMedia = m;
+        currentMedia.set(m);
     }
     
-    public void refresh(){
+    private void setTab(TAB t){
+        currentTab.set(t);
+    }
+    
+    protected void update(){
         updateSearchTab();
     }
     
     private void initSearchTab(){
+        searchEditMedia.setDisable(true);
+        searchDeleteMedia.setDisable(true);
+        
         searchTableData = DataManager.getMedia();
         FilteredList<Media> mediaFiltered = new FilteredList(searchTableData,x->true);
         SortedList<Media> mediaSortable = new SortedList<>(mediaFiltered);
@@ -143,12 +164,6 @@ public class SearchTabController implements Initializable {
                 return new ReadOnlyObjectWrapper(p.getValue().getAverageRating());
             }
         });
-//        searchOriginalRColumn.setCellValueFactory(new Callback<CellDataFeatures<Media,BigDecimal>, ObservableValue<BigDecimal>>() {
-//            @Override
-//            public ObservableValue<BigDecimal> call(CellDataFeatures<Media,BigDecimal> p) {
-//                return new ReadOnlyObjectWrapper(p.getValue().getOriginalRating());
-//            }
-//        });
         searchCurrentRColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Media,BigDecimal>, ObservableValue<BigDecimal>>() {
             @Override
             public ObservableValue<BigDecimal> call(TableColumn.CellDataFeatures<Media,BigDecimal> p) {
@@ -213,11 +228,10 @@ public class SearchTabController implements Initializable {
         });
         
         searchNewMedia.setOnAction(e->{
-//            Media neo = new Media();
-//            neo.setId(DataManager.createDB(neo));
-//            setMedia(neo);
-            throw new UnsupportedOperationException("No Media Tab interaction");
-//            anchorCenter.getSelectionModel().select(mediaTab);
+            Media neo = new Media();
+            neo.setId(DataManager.createDB(neo));
+            setMedia(neo);
+            setTab(TAB.MEDIA);
         });
         searchQuickEntry.setOnAction(e->{
                 throw new UnsupportedOperationException("No Quick Entry interaction");
@@ -233,15 +247,13 @@ public class SearchTabController implements Initializable {
 //                  } catch(Exception ex) {}
         });
         searchStandardEntry.setOnAction(e->{
-            throw new UnsupportedOperationException("No Media Tab interaction");
-//            Media neo = new Media();
-//            neo.setId(DataManager.createDB(neo));
-//            setMedia(neo);
-//            anchorCenter.getSelectionModel().select(mediaTab);
+            Media neo = new Media();
+            neo.setId(DataManager.createDB(neo));
+            setMedia(neo);
+            setTab(TAB.MEDIA);
         });
         searchEditMedia.setOnAction(e->{
-            throw new UnsupportedOperationException("No Media Tab interaction");
-//            anchorCenter.getSelectionModel().select(mediaTab);
+            setTab(TAB.MEDIA);
         });
         searchDeleteMedia.setOnAction(e->{
             if(new Alert(Alert.AlertType.WARNING,"Are you sure you want to delete this?",ButtonType.NO,ButtonType.YES).showAndWait().get().equals(ButtonType.YES)){

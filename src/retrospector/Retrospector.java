@@ -42,6 +42,12 @@ public class Retrospector extends Application {
         FXMLLoader medialdr = new FXMLLoader(getClass().getResource("/retrospector/fxml/MediaTab.fxml"));
             medialdr.load();
             core.setMediaController(medialdr);
+        FXMLLoader reviewldr = new FXMLLoader(getClass().getResource("/retrospector/fxml/ReviewTab.fxml"));
+            reviewldr.load();
+            core.setReviewController(reviewldr);
+        FXMLLoader listldr = new FXMLLoader(getClass().getResource("/retrospector/fxml/ListsTab.fxml"));
+            listldr.load();
+            core.setListController(listldr);
         
         Scene scene = new Scene(root, 1300, 800);
         

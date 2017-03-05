@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
+import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -24,6 +25,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import org.controlsfx.control.Rating;
+import retrospector.fxml.CoreController.TAB;
 import retrospector.model.DataManager;
 import retrospector.model.Media;
 import retrospector.model.Review;
@@ -88,33 +90,49 @@ public class MediaTabController implements Initializable {
     @FXML
     private HBox mediaEpisodeBox;
     
-    private Media currentMedia;
+    private ObjectProperty<Media> currentMedia;
+    private ObjectProperty<Review> currentReview;
+    private ObjectProperty<TAB> currentTab;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        initMediaTab();
     }    
     
     public Media getMedia(){
-        return currentMedia;
+        return currentMedia.get();
     }
     
-    public void updateMedia(Media m){
-        setMedia(m);
-    }
-    
-    private void setMedia(Media m){
+    public void setup(ObjectProperty<TAB> t, ObjectProperty<Media> m,ObjectProperty<Review> r){
+        currentTab = t;
         currentMedia = m;
+        currentReview = r;
     }
     
-    public void refresh(){
+    public void update(){
         updateMediaTab();
     }
     
-    public void updateMediaTab(){
+    private Review getReview(){
+        return currentReview.get();
+    }
+    
+    private void setReview(Review r){
+        currentReview.set(r);
+    }
+
+    private void setMedia(Media m){
+        currentMedia.setValue(m);
+    }
+    
+    private void setTab(TAB t){
+        currentTab.set(t);
+    }
+    
+    private void updateMediaTab(){
         setMedia(DataManager.getMedia(getMedia().getId()));
         mediaTitle.setText(getMedia().getTitle());
         mediaCreator.setText(getMedia().getCreator());
@@ -134,7 +152,7 @@ public class MediaTabController implements Initializable {
             mediaReviewTable.getSelectionModel().select(0);
     }
     
-    public void initMediaTab(){
+    private void initMediaTab(){
         mediaStars.setPartialRating(true);
         mediaStars.setDisable(true);
         mediaStars.setMax(DataManager.getMaxRating()/2);
@@ -166,8 +184,7 @@ public class MediaTabController implements Initializable {
         });
         
         mediaReviewTable.getSelectionModel().selectedItemProperty().addListener((observe, old, neo)->{
-//            setReview(neo);
-            throw new UnsupportedOperationException("Review tab interaction not happening yet");
+            setReview(neo);
         });
         mediaRatingColumn.setCellValueFactory(new PropertyValueFactory<Review,Double>("Rating"));
         mediaUserColumn.setCellValueFactory(new PropertyValueFactory<Review,String>("User"));
@@ -177,20 +194,17 @@ public class MediaTabController implements Initializable {
             Review review = new Review();
             review.setMediaId(getMedia().getId());
             review.setId(DataManager.createDB(review));
-            throw new UnsupportedOperationException("Review tab interaction not happening yet");
-//            setReview(review);
-//            anchorCenter.getSelectionModel().select(reviewTab);
+            setReview(review);
+            setTab(TAB.REVIEW);
         });
         mediaEditReview.setOnAction(e->{
-            throw new UnsupportedOperationException("Review tab interaction not happening yet");
-//            anchorCenter.getSelectionModel().select(reviewTab);
+            setTab(TAB.REVIEW);
         });
         mediaDeleteReview.setOnAction(e->{
-            throw new UnsupportedOperationException("Review tab interaction not happening yet");
-//            if(new Alert(Alert.AlertType.WARNING,"Are you sure you want to delete this?",ButtonType.NO,ButtonType.YES).showAndWait().get().equals(ButtonType.YES)){
-//                DataManager.deleteDB(getReview());
-//                updateMediaTab();
-//            }
+            if(new Alert(Alert.AlertType.WARNING,"Are you sure you want to delete this?",ButtonType.NO,ButtonType.YES).showAndWait().get().equals(ButtonType.YES)){
+                DataManager.deleteDB(getReview());
+                updateMediaTab();
+            }
         });
         
         mediaSave.setOnAction(e->{
@@ -206,18 +220,15 @@ public class MediaTabController implements Initializable {
             m.setDescription(mediaDescription.getText());
             DataManager.updateDB(m);
             setMedia(m);
-//            anchor.getSelectionModel().select(searchTab); // <-- This is annoying
         });
         mediaDelete.setOnAction(e->{
-            throw new UnsupportedOperationException("Search tab interaction not happening yet");
-//            if(new Alert(Alert.AlertType.WARNING,"Are you sure you want to delete this?",ButtonType.NO,ButtonType.YES).showAndWait().get().equals(ButtonType.YES)){
-//                DataManager.deleteDB(getMedia());
-//                anchorCenter.getSelectionModel().select(searchTab);
-//            }
+            if(new Alert(Alert.AlertType.WARNING,"Are you sure you want to delete this?",ButtonType.NO,ButtonType.YES).showAndWait().get().equals(ButtonType.YES)){
+                DataManager.deleteDB(getMedia());
+                setTab(TAB.SEARCH);
+            }
         });
         mediaCancel.setOnAction(e->{
-            throw new UnsupportedOperationException("Search tab interaction not happening yet");
-//            anchorCenter.getSelectionModel().select(searchTab);
+            setTab(TAB.SEARCH);
         });
         
         mediaNewMedia.setOnAction(e->{

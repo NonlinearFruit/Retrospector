@@ -5,40 +5,23 @@
  */
 package retrospector.fxml;
 
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
 import java.net.URL;
 import java.text.DecimalFormat;
-import java.time.LocalDate;
-import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
-import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListView;
-import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
+import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
@@ -46,20 +29,10 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.control.TableColumn.CellDataFeatures;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.control.cell.CheckBoxListCell;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
-import javafx.util.Callback;
 import org.controlsfx.control.Rating;
 import retrospector.model.*;
-import static retrospector.model.Media.Type.SERIES;
-import retrospector.util.NaturalOrderComparator;
-import retrospector.util.Stroolean;
-import retrospector.util.UtilityCloset;
 
 /**
  * FXML Controller class
@@ -68,6 +41,9 @@ import retrospector.util.UtilityCloset;
  */
 public class CoreController implements Initializable {
 
+    public static enum TAB{ SEARCH, MEDIA, REVIEW, CHART, LIST} 
+    public static final DecimalFormat ratingFormat =  new DecimalFormat("#.#");
+    
     @FXML
     public TabPane anchorCenter;
     @FXML
@@ -75,97 +51,27 @@ public class CoreController implements Initializable {
     @FXML
     private Tab mediaTab;
     @FXML
-    private TextField reviewTitle;
-    @FXML
-    private TextField reviewCreator;
-    @FXML
-    private TextField reviewSeason;
-    @FXML
-    private TextField reviewEpisode;
-    @FXML
-    private Rating reviewStars;
-    @FXML
-    private Text reviewRating;
-    @FXML
-    private Text reviewMaxRating;
-    @FXML
-    private Slider reviewRater;
-    @FXML
-    private TextField reviewUser;
-    @FXML
-    private DatePicker reviewDate;
-    @FXML
-    private TextArea reviewDescription;
-    @FXML
-    private Button reviewSave;
-    @FXML
-    private Button reviewDelete;
-    @FXML
-    private Button reviewCancel;
-    @FXML
     private Tab reviewTab;
     @FXML
     private Tab chartTab;
     @FXML
-    private ListView<Stroolean> listIncludeList;
-    @FXML
-    private TableView<Media> listTable;
-    @FXML
-    private ToggleButton listTop10;
-    @FXML
-    private ToggleButton listTop100;
-    @FXML
-    private ToggleButton listTop1000;
-    @FXML
-    private TextField listYear;
-    @FXML
-    private DatePicker listStartDate;
-    @FXML
-    private DatePicker listEndDate;
-    @FXML
-    private TextField listUser;
-    @FXML
-    private TableColumn<Media, String> listTitleColumn;
-    @FXML
-    private TableColumn<Media, String> listCreatorColumn;
-    @FXML
-    private TableColumn<Media, String> listSeasonColumn;
-    @FXML
-    private TableColumn<Media, String> listEpisodeColumn;
-    @FXML
-    private TableColumn<Media, String> listCategoryColumn;
-    @FXML
-    private TableColumn<Media, Integer> listReviewsColumn;
-    @FXML
-    private TableColumn<Media, BigDecimal> listRatingColumn;
-    @FXML
-    private TableColumn<Media, Integer> listRankColumn;
-    @FXML
-    private RadioButton listCustomDateRange;
-    @FXML
-    private ToggleButton listGroupCreator;
-    @FXML
-    private ToggleButton listGroupTitle;
-    @FXML
-    private ToggleButton listGroupSeason;
-    @FXML
-    private ToggleButton listGroupEpisode;
-    @FXML
-    private RadioButton listUseAllTime;
-    @FXML
-    private RadioButton listUseYear;
+    private Tab listTab;
     
-    public final ObjectProperty<Media> currentMedia = new SimpleObjectProperty<>();
-    private ObjectProperty<Review> currentReview = new SimpleObjectProperty<>();
-    public static final DecimalFormat ratingFormat =  new DecimalFormat("#.#");
+    private final ObjectProperty<Media> currentMedia = new SimpleObjectProperty<>();
+    private final ObjectProperty<Review> currentReview = new SimpleObjectProperty<>();
+    private final ObjectProperty<TAB> currentTab = new SimpleObjectProperty<>();
 
     private StatsTabController statsController;
     private SearchTabController searchController;
     private MediaTabController mediaController;
+    private ReviewTabController reviewController;
+    private ListsTabController listsController;
     
     public void setStatsController(FXMLLoader ldr){ chartTab.setContent(ldr.getRoot());statsController = ldr.getController(); }
-    public void setMediaController(FXMLLoader ldr){ mediaTab.setContent(ldr.getRoot());mediaController = ldr.getController(); }
-    public void setSearchController(FXMLLoader ldr){ searchTab.setContent(ldr.getRoot());searchController = ldr.getController();searchController.update(currentMedia.get()); }
+    public void setMediaController(FXMLLoader ldr){ mediaTab.setContent(ldr.getRoot());mediaController = ldr.getController();mediaController.setup(currentTab,currentMedia,currentReview);}
+    public void setReviewController(FXMLLoader ldr){ reviewTab.setContent(ldr.getRoot());reviewController = ldr.getController();reviewController.setup(currentTab,currentMedia,currentReview); }
+    public void setListController(FXMLLoader ldr){ listTab.setContent(ldr.getRoot());listsController = ldr.getController();listsController.setup(currentTab); }
+    public void setSearchController(FXMLLoader ldr){ searchTab.setContent(ldr.getRoot());searchController = ldr.getController();searchController.setup(currentTab,currentMedia); }
     /**
      * Initializes the controller class.
      */
@@ -175,22 +81,42 @@ public class CoreController implements Initializable {
         // This is just for test, try not to put it in a really release
 //        if(DataManager.getMedia().size()==0)
 //            Dumpster.createMedia(1000);
-        initReviewTab();
         
-        // List
-        initListTab();
-        
+        currentTab.set(TAB.SEARCH);
+        currentTab.addListener((observe,old,neo)->{
+            Tab tab;
+            switch(neo){
+                default:
+                case SEARCH:
+                    tab = searchTab;
+                    break;
+                case MEDIA:
+                    tab = mediaTab;
+                    break;
+                case REVIEW:
+                    tab = reviewTab;
+                    break;
+                case CHART:
+                    tab = chartTab;
+                    break;
+                case LIST:
+                    tab = listTab;
+                    break;
+            }
+            anchorCenter.getSelectionModel().select(tab);
+        });
+
         anchorCenter.getSelectionModel().selectedItemProperty().addListener((observe,old,neo)->{
             if(neo.getText().equals("Search"))
-                searchController.update(currentMedia.get());
+                searchController.update();
             else if(neo.getText().equals("Media"))
-                mediaController.updateMedia(currentMedia.get());
+                mediaController.update();
             else if(neo.getText().equals("Review"))
-                updateReviewTab();
+                reviewController.update();
             else if(neo.getText().equals("Chart"))
                 statsController.update(currentMedia.get());
             else if(neo.getText().equals("List"))
-                updateListTab();
+                listsController.update();
         });
         
         currentMedia.addListener((observe, old, neo)->{
@@ -214,277 +140,5 @@ public class CoreController implements Initializable {
         mediaTab.setDisable(true);
         reviewTab.setDisable(true);
         chartTab.setDisable(true);
-    }    
-     
-    public void refresh(){
-        searchController.refresh();
-    }
-    
-    public void setMedia(Media media){
-        currentMedia.set(media);
-    }
-    
-    public Media getMedia(){
-        return currentMedia.get();
-    }
-    
-    public void setReview(Review review){
-        currentReview.set(review);
-    }
-    
-    public Review getReview(){
-        return currentReview.get();
-    }
-    
-    public void updateReviewTab(){
-        reviewTitle.setText(getMedia().getTitle());
-        reviewCreator.setText(getMedia().getCreator());
-        reviewSeason.setText(getMedia().getSeasonId());
-        reviewEpisode.setText(getMedia().getEpisodeId());
-        reviewRater.setValue(getReview().getRating().doubleValue());
-        reviewDescription.setText(getReview().getReview());
-        reviewUser.setText(getReview().getUser());
-        reviewDate.setValue(getReview().getDate());
-    }
-    
-    public void initReviewTab(){
-        reviewStars.setPartialRating(true);
-        reviewStars.setDisable(true);
-        reviewStars.setMax(DataManager.getMaxRating()/2);
-        reviewStars.ratingProperty().bind(
-                Bindings.divide(reviewRater.valueProperty(), 2)
-        );
-        reviewRating.textProperty().bind(
-                Bindings.createStringBinding(()->ratingFormat.format(reviewRater.valueProperty().getValue()), reviewRater.valueProperty())
-        );
-        
-        reviewSave.setOnAction(e->{
-            getReview().setDate(reviewDate.getValue());
-            getReview().setRating(BigDecimal.valueOf(reviewRater.getValue()).round(new MathContext(2, RoundingMode.HALF_UP)));
-            getReview().setUser(reviewUser.getText());
-            getReview().setReview(reviewDescription.getText());
-            DataManager.updateDB(getReview());
-            setReview(DataManager.getReview(getReview().getId()));
-            anchorCenter.getSelectionModel().select(mediaTab);
-        });
-        reviewDelete.setOnAction(e->{
-            if(new Alert(AlertType.WARNING,"Are you sure you want to delete this?",ButtonType.NO,ButtonType.YES).showAndWait().get().equals(ButtonType.YES)){
-                DataManager.deleteDB(getReview());
-                anchorCenter.getSelectionModel().select(mediaTab);
-            }
-        });
-        reviewCancel.setOnAction(e->{
-            anchorCenter.getSelectionModel().select(mediaTab);
-        });
-    }
-
-// Chart tab outsourced to StatsTabController.java
-    
-    private ObservableList<Stroolean> strooleans = FXCollections.observableArrayList();
-    private ObservableList<Media> listTableData = FXCollections.observableArrayList();
-    private ToggleGroup dateToggleGroup = new ToggleGroup();
-    
-    public void updateListTab(){
-        listTableData.clear();
-        if(!listGroupCreator.isSelected())
-            return;
-        
-        boolean creator = listGroupCreator.isSelected();
-        boolean title = listGroupTitle.isSelected();
-        boolean season = listGroupSeason.isSelected();
-        boolean episode = listGroupEpisode.isSelected();
-        Chartagories chartagory = episode? Chartagories.CURRENT_MEDIA:
-                                  season?  Chartagories.SEASON:
-                                  title?   Chartagories.TITLE:
-                                           Chartagories.CREATOR;
-        
-        Integer top = listTop10.isSelected()?  10:
-                      listTop100.isSelected()? 100:
-                                               1000;
-        
-        LocalDate start = listCustomDateRange.isSelected()? listStartDate.getValue() : LocalDate.of(Integer.parseInt(listYear.getText())-1, 12, 31);
-            start = listUseAllTime.isSelected()? LocalDate.MIN : start;
-        LocalDate end = listCustomDateRange.isSelected()? listEndDate.getValue() : LocalDate.of(Integer.parseInt(listYear.getText())+1, 1, 1);
-            end = listUseAllTime.isSelected()? LocalDate.MAX : end;
-        
-        String user = listUser.getText();
-        
-        for (Media media : DataManager.getMedia()) {
-            for (Stroolean stroolean : strooleans) {
-                if(stroolean.isBoolean() && media.getCategory().equals(stroolean.getString())){
-                    boolean homeless = true;
-                    for (Media data : listTableData) {
-                        Media temp = new Media();
-                        temp.clone(media);
-                        temp.setCategory(data.getCategory());
-                        temp.setType(data.getType());
-                        if(UtilityCloset.isSameMedia(chartagory, data, temp)){
-                            homeless = false;
-                            for (Review review : media.getReviews()) {
-                                if(review.getDate().isBefore(end) && 
-                                   review.getDate().isAfter(start)&&
-                                   review.getUser().equals(user)){
-                                        data.getReviews().add(review);
-                                }
-                            }
-                            break;
-                        }
-                    }
-                    if(homeless){
-                        Media m = new Media();
-                        if(creator)
-                            m.setCreator(media.getCreator());
-                        if(title)
-                            m.setTitle(media.getTitle());
-                        if(season)
-                            m.setSeasonId(media.getSeasonId());
-                        if(episode)
-                            m.setEpisodeId(media.getEpisodeId());
-                        m.setCategory(media.getCategory());
-                        for (Review review : media.getReviews()) {
-                            if(review.getUser().equals(user)){
-                                if(review.getDate().isBefore(end) && 
-                                   review.getDate().isAfter(start)){
-                                        m.getReviews().add(review);
-                                } else if(review.getDate().isEqual(start) || review.getDate().isEqual(end)){
-                                        m.getReviews().add(review);
-                                }
-                            }
-                        }
-                        listTableData.add(m);
-                    }
-                }
-            }
-        }
-        List rankedResults = listTableData.stream()
-                    .sorted((x,y)->y.getAverageRating().compareTo(x.getAverageRating()))
-                    .limit(top)
-                    .collect(Collectors.toList());
-        listTable.setItems(FXCollections.observableArrayList(rankedResults));
-        listRankColumn.setCellValueFactory(p -> new ReadOnlyObjectWrapper(1+rankedResults.indexOf(p.getValue())));
-        listTable.refresh();
-    }
-    
-    public void initListTab(){
-        // Include
-        for (String category : DataManager.getCategories()) {
-            Stroolean c = new Stroolean(category);
-            c.booleanProperty().addListener((observe,old,neo)->updateListTab());
-            strooleans.add(c);
-            listIncludeList.getItems().add(c);
-        }
-        listIncludeList.setCellFactory(CheckBoxListCell.forListView(Stroolean::booleanProperty));
-        
-        // Group By
-        listGroupCreator.setSelected(true);
-        listGroupCreator.selectedProperty().addListener((observe,old,neo)->{
-            if(neo){
-                // Nothing to select, top of the food chain
-            } else {
-                listGroupTitle.setSelected(false);
-                listGroupSeason.setSelected(false);
-                listGroupEpisode.setSelected(false);
-            }
-            updateListTab();
-        });
-        listGroupTitle.selectedProperty().addListener((observe,old,neo)->{
-            if(neo){
-                listGroupCreator.setSelected(true);
-            } else {
-                listGroupSeason.setSelected(false);
-                listGroupEpisode.setSelected(false);
-            }
-            updateListTab();
-        });
-        listGroupSeason.selectedProperty().addListener((observe,old,neo)->{
-            if(neo){
-                listGroupCreator.setSelected(true);
-                listGroupTitle.setSelected(true);
-            } else {
-                listGroupEpisode.setSelected(false);
-            }
-            updateListTab();
-        });
-        listGroupEpisode.selectedProperty().addListener((observe,old,neo)->{
-            if(neo){
-                listGroupCreator.setSelected(true);
-                listGroupTitle.setSelected(true);
-                listGroupSeason.setSelected(true);
-            } else {
-                // Nothing to deselect, bottom of the food chain
-            }
-            updateListTab();
-        });
-        
-        
-        // Top 10/0/0
-        listTop10.setSelected(true);
-        listTop10.selectedProperty().addListener((observe,old,neo)->{
-            updateListTab();
-            if(neo){
-                listTop100.setSelected(false);
-                listTop1000.setSelected(false);
-            }
-        });
-        listTop100.selectedProperty().addListener((observe,old,neo)->{
-            updateListTab();
-            if(neo){
-                listTop10.setSelected(false);
-                listTop1000.setSelected(false);
-            }
-        });
-        listTop1000.selectedProperty().addListener((observe,old,neo)->{
-            updateListTab();
-            if(neo){
-                listTop100.setSelected(false);
-                listTop10.setSelected(false);
-            }
-        });
-        
-        // Dates
-        listYear.setText(String.valueOf(LocalDate.now().getYear()));
-        listYear.setOnAction(e->updateListTab());
-        listStartDate.setValue(LocalDate.now().withMonth(1).withDayOfMonth(1));
-        listStartDate.valueProperty().addListener((observe,old,neo)->updateListTab());
-        listEndDate.setValue(LocalDate.now().withMonth(12).withDayOfMonth(31));
-        listEndDate.valueProperty().addListener((observe,old,neo)->updateListTab());
-        listUseAllTime.selectedProperty().addListener((observe,old,neo)->updateListTab());
-        listUseYear.selectedProperty().addListener((observe,old,neo)->updateListTab());
-        listCustomDateRange.selectedProperty().addListener((observe,old,neo)->updateListTab());
-        //  - Enable/Disble
-        dateToggleGroup.getToggles().addAll(listUseYear,listUseAllTime,listCustomDateRange);
-        dateToggleGroup.selectToggle(listUseAllTime);
-        listYear.disableProperty().bind(Bindings.not(listUseYear.selectedProperty()));
-        listStartDate.disableProperty().bind(Bindings.not(listCustomDateRange.selectedProperty()));
-        listEndDate.disableProperty().bind(Bindings.not(listCustomDateRange.selectedProperty()));
-        
-        // User
-        listUser.setText(DataManager.getDefaultUser());
-        listUser.setOnAction(e->updateListTab());
-        
-        // Table
-        listTable.setItems(listTableData);
-        
-        // Link to Properties
-        listTitleColumn.setCellValueFactory(new PropertyValueFactory<>("Title"));
-        listCreatorColumn.setCellValueFactory(new PropertyValueFactory<>("Creator"));
-        listSeasonColumn.setCellValueFactory(new PropertyValueFactory<>("SeasonId"));
-        listEpisodeColumn.setCellValueFactory(new PropertyValueFactory<>("EpisodeId"));
-        listCategoryColumn.setCellValueFactory(new PropertyValueFactory<>("Category"));
-        
-        // Special Table Cells
-        listReviewsColumn.setCellValueFactory(p -> new ReadOnlyObjectWrapper(p.getValue().getReviews().size()) );
-        listRatingColumn.setCellValueFactory(p -> new ReadOnlyObjectWrapper(p.getValue().getAverageRating()) );
-        
-        // Comparors for string columns
-        listTitleColumn.setComparator(new NaturalOrderComparator());
-        listCreatorColumn.setComparator(new NaturalOrderComparator());
-        listSeasonColumn.setComparator(new NaturalOrderComparator());
-        listEpisodeColumn.setComparator(new NaturalOrderComparator());
-        listCategoryColumn.setComparator(new NaturalOrderComparator());
-    }
-    
-    public static enum Chartagories{
-        CURRENT_MEDIA,SEASON,TITLE,CREATOR,CATEGORY
     }
 }
