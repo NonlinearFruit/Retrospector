@@ -7,31 +7,14 @@ package retrospector.fxml;
 
 import java.net.URL;
 import java.text.DecimalFormat;
-import java.util.Locale;
 import java.util.ResourceBundle;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.ListView;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.Slider;
-import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.layout.HBox;
-import javafx.scene.text.Text;
-import org.controlsfx.control.Rating;
 import retrospector.model.*;
 
 /**
@@ -67,11 +50,35 @@ public class CoreController implements Initializable {
     private ReviewTabController reviewController;
     private ListsTabController listsController;
     
-    public void setStatsController(FXMLLoader ldr){ chartTab.setContent(ldr.getRoot());statsController = ldr.getController(); }
-    public void setMediaController(FXMLLoader ldr){ mediaTab.setContent(ldr.getRoot());mediaController = ldr.getController();mediaController.setup(currentTab,currentMedia,currentReview);}
-    public void setReviewController(FXMLLoader ldr){ reviewTab.setContent(ldr.getRoot());reviewController = ldr.getController();reviewController.setup(currentTab,currentMedia,currentReview); }
-    public void setListController(FXMLLoader ldr){ listTab.setContent(ldr.getRoot());listsController = ldr.getController();listsController.setup(currentTab); }
-    public void setSearchController(FXMLLoader ldr){ searchTab.setContent(ldr.getRoot());searchController = ldr.getController();searchController.setup(currentTab,currentMedia); }
+    public void setStatsController(FXMLLoader ldr){ 
+        chartTab.setContent(ldr.getRoot());
+        statsController = ldr.getController(); 
+    }
+    
+    public void setMediaController(FXMLLoader ldr){ 
+        mediaTab.setContent(ldr.getRoot());
+        mediaController = ldr.getController();
+        mediaController.setup(currentTab,currentMedia,currentReview);
+    }
+    
+    public void setReviewController(FXMLLoader ldr){ 
+        reviewTab.setContent(ldr.getRoot());
+        reviewController = ldr.getController();
+        reviewController.setup(currentTab,currentMedia,currentReview); 
+    }
+    
+    public void setListController(FXMLLoader ldr){ 
+        listTab.setContent(ldr.getRoot());
+        listsController = ldr.getController();
+        listsController.setup(currentTab); 
+    }
+    
+    public void setSearchController(FXMLLoader ldr){ 
+        searchTab.setContent(ldr.getRoot());
+        searchController = ldr.getController();
+        searchController.setup(currentTab,currentMedia); 
+    }
+    
     /**
      * Initializes the controller class.
      */

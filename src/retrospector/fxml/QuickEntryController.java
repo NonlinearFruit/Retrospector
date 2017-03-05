@@ -8,18 +8,18 @@ package retrospector.fxml;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.Month;
 import java.util.ResourceBundle;
+import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
+import retrospector.fxml.CoreController.TAB;
 import retrospector.model.DataManager;
 import retrospector.model.Media;
 import retrospector.model.Review;
@@ -63,11 +63,11 @@ public class QuickEntryController implements Initializable {
     private MenuItem newKeepTCrCaS;
     @FXML
     private Button discard;
-    
-    private String defaultCat;
-    private CoreController core;
     @FXML
     private Button saveClose;
+    
+    private String defaultCat;
+    private ObjectProperty<TAB> currentTab;
 
     /**
      * Initializes the controller class.
@@ -105,19 +105,19 @@ public class QuickEntryController implements Initializable {
         saveClose.setOnAction(e->{
             Media m = getMedia();
             DataManager.createDB(m);
-            core.refresh();
+            causeRefresh();
             saveClose.getScene().getWindow().hide();
         });
         brandNew.setOnAction(e->{
             DataManager.createDB(getMedia());
-            core.refresh();
+            causeRefresh();
             clear();
             title.requestFocus();
         });
         newKeepT.setOnAction(e->{
             Media m = getMedia();
             DataManager.createDB(m);
-            core.refresh();
+            causeRefresh();
             clear();
             title.setText(m.getTitle());
             creator.requestFocus();
@@ -125,7 +125,7 @@ public class QuickEntryController implements Initializable {
         newKeepCr.setOnAction(e->{
             Media m = getMedia();
             DataManager.createDB(m);
-            core.refresh();
+            causeRefresh();
             clear();
             creator.setText(m.getCreator());
             title.requestFocus();
@@ -133,7 +133,7 @@ public class QuickEntryController implements Initializable {
         newKeepCa.setOnAction(e->{
             Media m = getMedia();
             DataManager.createDB(m);
-            core.refresh();
+            causeRefresh();
             clear();
             category.setValue(m.getCategory());
             title.requestFocus();
@@ -141,7 +141,7 @@ public class QuickEntryController implements Initializable {
         newKeepTCr.setOnAction(e->{
             Media m = getMedia();
             DataManager.createDB(m);
-            core.refresh();
+            causeRefresh();
             clear();
             title.setText(m.getTitle());
             creator.setText(m.getCreator());
@@ -150,7 +150,7 @@ public class QuickEntryController implements Initializable {
         newKeepTCrCa.setOnAction(e->{
             Media m = getMedia();
             DataManager.createDB(m);
-            core.refresh();
+            causeRefresh();
             clear();
             title.setText(m.getTitle());
             creator.setText(m.getCreator());
@@ -160,7 +160,7 @@ public class QuickEntryController implements Initializable {
         newKeepTCrCaS.setOnAction(e->{
             Media m = getMedia();
             DataManager.createDB(m);
-            core.refresh();
+            causeRefresh();
             clear();
             title.setText(m.getTitle());
             creator.setText(m.getCreator());
@@ -175,7 +175,15 @@ public class QuickEntryController implements Initializable {
         clear();
     }
     
-    public void clear(){
+    protected void setup(ObjectProperty<TAB> t){
+        currentTab = t;
+    }
+    
+    private void causeRefresh(){
+        currentTab.set(currentTab.get());
+    }
+    
+    private void clear(){
         title.setText("");
         creator.setText("");
         category.setValue(defaultCat);
@@ -185,11 +193,7 @@ public class QuickEntryController implements Initializable {
         date.setText("");
     }
     
-    public void setCore(CoreController c){
-        core = c;
-    }
-    
-    public Media getMedia(){
+    private Media getMedia(){
         Media m = new Media();
         m.setTitle(title.getText());
         m.setCreator(creator.getText());

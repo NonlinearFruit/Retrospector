@@ -23,8 +23,6 @@ import retrospector.model.DataManager;
  */
 public class Retrospector extends Application {
     
-    Map<String,List<double[]>> clicks = new HashMap<>();
-    
     @Override
     public void start(Stage primaryStage) throws Exception{
         

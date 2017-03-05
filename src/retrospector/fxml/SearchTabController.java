@@ -15,7 +15,10 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -26,6 +29,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 import retrospector.fxml.CoreController.TAB;
 import retrospector.model.DataManager;
@@ -132,10 +136,65 @@ public class SearchTabController implements Initializable {
         updateSearchTab();
     }
     
+    private void updateStats(){
+        int totalNumberReviews = 0;
+        int totalNumberMedia = 0;
+        int totalReviewRating = 0;
+        int totalCurrentRating = 0;
+
+        totalNumberMedia = searchTable.getItems().size();
+        for (Media media : searchTable.getItems()) {
+            totalNumberReviews += media.getReviews().size();
+            for (Review review : media.getReviews()) {
+                totalReviewRating += review.getRating().intValue();
+            }
+            totalCurrentRating += media.getCurrentRating().intValue();
+        }
+
+        searchMeanAverage.setText(String.format("%.2f", totalReviewRating * 1.0 / totalNumberReviews));
+        searchCurrentAverage.setText(String.format("%.2f", totalCurrentRating * 1.0 / totalNumberMedia));
+    }
+    
+    private boolean isMatchForMedia(String query, Media media){
+        boolean pass = true;
+        if(query.endsWith("|") && !query.endsWith("||"))
+            query = query.substring(0, query.length()-1);
+        String[] queries = query.split(":");
+        for (String q : queries) {
+            String[] optns = q.split("\\|\\|");
+            boolean minorPass = false;
+            for (String optn : optns) {
+                boolean negator = optn.length()>1 && optn.startsWith("!");
+                if ( !negator &&
+                        (  media.getTitle().toLowerCase().contains(optn)
+                        || media.getCreator().toLowerCase().contains(optn)
+                        || media.getSeasonId().toLowerCase().contains(optn)
+                        || media.getEpisodeId().toLowerCase().contains(optn)
+                        || media.getCategory().toLowerCase().contains(optn) )
+                        )
+                    minorPass = true;
+                if ( negator && 
+                        !( media.getTitle().toLowerCase().contains(optn.substring(1))
+                        || media.getCreator().toLowerCase().contains(optn.substring(1))
+                        || media.getSeasonId().toLowerCase().contains(optn.substring(1))
+                        || media.getEpisodeId().toLowerCase().contains(optn.substring(1))
+                        || media.getCategory().toLowerCase().contains(optn.substring(1)) )
+                        )
+                    minorPass = true;
+                System.out.println(negator);
+            }
+            if (!minorPass) {
+                pass = false;
+            }
+        }
+        return pass;
+    }
+    
     private void initSearchTab(){
         searchEditMedia.setDisable(true);
         searchDeleteMedia.setDisable(true);
         
+        // Table data setup
         searchTableData = DataManager.getMedia();
         FilteredList<Media> mediaFiltered = new FilteredList(searchTableData,x->true);
         SortedList<Media> mediaSortable = new SortedList<>(mediaFiltered);
@@ -188,45 +247,12 @@ public class SearchTabController implements Initializable {
                 mediaFiltered.setPredicate(x->true);
             else{
                 String[] queries = query.split(":");
-                mediaFiltered.setPredicate(x->{
-                    boolean pass = true;
-                    for (String q : queries) {
-                        String[] optns = q.split("\\|\\|");
-                        boolean minorPass = false;
-                        for (String optn : optns) {
-                            if(
-                                    x.getTitle().toLowerCase().contains(optn) ||
-                                    x.getCreator().toLowerCase().contains(optn) ||
-                                    x.getSeasonId().toLowerCase().contains(optn) ||
-                                    x.getEpisodeId().toLowerCase().contains(optn) ||
-                                    x.getCategory().toLowerCase().contains(optn) 
-                                    )
-                                minorPass = true;
-                        }
-                        if(!minorPass)
-                            pass = false;
-                    }
-                    return pass;
-                });
+                mediaFiltered.setPredicate(x->isMatchForMedia(query,x));
             }
-            int totalNumberReviews = 0;
-            int totalNumberMedia = 0;
-            int totalReviewRating = 0;
-            int totalCurrentRating = 0;
-
-            totalNumberMedia = searchTable.getItems().size();
-            for(Media media : searchTable.getItems()){
-                totalNumberReviews += media.getReviews().size();
-                for (Review review : media.getReviews()) {
-                    totalReviewRating += review.getRating().intValue();
-                }
-                totalCurrentRating += media.getCurrentRating().intValue();
-            }
-
-            searchMeanAverage.setText(String.format("%.2f", totalReviewRating*1.0/totalNumberReviews));
-            searchCurrentAverage.setText(String.format("%.2f", totalCurrentRating*1.0/totalNumberMedia));
+            updateStats();
         });
         
+        // Buttons
         searchNewMedia.setOnAction(e->{
             Media neo = new Media();
             neo.setId(DataManager.createDB(neo));
@@ -234,17 +260,16 @@ public class SearchTabController implements Initializable {
             setTab(TAB.MEDIA);
         });
         searchQuickEntry.setOnAction(e->{
-                throw new UnsupportedOperationException("No Quick Entry interaction");
-//                  try{
-//                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("QuickEntry.fxml"));
-//                    Parent root1 = (Parent) fxmlLoader.load();
-//                    QuickEntryController qec = fxmlLoader.getController();
-//                    qec.setCore(this);
-//                    Stage stage = new Stage();
-//                    stage.setTitle("Quick Entry");
-//                    stage.setScene(new Scene(root1));  
-//                    stage.show();
-//                  } catch(Exception ex) {}
+                  try{
+                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("QuickEntry.fxml"));
+                    Parent root1 = (Parent) fxmlLoader.load();
+                    QuickEntryController qec = fxmlLoader.getController();
+                    qec.setup(currentTab);
+                    Stage stage = new Stage();
+                    stage.setTitle("Quick Entry");
+                    stage.setScene(new Scene(root1));  
+                    stage.show();
+                  } catch(Exception ex) {}
         });
         searchStandardEntry.setOnAction(e->{
             Media neo = new Media();
@@ -261,5 +286,8 @@ public class SearchTabController implements Initializable {
                 updateSearchTab();
             }
         });
+        
+        // Init stuff
+        updateStats();
     }
 }
