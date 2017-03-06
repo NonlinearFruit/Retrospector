@@ -354,7 +354,7 @@ public class StatsTabController implements Initializable {
         String category = categorySelector.getValue();
             
         // Data Mining - Vars
-        Map<String, Integer> reviewYearMap = new HashMap<>();
+        Map<String, Integer> reviewMap = new HashMap<>();
         List<String> userSet = new ArrayList<>();
         Set<String> titleSet = new HashSet<>();
         Set<String> creatorSet = new HashSet<>();
@@ -387,7 +387,8 @@ public class StatsTabController implements Initializable {
                 for (Review r : m.getReviews()) {
                     if(r.getDate().isBefore(earliest))
                         earliest = r.getDate();
-                    reviewYearMap.put(r.getDate().getYear()+"", reviewYearMap.getOrDefault(r.getDate().getYear()+"", 0)+1);
+                    String key = r.getDate().getMonthValue()+"-"+r.getDate().getYear();
+                    reviewMap.put(key, reviewMap.getOrDefault(key, 0)+1);
                     aveAll += r.getRating().intValue();
                     userSet.add(r.getUser());
                     reviews++;
@@ -422,9 +423,18 @@ public class StatsTabController implements Initializable {
         chartReviewsPerYear.getData().clear();
         
         XYChart.Series data = new XYChart.Series();
-        for (int i=earliest.getYear(); i <= LocalDate.now().getYear(); i++) {
-            // Make sure every year since the earliest has a value
-            data.getData().add(new XYChart.Data(i+"", reviewYearMap.getOrDefault(i+"", 0)));
+        int year = earliest.getYear();
+        int month = earliest.getMonthValue();
+        for (int i=0; i <= ChronoUnit.MONTHS.between(earliest, LocalDate.now())+1; i++) {
+            String key = month+"-"+year;
+            data.getData().add(new XYChart.Data(key, reviewMap.getOrDefault(key, 0)));
+            ++month;
+            if(month>12){
+                month = 1;
+                ++year;
+            }
+            if(year>=LocalDate.now().getYear() && month>LocalDate.now().getMonthValue())
+                break;
         }
         
         chartReviewsPerYear.getData().addAll(data);
