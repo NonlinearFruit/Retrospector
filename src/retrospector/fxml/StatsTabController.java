@@ -44,6 +44,7 @@ import javafx.util.StringConverter;
 import retrospector.model.DataManager;
 import retrospector.model.Media;
 import retrospector.model.Review;
+import retrospector.util.NaturalOrderComparator;
 import retrospector.util.Stroolean;
 
 /**
@@ -166,10 +167,6 @@ public class StatsTabController implements Initializable {
     private Text mediaTitle;
     @FXML
     private Text mediaCreator;
-//    @FXML
-//    private StackedBarChart<String, Number> categoryReviewsPerWeekday;
-//    @FXML
-//    private StackedBarChart<String, Number> overallReviewsPerWeekday;
 
     /**
      * Initializes the controller class.
@@ -203,6 +200,11 @@ public class StatsTabController implements Initializable {
         mediaSortable.comparatorProperty().bind(mediaTable.comparatorProperty());
         mediaColumnRowNumber.setSortable(false);
         mediaColumnRowNumber.setCellValueFactory(p -> new ReadOnlyObjectWrapper(1+mediaTable.getItems().indexOf(p.getValue())));
+        mediaColumnTitle.setComparator(new NaturalOrderComparator());
+        mediaColumnCreator.setComparator(new NaturalOrderComparator());
+        mediaColumnSeason.setComparator(new NaturalOrderComparator());
+        mediaColumnEpisode.setComparator(new NaturalOrderComparator());
+        mediaColumnCategory.setComparator(new NaturalOrderComparator());
         mediaColumnTitle.setCellValueFactory(new PropertyValueFactory<>("Title"));
         mediaColumnCreator.setCellValueFactory(new PropertyValueFactory<>("Creator"));
         mediaColumnSeason.setCellValueFactory(new PropertyValueFactory<>("SeasonId"));
@@ -426,21 +428,6 @@ public class StatsTabController implements Initializable {
         }
         
         chartReviewsPerYear.getData().addAll(data);
-        
-//        categoryReviewsPerWeekday.setData(FXCollections.observableArrayList(
-//                userWeekdays.keySet()
-//                .stream()
-//                .sorted()
-//                .map(user -> new Series<String,Number>(user,FXCollections.observableArrayList(
-//                        userWeekdays.get(user).keySet()
-//                        .stream()
-//                        .sorted((x,y)->new Integer(orderedDaysOfWeek.indexOf(x)).compareTo(new Integer(orderedDaysOfWeek.indexOf(y))))
-//                        .map(weekday -> new Data<String,Number>(weekday,userWeekdays.get(user).get(weekday)))
-//                        .collect(Collectors.toList())
-//                    ))
-//                )
-//                .collect(Collectors.toList())
-//        ));
     }
     
     private void updateMedia(){
