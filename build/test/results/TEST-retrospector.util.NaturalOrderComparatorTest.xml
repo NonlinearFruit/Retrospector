@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite errors="0" failures="0" hostname="Hyperion" name="retrospector.util.NaturalOrderComparatorTest" skipped="0" tests="1" time="0.1" timestamp="2017-03-08T03:45:06">
+<testsuite errors="0" failures="0" hostname="Hyperion" name="retrospector.util.NaturalOrderComparatorTest" skipped="0" tests="1" time="0.09" timestamp="2017-03-08T10:33:33">
   <properties>
     <property name="libs.jsp-compiler.javadoc" value="" />
     <property name="netbeans.autoupdate.country" value="US" />
@@ -74,7 +74,7 @@
     <property name="libs.j2me_common_ant.maven-pom" value="" />
     <property name="libs.spring-webmvc3.0.maven-pom" value="" />
     <property name="libs.swing-layout.maven-pom" value="" />
-    <property name="sun.java.command" value="org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner retrospector.util.NaturalOrderComparatorTest skipNonTests=false filtertrace=true haltOnError=false haltOnFailure=false showoutput=true outputtoformatters=true logfailedtests=true threadid=0 logtestlistenerevents=true formatter=org.apache.tools.ant.taskdefs.optional.junit.BriefJUnitResultFormatter formatter=org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter,/home/nonfrt/NetBeansProjects/Retrospector/build/test/results/TEST-retrospector.util.NaturalOrderComparatorTest.xml crashfile=/home/nonfrt/NetBeansProjects/Retrospector/build/junitvmwatcher5318065972996620596.properties propsfile=/home/nonfrt/NetBeansProjects/Retrospector/build/junit1354291288367115410.properties" />
+    <property name="sun.java.command" value="org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner retrospector.util.NaturalOrderComparatorTest skipNonTests=false filtertrace=true haltOnError=false haltOnFailure=false showoutput=true outputtoformatters=true logfailedtests=true threadid=0 logtestlistenerevents=true formatter=org.apache.tools.ant.taskdefs.optional.junit.BriefJUnitResultFormatter formatter=org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter,/home/nonfrt/NetBeansProjects/Retrospector/build/test/results/TEST-retrospector.util.NaturalOrderComparatorTest.xml crashfile=/home/nonfrt/NetBeansProjects/Retrospector/build/junitvmwatcher4991604501304968547.properties propsfile=/home/nonfrt/NetBeansProjects/Retrospector/build/junit7955697194186153447.properties" />
     <property name="build.classes.dir" value="build/classes" />
     <property name="netbeans.accept_license_class" value="org.netbeans.license.AcceptLicense" />
     <property name="build.sysclasspath" value="ignore" />
@@ -124,7 +124,7 @@
     <property name="javadoc.splitindex" value="true" />
     <property name="file.separator" value="/" />
     <property name="libs.Java-EE-GlassFish-v3-Prelude.maven-pom" value="" />
-    <property name="javac.includesfile.binary" value="/home/nonfrt/NetBeansProjects/Retrospector/null654044404" />
+    <property name="javac.includesfile.binary" value="/home/nonfrt/NetBeansProjects/Retrospector/null577122478" />
     <property name="libs.junit_4.maven-pom" value="" />
     <property name="mkdist.disabled" value="false" />
     <property name="javac.test.processorpath" value="/usr/lib/jvm/java-8-oracle/jre/lib/javaws.jar:/usr/lib/jvm/java-8-oracle/jre/lib/deploy.jar:/usr/lib/jvm/java-8-oracle/jre/lib/plugin.jar:/home/nonfrt/Programming/Library/controlsfx-8.40.12.jar:/home/nonfrt/Programming/Library/hsqldb.jar:build/classes:/home/nonfrt/netbeans-8.1/platform/modules/ext/junit-4.12.jar:/home/nonfrt/netbeans-8.1/platform/modules/ext/hamcrest-core-1.3.jar" />
@@ -469,13 +469,42 @@
     <property name="ant.file.type.Retrospector" value="file" />
     <property name="libs.javaee-web-api-7.0.javadoc" value="/home/nonfrt/netbeans-8.1/enterprise/docs/javaee-doc-api.jar" />
   </properties>
-  <testcase classname="retrospector.util.NaturalOrderComparatorTest" name="testCompare" time="0.053" />
+  <testcase classname="retrospector.util.NaturalOrderComparatorTest" name="testCompare" time="0.05" />
   <system-out><![CDATA[compare
- E1
-E!
-E0
-E2
-E002
+.01.2-a U1
+.001.2-a U1.1.2-a
+.1.2-b U1.1a
+.2-a U1.01.2-b
+.2-a U1.001.2-b
+.2-a U1.01.02-b
+1
+01
+001
+1.01.2-a
+1.001.2-a
+1.01.02-a
+1.1.2-a U1
+1.1.2-b
+1.01.2-b
+1.001.2-b
+1.01.02-b
+1.1a
+1.1b
+001A U1
+1A U1.1b.2-a
+01A U001C
+01B U01
+001B U001A
+1B U1C
+01C
+001C
+1C U001B
+U01A
+U1B
+U001
+U1.01.02-a
+U01B U1
+U01C U1A
 ]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

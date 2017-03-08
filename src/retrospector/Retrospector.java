@@ -31,7 +31,7 @@ public class Retrospector extends Application {
         FXMLLoader ldr = new FXMLLoader(getClass().getResource("/retrospector/fxml/Core.fxml"));
             Parent root = ldr.load();
             CoreController core = ldr.getController();
-        FXMLLoader statldr = new FXMLLoader(getClass().getResource("/retrospector/fxml/StatsTab.fxml"));
+        FXMLLoader statldr = new FXMLLoader(getClass().getResource("/retrospector/fxml/chart/StatsTab.fxml"));
             statldr.load();
             core.setStatsController(statldr);
         FXMLLoader searchldr = new FXMLLoader(getClass().getResource("/retrospector/fxml/SearchTab.fxml"));

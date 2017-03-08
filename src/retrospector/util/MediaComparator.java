@@ -18,9 +18,52 @@ import retrospector.model.Media;
  */
 public class MediaComparator implements Comparator<Media>{
 
+    
     @Override
     public int compare(Media o1, Media o2) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        int result;
+        
+        // Average Review [Larger==Better]
+        result = o1.getAverageRating().compareTo(o2.getAverageRating())*-1;
+        if(result!=0)
+            return result;
+                    
+        // Number of Reviews [Larger==Better]
+        result = Integer.compare(o1.getReviews().size(),o2.getReviews().size())*-1;
+        if(result!=0)
+            return result;
+        
+        // Current Review [Larger==Better]
+        result = o1.getCurrentRating().compareTo(o2.getCurrentRating())*-1;
+        if(result!=0)
+            return result;
+        
+        // Title
+        result = o1.getTitle().compareTo(o2.getTitle());
+        if(result!=0)
+            return result;
+        
+        // Creator
+        result = o1.getCreator().compareTo(o2.getCreator());
+        if(result!=0)
+            return result;
+        
+        // Season
+        result = o1.getSeasonId().compareTo(o2.getSeasonId());
+        if(result!=0)
+            return result;
+        
+        // Episode
+        result = o1.getEpisodeId().compareTo(o2.getEpisodeId());
+        if(result!=0)
+            return result;
+        
+        // Category
+        result = o1.getCategory().compareTo(o2.getCategory());
+        if(result!=0)
+            return result;
+        
+        return 0;
     }
     
 }

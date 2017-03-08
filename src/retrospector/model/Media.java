@@ -48,7 +48,7 @@ public class Media {
     }
     
     public Media(String title, String creator){
-        this(title, creator, PropertyManager.loadProperties().getCategories()[0]);
+        this(title, creator, DataManager.getCategories()[0]);
     }
     
     public Media(String title, String creator, String category){

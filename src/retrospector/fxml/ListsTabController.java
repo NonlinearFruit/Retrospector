@@ -32,6 +32,7 @@ import retrospector.fxml.CoreController.TAB;
 import retrospector.model.DataManager;
 import retrospector.model.Media;
 import retrospector.model.Review;
+import retrospector.util.MediaComparator;
 import retrospector.util.NaturalOrderComparator;
 import retrospector.util.Stroolean;
 import retrospector.util.UtilityCloset;
@@ -187,7 +188,7 @@ public class ListsTabController implements Initializable {
             }
         }
         List rankedResults = listTableData.stream()
-                    .sorted((x,y)->y.getAverageRating().compareTo(x.getAverageRating()))
+                    .sorted(new MediaComparator())
                     .limit(top)
                     .collect(Collectors.toList());
         listTable.setItems(FXCollections.observableArrayList(rankedResults));

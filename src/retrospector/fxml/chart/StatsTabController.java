@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package retrospector.fxml;
+package retrospector.fxml.chart;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -39,12 +39,14 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.StringConverter;
 import retrospector.model.DataManager;
 import retrospector.model.Media;
 import retrospector.model.Review;
 import retrospector.util.NaturalOrderComparator;
+import retrospector.util.PropertyManager;
 import retrospector.util.Stroolean;
 
 /**
@@ -167,6 +169,10 @@ public class StatsTabController implements Initializable {
     private Text mediaTitle;
     @FXML
     private Text mediaCreator;
+    @FXML
+    private StackedBarChart<String, Number> chartReviewsPerDay;
+    @FXML
+    private BarChart<String, Number> chartReviewsPerRating;
 
     /**
      * Initializes the controller class.
@@ -183,6 +189,7 @@ public class StatsTabController implements Initializable {
         categorySelector.setItems(FXCollections.observableArrayList(DataManager.getCategories()));
         categorySelector.setValue(DataManager.getCategories()[0]);
         categorySelector.valueProperty().addListener((observe,old,neo)->updateCategory());
+        chartReviewsPerRating.setLegendVisible(false);
         // Media
         checkTitle.setSelected(true);
         checkCreator.setSelected(true);
@@ -260,10 +267,10 @@ public class StatsTabController implements Initializable {
     private void updateOverall(){
         
         // Data Mining - Vars
-        List<Review> considerReview = new ArrayList<>();
         Set<String> titleSet = new HashSet<>();
         Set<String> creatorSet = new HashSet<>();
         Map<String, Integer> categories = new HashMap<>();
+        Map<LocalDate, Map<String, Integer>> last30Days = new HashMap<>();
         int media = allMedia.size();
         int reviews = 0;
         int users = DataManager.getUsers().size();
@@ -289,14 +296,19 @@ public class StatsTabController implements Initializable {
             titleSet.add(m.getTitle()+m.getCreator());
             creatorSet.add(m.getCreator());
             categories.put(m.getCategory(), categories.getOrDefault(m.getCategory(), 0)+1);
-            considerReview.addAll(m.getReviews());
+            for (Review r : m.getReviews()) {
+                if(r.getDate().isBefore(earliest))
+                    earliest = r.getDate();
+                if(ChronoUnit.DAYS.between(r.getDate(), LocalDate.now())<=30){
+                    Map<String,Integer> cat2Num = last30Days.getOrDefault(r.getDate(), new HashMap<>());
+                    Integer num = cat2Num.getOrDefault(m.getCategory(), 1);
+                    cat2Num.put(m.getCategory(), num);
+                    last30Days.put(r.getDate(), cat2Num);
+                }
+                aveAll += r.getRating().intValue();
+                reviews++;
+            }
         }
-        for (Review r : considerReview) {
-            if(r.getDate().isBefore(earliest))
-                earliest = r.getDate();
-            aveAll += r.getRating().intValue();
-        }
-        reviews = considerReview.size();
         titles = titleSet.size();
         creators = creatorSet.size();
         aveAll = reviews==0? 0 : aveAll/reviews;
@@ -318,7 +330,7 @@ public class StatsTabController implements Initializable {
         overallCurrentRating.setText(String.format("%.2f", aveCurrent)+" Current");
         overallAllRating.setText(String.format("%.2f", aveAll)+" All");
         
-        // Chart
+        // Chart # Media / Category
 //        overallReviewsPerWeekday.setData(FXCollections.observableArrayList(
 //                userWeekdays.keySet()
 //                .stream()
@@ -346,6 +358,21 @@ public class StatsTabController implements Initializable {
                         .collect(Collectors.toList())
                 )
         );
+        
+        // Chart # Reviews / Day
+        chartReviewsPerDay.getData().clear();
+        LocalDate now = LocalDate.now();
+        for (String category : DataManager.getCategories()) {
+            XYChart.Series data = new XYChart.Series();
+            data.setName(category);
+            for (int i = 30; i > -1; i--) {
+                LocalDate target = now.minusDays(i);
+                int count = last30Days.getOrDefault(target, new HashMap<>()).getOrDefault(category, 0);
+                String key = target.getDayOfMonth()+"";
+                data.getData().add(new XYChart.Data(key,count));
+            }
+            chartReviewsPerDay.getData().add(data);
+        }
     }
     
     private void updateCategory(){
@@ -358,6 +385,7 @@ public class StatsTabController implements Initializable {
         List<String> userSet = new ArrayList<>();
         Set<String> titleSet = new HashSet<>();
         Set<String> creatorSet = new HashSet<>();
+        int[] reviewsPerRating = new int[DataManager.getMaxRating()+1];
         int media = 0;
         int reviews = 0;
         long users = 0;
@@ -387,6 +415,7 @@ public class StatsTabController implements Initializable {
                 for (Review r : m.getReviews()) {
                     if(r.getDate().isBefore(earliest))
                         earliest = r.getDate();
+                    reviewsPerRating[r.getRating().intValue()] += 1;
                     String key = r.getDate().getMonthValue()+"-"+r.getDate().getYear();
                     reviewMap.put(key, reviewMap.getOrDefault(key, 0)+1);
                     aveAll += r.getRating().intValue();
@@ -438,6 +467,14 @@ public class StatsTabController implements Initializable {
         }
         
         chartReviewsPerYear.getData().addAll(data);
+        
+        // Chart - # Reviews / Rating
+        data = new XYChart.Series();
+        for (int i = 0; i < reviewsPerRating.length; i++) {
+            data.getData().add(new XYChart.Data(i+"",reviewsPerRating[i]));
+        }
+        chartReviewsPerRating.getData().clear();
+        chartReviewsPerRating.getData().add(data);
     }
     
     private void updateMedia(){

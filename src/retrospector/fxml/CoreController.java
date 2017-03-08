@@ -5,6 +5,7 @@
  */
 package retrospector.fxml;
 
+import retrospector.fxml.chart.StatsTabController;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ResourceBundle;
