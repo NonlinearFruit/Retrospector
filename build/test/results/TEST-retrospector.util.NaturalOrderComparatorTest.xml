@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite errors="0" failures="0" hostname="Hyperion" name="retrospector.util.NaturalOrderComparatorTest" skipped="0" tests="1" time="0.048" timestamp="2017-03-06T15:39:13">
+<testsuite errors="0" failures="0" hostname="Hyperion" name="retrospector.util.NaturalOrderComparatorTest" skipped="0" tests="1" time="0.1" timestamp="2017-03-08T03:45:06">
   <properties>
     <property name="libs.jsp-compiler.javadoc" value="" />
     <property name="netbeans.autoupdate.country" value="US" />
@@ -74,7 +74,7 @@
     <property name="libs.j2me_common_ant.maven-pom" value="" />
     <property name="libs.spring-webmvc3.0.maven-pom" value="" />
     <property name="libs.swing-layout.maven-pom" value="" />
-    <property name="sun.java.command" value="org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner retrospector.util.NaturalOrderComparatorTest skipNonTests=false filtertrace=true haltOnError=false haltOnFailure=false showoutput=true outputtoformatters=true logfailedtests=true threadid=0 logtestlistenerevents=true formatter=org.apache.tools.ant.taskdefs.optional.junit.BriefJUnitResultFormatter formatter=org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter,/home/nonfrt/NetBeansProjects/Retrospector/build/test/results/TEST-retrospector.util.NaturalOrderComparatorTest.xml crashfile=/home/nonfrt/NetBeansProjects/Retrospector/build/junitvmwatcher612714336778770734.properties propsfile=/home/nonfrt/NetBeansProjects/Retrospector/build/junit2806098217549394098.properties" />
+    <property name="sun.java.command" value="org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner retrospector.util.NaturalOrderComparatorTest skipNonTests=false filtertrace=true haltOnError=false haltOnFailure=false showoutput=true outputtoformatters=true logfailedtests=true threadid=0 logtestlistenerevents=true formatter=org.apache.tools.ant.taskdefs.optional.junit.BriefJUnitResultFormatter formatter=org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter,/home/nonfrt/NetBeansProjects/Retrospector/build/test/results/TEST-retrospector.util.NaturalOrderComparatorTest.xml crashfile=/home/nonfrt/NetBeansProjects/Retrospector/build/junitvmwatcher5318065972996620596.properties propsfile=/home/nonfrt/NetBeansProjects/Retrospector/build/junit1354291288367115410.properties" />
     <property name="build.classes.dir" value="build/classes" />
     <property name="netbeans.accept_license_class" value="org.netbeans.license.AcceptLicense" />
     <property name="build.sysclasspath" value="ignore" />
@@ -124,7 +124,7 @@
     <property name="javadoc.splitindex" value="true" />
     <property name="file.separator" value="/" />
     <property name="libs.Java-EE-GlassFish-v3-Prelude.maven-pom" value="" />
-    <property name="javac.includesfile.binary" value="/home/nonfrt/NetBeansProjects/Retrospector/null234759169" />
+    <property name="javac.includesfile.binary" value="/home/nonfrt/NetBeansProjects/Retrospector/null654044404" />
     <property name="libs.junit_4.maven-pom" value="" />
     <property name="mkdist.disabled" value="false" />
     <property name="javac.test.processorpath" value="/usr/lib/jvm/java-8-oracle/jre/lib/javaws.jar:/usr/lib/jvm/java-8-oracle/jre/lib/deploy.jar:/usr/lib/jvm/java-8-oracle/jre/lib/plugin.jar:/home/nonfrt/Programming/Library/controlsfx-8.40.12.jar:/home/nonfrt/Programming/Library/hsqldb.jar:build/classes:/home/nonfrt/netbeans-8.1/platform/modules/ext/junit-4.12.jar:/home/nonfrt/netbeans-8.1/platform/modules/ext/hamcrest-core-1.3.jar" />
@@ -137,6 +137,7 @@
     <property name="libs.hibernate4-persistencemodelgen.javadoc" value="" />
     <property name="libs.jaxb.javadoc" value="/home/nonfrt/netbeans-8.1/ide/docs/jaxb-api-doc.zip" />
     <property name="libs.struts.classpath" value="/home/nonfrt/netbeans-8.1/enterprise/modules/ext/struts/antlr-2.7.2.jar:/home/nonfrt/netbeans-8.1/enterprise/modules/ext/struts/bsf-2.3.0.jar:/home/nonfrt/netbeans-8.1/enterprise/modules/ext/struts/commons-beanutils-1.8.0.jar:/home/nonfrt/netbeans-8.1/enterprise/modules/ext/struts/commons-chain-1.2.jar:/home/nonfrt/netbeans-8.1/enterprise/modules/ext/struts/commons-digester-1.8.jar:/home/nonfrt/netbeans-8.1/enterprise/modules/ext/struts/commons-fileupload-1.1.1.jar:/home/nonfrt/netbeans-8.1/enterprise/modules/ext/struts/commons-io-1.1.jar:/home/nonfrt/netbeans-8.1/enterprise/modules/ext/struts/commons-logging-1.0.4.jar:/home/nonfrt/netbeans-8.1/enterprise/modules/ext/struts/commons-validator-1.3.1.jar:/home/nonfrt/netbeans-8.1/enterprise/modules/ext/struts/jstl-1.0.2.jar:/home/nonfrt/netbeans-8.1/enterprise/modules/ext/struts/oro-2.0.8.jar:/home/nonfrt/netbeans-8.1/enterprise/modules/ext/struts/standard-1.0.6.jar:/home/nonfrt/netbeans-8.1/enterprise/modules/ext/struts/struts-core-1.3.10.jar:/home/nonfrt/netbeans-8.1/enterprise/modules/ext/struts/struts-el-1.3.10.jar:/home/nonfrt/netbeans-8.1/enterprise/modules/ext/struts/struts-extras-1.3.10.jar:/home/nonfrt/netbeans-8.1/enterprise/modules/ext/struts/struts-faces-1.3.10.jar:/home/nonfrt/netbeans-8.1/enterprise/modules/ext/struts/struts-mailreader-dao-1.3.10.jar:/home/nonfrt/netbeans-8.1/enterprise/modules/ext/struts/struts-scripting-1.3.10.jar:/home/nonfrt/netbeans-8.1/enterprise/modules/ext/struts/struts-taglib-1.3.10.jar:/home/nonfrt/netbeans-8.1/enterprise/modules/ext/struts/struts-tiles-1.3.10.jar" />
+    <property name="org.openide.awt.SwingBrowserImpl.do-not-block-awt" value="false" />
     <property name="javac.includes.binary" value="/home/nonfrt/NetBeansProjects/Retrospector/build/test/classes/retrospector/util/NaturalOrderComparatorTest.class" />
     <property name="ant.home" value="/home/nonfrt/netbeans-8.1/extide/ant" />
     <property name="libs.junit_4.src" value="/home/nonfrt/netbeans-8.1/platform/docs/junit-4.12-sources.jar" />
@@ -291,8 +292,8 @@
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment" />
     <property name="ant.project.name" value="Retrospector" />
     <property name="netbeans.hash.code" value="unique=NB_CND_EXTIDE_GFMOD_GROOVY_JAVA_MOB_PHP_WEBCOMMON_WEBEE08633600b-f07c-42d8-ae9a-730cc44448ed_2447fca8-36ed-46d5-b40d-0478b0c98b96" />
-    <property name="libs.jsp-compilation-syscp.maven-pom" value="" />
     <property name="netbeans.default_userdir_root" value="/home/nonfrt/.netbeans" />
+    <property name="libs.jsp-compilation-syscp.maven-pom" value="" />
     <property name="sun.cpu.isalist" value="" />
     <property name="libs.CopyLibs.javadoc" value="" />
     <property name="libs.spring-framework400.javadoc" value="" />
@@ -301,21 +302,21 @@
     <property name="libs.DataBindingME-PIM.classpath" value="/home/nonfrt/netbeans-8.1/mobility/modules/ext/netbeans_databindingme_pim.jar" />
     <property name="user.home" value="/home/nonfrt" />
     <property name="annotation.processing.processors.list" value="" />
-    <property name="libs.primefaces.maven-pom" value="" />
     <property name="debug-args-line" value="-Xdebug" />
+    <property name="libs.primefaces.maven-pom" value="" />
     <property name="libs.javaee-api-6.0.maven-pom" value="" />
     <property name="libs.JWSAntTasks.src" value="" />
     <property name="libs.CopyLibs.maven-pom" value="" />
     <property name="jar.index" value="false" />
     <property name="libs.absolutelayout.javadoc" value="" />
     <property name="libs.spring-framework300.javadoc" value="" />
-    <property name="guice.disable.misplaced.annotation.check" value="true" />
     <property name="java.specification.name" value="Java Platform API Specification" />
+    <property name="guice.disable.misplaced.annotation.check" value="true" />
     <property name="java.specification.vendor" value="Oracle Corporation" />
     <property name="libs.javac-api.classpath" value="/home/nonfrt/netbeans-8.1/java/modules/ext/nb-javac-api.jar" />
     <property name="java.version" value="1.8.0_121" />
-    <property name="run.jvmargs.ide" value="" />
     <property name="javadoc.version" value="false" />
+    <property name="run.jvmargs.ide" value="" />
     <property name="libs.MySQLDriver.javadoc" value="" />
     <property name="org.openide.version" value="deprecated" />
     <property name="source.encoding" value="UTF-8" />
@@ -324,8 +325,8 @@
     <property name="libs.eclipselinkmodelgen.maven-pom" value="" />
     <property name="libs.jsp-compilation-syscp.javadoc" value="" />
     <property name="ant.file.type.jfx-impl" value="file" />
-    <property name="libs.javaee-endorsed-api-7.0.classpath" value="/home/nonfrt/netbeans-8.1/enterprise/modules/ext/javaee7-endorsed/javax.annotation-api.jar:/home/nonfrt/netbeans-8.1/enterprise/modules/ext/javaee7-endorsed/javax.xml.soap-api.jar:/home/nonfrt/netbeans-8.1/enterprise/modules/ext/javaee7-endorsed/jaxb-api-osgi.jar:/home/nonfrt/netbeans-8.1/enterprise/modules/ext/javaee7-endorsed/jaxws-api.jar:/home/nonfrt/netbeans-8.1/enterprise/modules/ext/javaee7-endorsed/jsr181-api.jar" />
     <property name="libs.eclipselinkmodelgen.javadoc" value="" />
+    <property name="libs.javaee-endorsed-api-7.0.classpath" value="/home/nonfrt/netbeans-8.1/enterprise/modules/ext/javaee7-endorsed/javax.annotation-api.jar:/home/nonfrt/netbeans-8.1/enterprise/modules/ext/javaee7-endorsed/javax.xml.soap-api.jar:/home/nonfrt/netbeans-8.1/enterprise/modules/ext/javaee7-endorsed/jaxb-api-osgi.jar:/home/nonfrt/netbeans-8.1/enterprise/modules/ext/javaee7-endorsed/jaxws-api.jar:/home/nonfrt/netbeans-8.1/enterprise/modules/ext/javaee7-endorsed/jsr181-api.jar" />
     <property name="libs.metro.javadoc" value="/home/nonfrt/netbeans-8.1/enterprise/docs/metro-1.4-doc.zip" />
     <property name="libs.struts.maven-pom" value="" />
     <property name="file.reference.controlsfx-8.40.12.jar" value="/home/nonfrt/Programming/Library/controlsfx-8.40.12.jar" />
@@ -337,16 +338,16 @@
     <property name="libs.testng.maven-pom" value="" />
     <property name="libs.jaxb.src" value="" />
     <property name="work.dir" value="/home/nonfrt/NetBeansProjects/Retrospector" />
-    <property name="compile.on.save.unsupported.javafx" value="true" />
     <property name="libs.jaxb.classpath" value="/home/nonfrt/netbeans-8.1/ide/modules/ext/jaxb/jaxb-impl.jar:/home/nonfrt/netbeans-8.1/ide/modules/ext/jaxb/jaxb-xjc.jar:/home/nonfrt/netbeans-8.1/ide/modules/ext/jaxb/jaxb1-impl.jar:/home/nonfrt/netbeans-8.1/ide/modules/ext/jaxb/activation.jar:/home/nonfrt/netbeans-8.1/ide/modules/ext/jaxb/api/jaxb-api.jar:/home/nonfrt/netbeans-8.1/ide/modules/ext/jaxb/api/jsr173_1.0_api.jar" />
+    <property name="compile.on.save.unsupported.javafx" value="true" />
     <property name="do.depend" value="false" />
-    <property name="dist.javadoc.dir" value="dist/javadoc" />
     <property name="libs.j2me_common_ant.classpath" value="/home/nonfrt/netbeans-8.1/mobility/modules/org-netbeans-modules-j2me-common-ant.jar:/home/nonfrt/netbeans-8.1/java/modules/org-netbeans-modules-classfile.jar" />
-    <property name="libs.swing-layout.classpath" value="/home/nonfrt/netbeans-8.1/platform/modules/ext/swing-layout-1.0.4.jar" />
+    <property name="dist.javadoc.dir" value="dist/javadoc" />
     <property name="libs.spring-webmvc3.0.classpath" value="/home/nonfrt/netbeans-8.1/java/modules/ext/spring-3.0/spring-webmvc-3.2.7.RELEASE.jar" />
+    <property name="libs.swing-layout.classpath" value="/home/nonfrt/netbeans-8.1/platform/modules/ext/swing-layout-1.0.4.jar" />
     <property name="libs.javaee-web-api-7.0.maven-pom" value="" />
-    <property name="libs.restlib.src" value="" />
     <property name="ant.file.Retrospector" value="/home/nonfrt/NetBeansProjects/Retrospector/build.xml" />
+    <property name="libs.restlib.src" value="" />
     <property name="javac.source" value="1.8" />
     <property name="build.generated.dir" value="build/generated" />
     <property name="javafx.fallback.class" value="com.javafx.main.NoJavaFXFallback" />
@@ -359,11 +360,11 @@
     <property name="sun.boot.class.path" value="/usr/lib/jvm/java-8-oracle/jre/lib/resources.jar:/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar:/usr/lib/jvm/java-8-oracle/jre/lib/sunrsasign.jar:/usr/lib/jvm/java-8-oracle/jre/lib/jsse.jar:/usr/lib/jvm/java-8-oracle/jre/lib/jce.jar:/usr/lib/jvm/java-8-oracle/jre/lib/charsets.jar:/usr/lib/jvm/java-8-oracle/jre/lib/jfr.jar:/usr/lib/jvm/java-8-oracle/jre/classes" />
     <property name="javac.target" value="1.8" />
     <property name="built-jar.properties" value="/home/nonfrt/NetBeansProjects/Retrospector/build/built-jar.properties" />
-    <property name="javafx.deploy.permissionselevated" value="false" />
     <property name="build.test.classes.dir" value="build/test/classes" />
+    <property name="javafx.deploy.permissionselevated" value="false" />
     <property name="src.dir" value="src" />
-    <property name="libs.jpa2-persistence.src" value="" />
     <property name="annotation.processing.enabled" value="true" />
+    <property name="libs.jpa2-persistence.src" value="" />
     <property name="libs.jsf20.src" value="" />
     <property name="libs.jpa20-persistence.src" value="" />
     <property name="libs.DataBindingME-SVG.maven-pom" value="" />
@@ -387,8 +388,8 @@
     <property name="java.awt.printerjob" value="sun.print.PSPrinterJob" />
     <property name="default.javac.source" value="1.8" />
     <property name="debug-transport-by-os" value="dt_socket" />
-    <property name="sun.jnu.encoding" value="UTF-8" />
     <property name="libs.MySQLDriver.src" value="" />
+    <property name="sun.jnu.encoding" value="UTF-8" />
     <property name="build.test.results.dir" value="build/test/results" />
     <property name="java.runtime.version" value="1.8.0_121-b13" />
     <property name="javafx.run.inbrowser" value="&lt;Default System Browser&gt;" />
@@ -400,31 +401,31 @@
     <property name="user.timezone" value="" />
     <property name="nb.junit.single" value="false" />
     <property name="do.jar" value="true" />
-    <property name="libs.javaee-endorsed-api-6.0.maven-pom" value="" />
     <property name="libs.JAVADB_DRIVER_LABEL.javadoc" value="" />
+    <property name="libs.javaee-endorsed-api-6.0.maven-pom" value="" />
     <property name="netbeans.dirs" value="/home/nonfrt/netbeans-8.1/nb:/home/nonfrt/netbeans-8.1/ergonomics:/home/nonfrt/netbeans-8.1/ide:/home/nonfrt/netbeans-8.1/extide:/home/nonfrt/netbeans-8.1/java:/home/nonfrt/netbeans-8.1/apisupport:/home/nonfrt/netbeans-8.1/webcommon:/home/nonfrt/netbeans-8.1/websvccommon:/home/nonfrt/netbeans-8.1/enterprise:/home/nonfrt/netbeans-8.1/mobility:/home/nonfrt/netbeans-8.1/profiler:/home/nonfrt/netbeans-8.1/python:/home/nonfrt/netbeans-8.1/php:/home/nonfrt/netbeans-8.1/identity:/home/nonfrt/netbeans-8.1/harness:/home/nonfrt/netbeans-8.1/cnd:/home/nonfrt/netbeans-8.1/cndext:/home/nonfrt/netbeans-8.1/dlight:/home/nonfrt/netbeans-8.1/groovy:/home/nonfrt/netbeans-8.1/extra:/home/nonfrt/netbeans-8.1/javacard:/home/nonfrt/netbeans-8.1/javafx:" />
-    <property name="libs.jstl.javadoc" value="/home/nonfrt/netbeans-8.1/enterprise/docs/javaee-doc-api.jar" />
     <property name="libs.jsf20.javadoc" value="/home/nonfrt/netbeans-8.1/enterprise/docs/javaee-doc-api.jar" />
+    <property name="libs.jstl.javadoc" value="/home/nonfrt/netbeans-8.1/enterprise/docs/javaee-doc-api.jar" />
     <property name="java.ext.dirs" value="/usr/lib/jvm/java-8-oracle/jre/lib/ext:/usr/java/packages/lib/ext" />
     <property name="libs.metro.src" value="" />
     <property name="endorsed.classpath" value="" />
     <property name="libs.absolutelayout.classpath" value="/home/nonfrt/netbeans-8.1/java/modules/ext/AbsoluteLayout.jar" />
     <property name="excludes" value="" />
-    <property name="libs.metro.classpath" value="/home/nonfrt/netbeans-8.1/ide/modules/ext/jaxb/activation.jar:/home/nonfrt/netbeans-8.1/enterprise/modules/ext/metro/webservices-api.jar:/home/nonfrt/netbeans-8.1/enterprise/modules/ext/metro/webservices-extra-api.jar:/home/nonfrt/netbeans-8.1/enterprise/modules/ext/metro/webservices-extra.jar:/home/nonfrt/netbeans-8.1/enterprise/modules/ext/metro/webservices-rt.jar:/home/nonfrt/netbeans-8.1/enterprise/modules/ext/metro/webservices-tools.jar" />
     <property name="libs.restlib.maven-pom" value="" />
+    <property name="libs.metro.classpath" value="/home/nonfrt/netbeans-8.1/ide/modules/ext/jaxb/activation.jar:/home/nonfrt/netbeans-8.1/enterprise/modules/ext/metro/webservices-api.jar:/home/nonfrt/netbeans-8.1/enterprise/modules/ext/metro/webservices-extra-api.jar:/home/nonfrt/netbeans-8.1/enterprise/modules/ext/metro/webservices-extra.jar:/home/nonfrt/netbeans-8.1/enterprise/modules/ext/metro/webservices-rt.jar:/home/nonfrt/netbeans-8.1/enterprise/modules/ext/metro/webservices-tools.jar" />
     <property name="libs.jpa2-persistence.javadoc" value="/home/nonfrt/netbeans-8.1/java/modules/ext/docs/javax.persistence-2.1.0-doc.zip" />
     <property name="libs.DataBindingME.javadoc" value="/home/nonfrt/netbeans-8.1/mobility/modules/docs/netbeans_databindingme-api.zip" />
     <property name="java.class.path" value="/usr/lib/jvm/java-8-oracle/jre/lib/javaws.jar:/usr/lib/jvm/java-8-oracle/jre/lib/deploy.jar:/usr/lib/jvm/java-8-oracle/jre/lib/plugin.jar:/home/nonfrt/Programming/Library/controlsfx-8.40.12.jar:/home/nonfrt/Programming/Library/hsqldb.jar:/home/nonfrt/NetBeansProjects/Retrospector/build/classes:/home/nonfrt/netbeans-8.1/platform/modules/ext/junit-4.12.jar:/home/nonfrt/netbeans-8.1/platform/modules/ext/hamcrest-core-1.3.jar:/home/nonfrt/NetBeansProjects/Retrospector/build/test/classes:/home/nonfrt/netbeans-8.1/extide/ant/lib/ant-launcher.jar:/home/nonfrt/netbeans-8.1/extide/ant/lib/ant.jar:/home/nonfrt/netbeans-8.1/extide/ant/lib/ant-junit.jar:/home/nonfrt/netbeans-8.1/extide/ant/lib/ant-junit4.jar" />
     <property name="apple.laf.useScreenMenuBar" value="true" />
     <property name="libs.absolutelayout.src" value="" />
     <property name="libs.jpa20-persistence.classpath" value="/home/nonfrt/netbeans-8.1/java/modules/ext/eclipselink/javax.persistence_2.1.0.v201304241213.jar" />
-    <property name="os.version" value="4.4.0-64-generic" />
+    <property name="os.version" value="4.4.0-65-generic" />
     <property name="application.args" value="" />
     <property name="libs.EclipseLink-GlassFish-v3.javadoc" value="/home/nonfrt/netbeans-8.1/enterprise/docs/javaee-doc-api.jar" />
     <property name="manifest.custom.permissions" value="" />
     <property name="libs.javaee-api-7.0.maven-pom" value="" />
-    <property name="sun.awt.enableExtraMouseButtons" value="true" />
     <property name="main.class.available" value="true" />
+    <property name="sun.awt.enableExtraMouseButtons" value="true" />
     <property name="sun.desktop" value="gnome" />
     <property name="libs.hibernate4-persistence.src" value="" />
     <property name="auxiliary.org-netbeans-spi-editor-hints-projects.perProjectHintSettingsFile" value="nbproject/cfg_hints.xml" />
@@ -434,8 +435,8 @@
     <property name="javafx.deploy.allowoffline" value="true" />
     <property name="libs.JAXB-ENDORSED.classpath" value="/home/nonfrt/netbeans-8.1/ide/modules/ext/jaxb/api/jaxb-api.jar" />
     <property name="nb.internal.action.name" value="test.single" />
-    <property name="libs.eclipselink.classpath" value="/home/nonfrt/netbeans-8.1/java/modules/ext/eclipselink/eclipselink.jar:/home/nonfrt/netbeans-8.1/java/modules/ext/eclipselink/javax.persistence_2.1.0.v201304241213.jar:/home/nonfrt/netbeans-8.1/java/modules/ext/eclipselink/org.eclipse.persistence.jpa.jpql_2.5.2.v20140319-9ad6abd.jar" />
     <property name="libs.javaee-api-7.0.javadoc" value="/home/nonfrt/netbeans-8.1/enterprise/docs/javaee-doc-api.jar" />
+    <property name="libs.eclipselink.classpath" value="/home/nonfrt/netbeans-8.1/java/modules/ext/eclipselink/eclipselink.jar:/home/nonfrt/netbeans-8.1/java/modules/ext/eclipselink/javax.persistence_2.1.0.v201304241213.jar:/home/nonfrt/netbeans-8.1/java/modules/ext/eclipselink/org.eclipse.persistence.jpa.jpql_2.5.2.v20140319-9ad6abd.jar" />
     <property name="libs.beans-binding.javadoc" value="/home/nonfrt/netbeans-8.1/java/docs/beansbinding-1.2.1-doc.zip" />
     <property name="java.awt.graphicsenv" value="sun.awt.X11GraphicsEnvironment" />
     <property name="java.vm.vendor" value="Oracle Corporation" />
@@ -457,19 +458,24 @@
     <property name="build.dir" value="build" />
     <property name="libs.jsp-compilation.classpath" value="/home/nonfrt/netbeans-8.1/extide/ant/lib/ant.jar:/home/nonfrt/netbeans-8.1/enterprise/modules/ext/servlet3.1-jsp2.3-api.jar:/home/nonfrt/netbeans-8.1/enterprise/modules/ext/glassfish-jspparser-4.0.jar:/home/nonfrt/netbeans-8.1/enterprise/modules/ext/jsf-2_2/javax.faces.jar:/home/nonfrt/netbeans-8.1/enterprise/modules/ext/jstl-api.jar:/home/nonfrt/netbeans-8.1/extide/ant/lib/ant-launcher.jar" />
     <property name="ant.version" value="Apache Ant(TM) version 1.9.4 compiled on April 29 2014" />
-    <property name="build.classes.excludes" value="**/*.java,**/*.form" />
     <property name="file.encoding" value="UTF-8" />
-    <property name="jdkBug6558476" value="false" />
+    <property name="build.classes.excludes" value="**/*.java,**/*.form" />
     <property name="javadoc.nonavbar" value="false" />
+    <property name="jdkBug6558476" value="false" />
     <property name="libs.spring-webmvc4.0.classpath" value="/home/nonfrt/netbeans-8.1/java/modules/ext/spring-4/spring-webmvc-4.0.1.RELEASE.jar" />
     <property name="platform.active" value="default_platform" />
     <property name="awt.toolkit" value="sun.awt.X11.XToolkit" />
-    <property name="ant.file.type.Retrospector" value="file" />
     <property name="javafx.deploy.installpermanently" value="false" />
+    <property name="ant.file.type.Retrospector" value="file" />
     <property name="libs.javaee-web-api-7.0.javadoc" value="/home/nonfrt/netbeans-8.1/enterprise/docs/javaee-doc-api.jar" />
   </properties>
-  <testcase classname="retrospector.util.NaturalOrderComparatorTest" name="testCompare" time="0.002" />
+  <testcase classname="retrospector.util.NaturalOrderComparatorTest" name="testCompare" time="0.053" />
   <system-out><![CDATA[compare
+ E1
+E!
+E0
+E2
+E002
 ]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

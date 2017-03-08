@@ -2,7 +2,10 @@
 
 package retrospector.util;
 
+import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 
 /**
@@ -17,23 +20,22 @@ import java.util.Comparator;
  * For example, {A,C,03,1,b,002,$} would be sorted into {$,1,002,03,A,b,C}. 
  * @author NonlinearFruit
  */
-public class NaturalOrderComparator implements Comparator
-{
+public class NaturalOrderComparator implements Comparator<String> {
     /**
      * This enum represents the three types of characters:
      *  + DIGIT - [0-9]+
      *  + ALPHA - [A-Za-z]
      *  + OTHER - [^0-9A-Za-z]
      */
-    private static enum TYPE{ 
+    private static enum Type{ 
         DIGIT(1), ALPHA(2), OTHER(0);
         
         /**
-         * Takes a char and returns the TYPE it belongs to
-         * @param x a single char
-         * @return TYPE of x
+         * Takes a char and returns the Type it belongs to
+         * @param x
+         * @return 
          */
-        public static TYPE getType(char x){
+        public static Type getType(char x){
             if(Character.isDigit(x))
                 return DIGIT;
             if(Character.isAlphabetic(x))
@@ -42,9 +44,9 @@ public class NaturalOrderComparator implements Comparator
         }
         
         /**
-         * Compares two TYPEs based on natural order. Returns:
+         * Compares two Types based on natural order. Returns:
          *  + Negative if `a` is before `b`
-         *  + Zero if `a` and `b` are the same TYPE
+         *  + Zero if `a` and `b` are the same Type
          *  + Positive if `a` is after `b`
          * @param a
          * @param b
@@ -52,13 +54,13 @@ public class NaturalOrderComparator implements Comparator
          *         first argument is less than, equal to, or greater than the
          *         second.
          */
-        public static int compare(TYPE a, TYPE b){
+        public static int compare(Type a, Type b){
             return Integer.compare(a.getValue(), b.getValue());
         }
         
         private int value;
         
-        TYPE(int v){ 
+        Type(int v){ 
             value = v;
         }
         
@@ -66,11 +68,6 @@ public class NaturalOrderComparator implements Comparator
             return value;
         }
     }
-    
-    /**
-     * This provides the ordering of ALPHA characters
-     */
-    private static final String ALPHA_ORDER = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz";
     
     /**
      * Takes two integer strings and compares the integer value of them. For
@@ -83,9 +80,9 @@ public class NaturalOrderComparator implements Comparator
      */
     private int compareDigitUnits(String a, String b)
     {
-        int aInt = Integer.parseInt(a);
-        int bInt = Integer.parseInt(b);
-        return Integer.compare(aInt, bInt);
+        BigInteger aInt = new BigInteger(a);
+        BigInteger bInt = new BigInteger(b);
+        return aInt.compareTo(bInt);
     }
     
     /**
@@ -98,24 +95,22 @@ public class NaturalOrderComparator implements Comparator
      */
     private int compareAlphaUnits(char a, char b)
     {
-        if(TYPE.getType(a)!=TYPE.ALPHA)
-            throw new IllegalArgumentException(a+" is not of TYPE Alpha");
-        if(TYPE.getType(b)!=TYPE.ALPHA)
-            throw new IllegalArgumentException(b+" is not of TYPE Alpha");
+        if(Type.getType(a)!=Type.ALPHA)
+            throw new IllegalArgumentException(a+" is not of Type Alpha");
+        if(Type.getType(b)!=Type.ALPHA)
+            throw new IllegalArgumentException(b+" is not of Type Alpha");
         
-        int indexA = ALPHA_ORDER.indexOf(a);
-        int indexB = ALPHA_ORDER.indexOf(b);
+        char lowB = Character.toLowerCase(b);
+        char lowA = Character.toLowerCase(a);
         
-        if(indexA<0)
-            throw new IllegalArgumentException(a+" is not in '"+ALPHA_ORDER+"'");
-        if(indexB<0)
-            throw new IllegalArgumentException(b+" is not in '"+ALPHA_ORDER+"'");
+        if(lowA==lowB)
+            return Character.compare(a, b);
         
-        return Integer.compare(indexA, indexB);
+        return Character.compare(lowA, lowB);
     }
 
     /**
-     * Takes two character of TYPE Other and compares them based on their ASCII
+     * Takes two character of Type Other and compares them based on their ASCII
      * values.
      * @param a
      * @param b
@@ -125,10 +120,10 @@ public class NaturalOrderComparator implements Comparator
      */
     private int compareOtherUnits(char a, char b)
     {
-        if(TYPE.getType(a)!=TYPE.OTHER)
-            throw new IllegalArgumentException(a+" is not of TYPE Other");
-        if(TYPE.getType(b)!=TYPE.OTHER)
-            throw new IllegalArgumentException(b+" is not of TYPE Other");
+        if(Type.getType(a)!=Type.OTHER)
+            throw new IllegalArgumentException(a+" is not of Type Other");
+        if(Type.getType(b)!=Type.OTHER)
+            throw new IllegalArgumentException(b+" is not of Type Other");
         return Character.compare(a, b);
     }
 
@@ -140,10 +135,10 @@ public class NaturalOrderComparator implements Comparator
      *         first argument is less than, equal to, or greater than the
      *         second.
      */
-    public int compare(Object o1, Object o2)
+    public int compare(String s1, String s2)
     {
-        StringBuilder a = new StringBuilder(o1.toString());
-        StringBuilder b = new StringBuilder(o2.toString());
+        StringBuilder a = new StringBuilder(s1);
+        StringBuilder b = new StringBuilder(s2);
         
         while(a.length()>0 && b.length()>0){
             
@@ -153,10 +148,10 @@ public class NaturalOrderComparator implements Comparator
             a.delete(0, nextAUnit.length());
             b.delete(0, nextBUnit.length());
             
-            TYPE aUnitType = TYPE.getType(nextAUnit.charAt(0));
-            TYPE bUnitType = TYPE.getType(nextBUnit.charAt(0));
+            Type aUnitType = Type.getType(nextAUnit.charAt(0));
+            Type bUnitType = Type.getType(nextBUnit.charAt(0));
             
-            int result = TYPE.compare(aUnitType, bUnitType);
+            int result = Type.compare(aUnitType, bUnitType);
             if(result != 0)
                 return result;
             
@@ -177,7 +172,9 @@ public class NaturalOrderComparator implements Comparator
                 return result;
             
         }
-        return 0;
+        
+        // All things being equal, let the shorter win
+        return s1.length()-s2.length();
     }
     
     /**
