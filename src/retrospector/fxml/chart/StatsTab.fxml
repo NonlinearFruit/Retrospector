@@ -35,7 +35,7 @@
       <RowConstraints minHeight="10.0" prefHeight="250.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <PieChart fx:id="chartMediaPerCategory" title="Media per Category" GridPane.columnIndex="3" />
+      <PieChart fx:id="chartMediaPerCategory" GridPane.columnIndex="3" />
       <VBox prefHeight="200.0" prefWidth="100.0">
          <children>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Overall">
@@ -138,7 +138,7 @@
       </VBox>
       <Separator prefWidth="200.0" GridPane.columnSpan="4" GridPane.rowIndex="1" />
       <Separator prefWidth="200.0" GridPane.columnSpan="4" GridPane.rowIndex="3" />
-      <LineChart fx:id="chartReviewsPerYear" title="Reviews per Year" GridPane.columnIndex="3" GridPane.rowIndex="2">
+      <LineChart fx:id="chartReviewsPerYear" GridPane.columnIndex="3" GridPane.rowIndex="2">
         <xAxis>
           <CategoryAxis side="BOTTOM" />
         </xAxis>
@@ -146,7 +146,7 @@
           <NumberAxis side="LEFT" />
         </yAxis>
       </LineChart>
-      <LineChart fx:id="chartRatingOverTime" legendVisible="false" title="Ratings over Time" GridPane.columnIndex="3" GridPane.rowIndex="4">
+      <LineChart fx:id="chartRatingOverTime" legendVisible="false" GridPane.columnIndex="3" GridPane.rowIndex="4">
         <xAxis>
           <NumberAxis fx:id="chartRotX" side="BOTTOM" />
         </xAxis>

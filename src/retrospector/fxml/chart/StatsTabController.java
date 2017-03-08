@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -299,7 +300,7 @@ public class StatsTabController implements Initializable {
             for (Review r : m.getReviews()) {
                 if(r.getDate().isBefore(earliest))
                     earliest = r.getDate();
-                if(ChronoUnit.DAYS.between(r.getDate(), LocalDate.now())<=30){
+                if(ChronoUnit.DAYS.between(r.getDate(), LocalDate.now())<=25){
                     Map<String,Integer> cat2Num = last30Days.getOrDefault(r.getDate(), new HashMap<>());
                     Integer num = cat2Num.getOrDefault(m.getCategory(), 1);
                     cat2Num.put(m.getCategory(), num);
@@ -348,7 +349,7 @@ public class StatsTabController implements Initializable {
         
         chartMediaPerCategory.setData(
                 FXCollections.observableArrayList(
-                    categories.keySet()
+                    Arrays.asList(DataManager.getCategories())
                         .stream()
                         .map(c -> {
                                 int count = categories.getOrDefault(c, 0);
@@ -360,19 +361,21 @@ public class StatsTabController implements Initializable {
         );
         
         // Chart # Reviews / Day
-        chartReviewsPerDay.getData().clear();
+        ObservableList list = FXCollections.observableArrayList();
         LocalDate now = LocalDate.now();
         for (String category : DataManager.getCategories()) {
             XYChart.Series data = new XYChart.Series();
             data.setName(category);
-            for (int i = 30; i > -1; i--) {
+            for (int i = 25; i > -1; i--) {
                 LocalDate target = now.minusDays(i);
                 int count = last30Days.getOrDefault(target, new HashMap<>()).getOrDefault(category, 0);
                 String key = target.getDayOfMonth()+"";
                 data.getData().add(new XYChart.Data(key,count));
             }
-            chartReviewsPerDay.getData().add(data);
+            list.add(data);
         }
+//        chartReviewsPerDay.getData().clear();
+        chartReviewsPerDay.setData(list);
     }
     
     private void updateCategory(){
