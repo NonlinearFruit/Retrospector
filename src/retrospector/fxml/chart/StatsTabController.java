@@ -27,6 +27,7 @@ import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.PieChart;
@@ -155,10 +156,6 @@ public class StatsTabController implements Initializable {
     @FXML
     private LineChart<Number, Number> chartReviewsPerYear;
     @FXML
-    private NumberAxis chartRotY;
-    @FXML
-    private NumberAxis chartRotX;
-    @FXML
     private Text overallTitle;
     @FXML
     private Text overallCreator;
@@ -174,6 +171,22 @@ public class StatsTabController implements Initializable {
     private StackedBarChart<String, Number> chartReviewsPerDay;
     @FXML
     private BarChart<String, Number> chartReviewsPerRating;
+    @FXML
+    private NumberAxis chartRotY;
+    @FXML
+    private NumberAxis chartRotX;
+    @FXML
+    private NumberAxis chartRpdY;
+    @FXML
+    private CategoryAxis chartRpdX;
+    @FXML
+    private NumberAxis chartRprY;
+    @FXML
+    private CategoryAxis chartRprX;
+    @FXML
+    private NumberAxis chartRpyY;
+    @FXML
+    private CategoryAxis chartRpyX;
 
     /**
      * Initializes the controller class.
@@ -181,16 +194,22 @@ public class StatsTabController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // Bug Work Around
-//        overallReviewsPerWeekday.getData().add(new XYChart.Series(FXCollections.observableArrayList(new XYChart.Data("",0))));
         chartReviewsPerYear.getData().add(new XYChart.Series(FXCollections.observableArrayList(new XYChart.Data("",0))));
-//        categoryReviewsPerWeekday.getData().add(new XYChart.Series(FXCollections.observableArrayList(new XYChart.Data("",0))));
+        chartReviewsPerDay.getData().add(new XYChart.Series(FXCollections.observableArrayList(new XYChart.Data("",0))));
+        chartReviewsPerRating.getData().add(new XYChart.Series(FXCollections.observableArrayList(new XYChart.Data("",0))));
         // Overall
         chartMediaPerCategory.setLegendVisible(true);
+        chartRpdX.setLabel("Days");
+        chartRpdY.setLabel("Reviews");
         // Category
         categorySelector.setItems(FXCollections.observableArrayList(DataManager.getCategories()));
         categorySelector.setValue(DataManager.getCategories()[0]);
         categorySelector.valueProperty().addListener((observe,old,neo)->updateCategory());
         chartReviewsPerRating.setLegendVisible(false);
+        chartRprX.setLabel("Ratings");
+        chartRprY.setLabel("Reviews");
+        chartRpyX.setLabel("Months");
+        chartRpyY.setLabel("Reviews");
         // Media
         checkTitle.setSelected(true);
         checkCreator.setSelected(true);
@@ -218,11 +237,13 @@ public class StatsTabController implements Initializable {
         mediaColumnSeason.setCellValueFactory(new PropertyValueFactory<>("SeasonId"));
         mediaColumnEpisode.setCellValueFactory(new PropertyValueFactory<>("EpisodeId"));
         mediaColumnCategory.setCellValueFactory(new PropertyValueFactory<>("Category"));
+        chartRotY.setLabel("Reviews");
         chartRotY.setAutoRanging(false);
         chartRotY.setLowerBound(0);
         chartRotY.setUpperBound(10);
         chartRotY.setTickUnit(2);
         chartRotY.setMinorTickCount(2);
+        chartRotX.setLabel("Time");
         chartRotX.setAutoRanging(false);
         chartRotX.setTickUnit(1);
         chartRotX.setMinorTickCount(4);
@@ -473,7 +494,7 @@ public class StatsTabController implements Initializable {
         
         // Chart - # Reviews / Rating
         data = new XYChart.Series();
-        for (int i = 0; i < reviewsPerRating.length; i++) {
+        for (int i = 1; i < reviewsPerRating.length; i++) {
             data.getData().add(new XYChart.Data(i+"",reviewsPerRating[i]));
         }
         chartReviewsPerRating.getData().clear();

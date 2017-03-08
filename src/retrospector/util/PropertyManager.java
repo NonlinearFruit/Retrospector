@@ -27,7 +27,6 @@ public class PropertyManager {
         private Integer maxRating;
         private Integer defaultRating;
         private String[] categories;
-        private Boolean enableTrope;
         
         public Configuration(){
             defaultUser = "Ben";
@@ -47,15 +46,13 @@ public class PropertyManager {
                 "Product",
                 "Other"
             };
-            enableTrope = true;
         }
         
-        public Configuration(String user, Integer maxRate, Integer defaultRate, String[] category, Boolean trope){
+        public Configuration(String user, Integer maxRate, Integer defaultRate, String[] category){
             defaultUser = user;
             maxRating = maxRate;
             defaultRating = defaultRate;
             categories = category;
-            enableTrope = trope;
         }
 
         public String getDefaultUser() {
@@ -89,14 +86,6 @@ public class PropertyManager {
         public void setCategories(String[] categories) {
             this.categories = categories;
         }
-
-        public Boolean isEnableTrope() {
-            return enableTrope;
-        }
-
-        public void setEnableTrope(Boolean enableTrope) {
-            this.enableTrope = enableTrope;
-        }
     }
     
     public static void saveProperties(Configuration config) throws IOException,URISyntaxException{
@@ -106,7 +95,6 @@ public class PropertyManager {
         prop.setProperty(Configuration.prop.MAX_RATING.name(), config.getMaxRating().toString());
         prop.setProperty(Configuration.prop.DEFAULT_RATING.name(), config.getDefaultRating().toString());
         prop.setProperty(Configuration.prop.CATEGORIES.name(), String.join(",",config.getCategories()));
-        prop.setProperty(Configuration.prop.ENABLE_TROPE.name(), config.isEnableTrope().toString());
         FileOutputStream out = new FileOutputStream(configPath);
         saveProperties(prop, out);
     }
@@ -122,8 +110,7 @@ public class PropertyManager {
                     prop.getProperty(Configuration.prop.DEFAULT_USER.name()),
                     Integer.parseInt(prop.getProperty(Configuration.prop.MAX_RATING.name())),
                     Integer.parseInt(prop.getProperty(Configuration.prop.DEFAULT_RATING.name())),
-                    prop.getProperty(Configuration.prop.CATEGORIES.name()).split(","),
-                    Boolean.parseBoolean(prop.getProperty(Configuration.prop.ENABLE_TROPE.name()))
+                    prop.getProperty(Configuration.prop.CATEGORIES.name()).split(",")
             );
             return config;
         } catch(IOException|NumberFormatException e) {

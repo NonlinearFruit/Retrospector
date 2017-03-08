@@ -35,7 +35,7 @@
       <RowConstraints minHeight="10.0" prefHeight="250.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <PieChart fx:id="chartMediaPerCategory" GridPane.columnIndex="3" />
+      <PieChart fx:id="chartMediaPerCategory" title="Category Size" GridPane.columnIndex="3" />
       <VBox prefHeight="200.0" prefWidth="100.0">
          <children>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Overall">
@@ -138,15 +138,15 @@
       </VBox>
       <Separator prefWidth="200.0" GridPane.columnSpan="4" GridPane.rowIndex="1" />
       <Separator prefWidth="200.0" GridPane.columnSpan="4" GridPane.rowIndex="3" />
-      <LineChart fx:id="chartReviewsPerYear" GridPane.columnIndex="3" GridPane.rowIndex="2">
+      <LineChart fx:id="chartReviewsPerYear" title="Monthly Totals" GridPane.columnIndex="3" GridPane.rowIndex="2">
         <xAxis>
-          <CategoryAxis side="BOTTOM" />
+          <CategoryAxis fx:id="chartRpyX" side="BOTTOM" />
         </xAxis>
         <yAxis>
-          <NumberAxis side="LEFT" />
+          <NumberAxis fx:id="chartRpyY" side="LEFT" />
         </yAxis>
       </LineChart>
-      <LineChart fx:id="chartRatingOverTime" legendVisible="false" GridPane.columnIndex="3" GridPane.rowIndex="4">
+      <LineChart fx:id="chartRatingOverTime" legendVisible="false" title="Rating over Time" GridPane.columnIndex="3" GridPane.rowIndex="4">
         <xAxis>
           <NumberAxis fx:id="chartRotX" side="BOTTOM" />
         </xAxis>
@@ -154,23 +154,20 @@
           <NumberAxis fx:id="chartRotY" side="LEFT" />
         </yAxis>
       </LineChart>
-      <VBox fx:id="overallSpace" GridPane.columnIndex="1">
-         <children>
-            <StackedBarChart fx:id="chartReviewsPerDay">
-              <xAxis>
-                <CategoryAxis side="BOTTOM" />
-              </xAxis>
-              <yAxis>
-                <NumberAxis side="LEFT" />
-              </yAxis>
-            </StackedBarChart>
-         </children></VBox>
-      <BarChart fx:id="chartReviewsPerRating" GridPane.columnIndex="1" GridPane.rowIndex="2">
+      <StackedBarChart fx:id="chartReviewsPerDay" title="Last 25 Days" GridPane.columnIndex="1">
         <xAxis>
-          <CategoryAxis side="BOTTOM" />
+          <CategoryAxis fx:id="chartRpdX" side="BOTTOM" />
         </xAxis>
         <yAxis>
-          <NumberAxis side="LEFT" />
+          <NumberAxis fx:id="chartRpdY" side="LEFT" />
+        </yAxis>
+      </StackedBarChart>
+      <BarChart fx:id="chartReviewsPerRating" title="Rating Distrobution" GridPane.columnIndex="1" GridPane.rowIndex="2">
+        <xAxis>
+          <CategoryAxis fx:id="chartRprX" side="BOTTOM" />
+        </xAxis>
+        <yAxis>
+          <NumberAxis fx:id="chartRprY" side="LEFT" />
         </yAxis>
       </BarChart>
    </children>
