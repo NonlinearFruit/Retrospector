@@ -10,3 +10,5 @@ Maintain an active list of your personal reviews/ratings of media.
 ![screenshot](/screenshots/Review.png)
 ## Chart
 ![screenshot](/screenshots/Chart.png)
+## List
+![screenshot](/screenshots/List.png)
