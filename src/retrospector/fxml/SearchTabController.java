@@ -8,6 +8,7 @@ package retrospector.fxml;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ObservableValue;
@@ -97,17 +98,32 @@ public class SearchTabController implements Initializable {
     }   
     
     private void updateSearchTab(){
+        int index = searchTable.getSelectionModel().getFocusedIndex();
         searchTableData.clear();
         searchTableData.addAll(DataManager.getMedia());
         searchTable.refresh();
         if(searchTable.getItems().contains(getMedia()))
             searchTable.getSelectionModel().select(getMedia());
+        else if(searchTable.getItems().size()>index)
+            searchTable.getSelectionModel().select(index);
         else if(searchTable.getItems().size()>0)
             searchTable.getSelectionModel().select(0);
     }
     
     private Media getMedia(){
         return currentMedia.get();
+    }
+    
+    protected void next(){
+        int size = searchTable.getItems().size();
+        int index = searchTable.getSelectionModel().getFocusedIndex()+1;
+        searchTable.getSelectionModel().select(index%size);
+    }
+    
+    protected void previous(){
+        int size = searchTable.getItems().size();
+        int index = searchTable.getSelectionModel().getFocusedIndex()-1;
+        searchTable.getSelectionModel().select( (index+size)%size );
     }
     
     protected void setup(ObjectProperty<TAB> t,ObjectProperty<Media> m){
@@ -243,7 +259,7 @@ public class SearchTabController implements Initializable {
             }
         });
         
-        // Comparors for string columns
+        // Comparators for string columns
         searchTitleColumn.setComparator(new NaturalOrderComparator());
         searchCreatorColumn.setComparator(new NaturalOrderComparator());
         searchSeasonColumn.setComparator(new NaturalOrderComparator());
