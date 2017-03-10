@@ -162,7 +162,7 @@
           <NumberAxis fx:id="chartRpdY" side="LEFT" />
         </yAxis>
       </StackedBarChart>
-      <BarChart fx:id="chartReviewsPerRating" title="Rating Distrobution" GridPane.columnIndex="1" GridPane.rowIndex="2">
+      <BarChart fx:id="chartReviewsPerRating" title="Rating Distribution" GridPane.columnIndex="1" GridPane.rowIndex="2">
         <xAxis>
           <CategoryAxis fx:id="chartRprX" side="BOTTOM" />
         </xAxis>

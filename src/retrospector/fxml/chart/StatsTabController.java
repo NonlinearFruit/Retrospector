@@ -324,7 +324,7 @@ public class StatsTabController implements Initializable {
                 if(ChronoUnit.DAYS.between(r.getDate(), LocalDate.now())<=25){
                     Map<String,Integer> cat2Num = last30Days.getOrDefault(r.getDate(), new HashMap<>());
                     Integer num = cat2Num.getOrDefault(m.getCategory(), 1);
-                    cat2Num.put(m.getCategory(), num);
+                    cat2Num.put(m.getCategory(), num+1);
                     last30Days.put(r.getDate(), cat2Num);
                 }
                 aveAll += r.getRating().intValue();

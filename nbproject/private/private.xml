@@ -5,12 +5,14 @@
             <url>test/retrospector/util/NaturalOrderComparatorTest.java</url>
             <bookmark id="1">
                 <name/>
-                <line>75</line>
+                <line>69</line>
                 <key/>
             </bookmark>
         </file>
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/home/nonfrt/NetBeansProjects/Retrospector/src/retrospector/util/PropertyManager.java</file>
+        </group>
     </open-files>
 </project-private>

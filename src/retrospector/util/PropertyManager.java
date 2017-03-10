@@ -116,7 +116,7 @@ public class PropertyManager {
         } catch(IOException|NumberFormatException e) {
             System.err.println("Loading Config File Failed!");
             Configuration dfault = new Configuration();
-            try{ saveProperties(dfault); } catch(IOException|URISyntaxException ex) {} // Since there isn't a config file, make one!
+            try{ saveProperties(dfault); } catch(IOException|URISyntaxException ex) {System.err.println(ex.getMessage());} // Since there isn't a config file, make one!
             return dfault;
         }
     }

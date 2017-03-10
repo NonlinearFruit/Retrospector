@@ -25,6 +25,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -193,6 +194,18 @@ public class SearchTabController implements Initializable {
     private void initSearchTab(){
         searchEditMedia.setDisable(true);
         searchDeleteMedia.setDisable(true);
+        
+        // Table Double Click
+        searchTable.setRowFactory(tv -> {
+            TableRow<Media> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && (!row.isEmpty())){
+                    setMedia(row.getItem());
+                    setTab(TAB.MEDIA);
+                }
+            });
+            return row;
+        });
         
         // Table data setup
         searchTableData = DataManager.getMedia();
