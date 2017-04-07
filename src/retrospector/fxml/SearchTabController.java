@@ -118,12 +118,14 @@ public class SearchTabController implements Initializable {
         int size = searchTable.getItems().size();
         int index = searchTable.getSelectionModel().getFocusedIndex()+1;
         searchTable.getSelectionModel().select(index%size);
+//        setMedia(searchTable.getSelectionModel().getSelectedItem());
     }
     
     protected void previous(){
         int size = searchTable.getItems().size();
         int index = searchTable.getSelectionModel().getFocusedIndex()-1;
         searchTable.getSelectionModel().select( (index+size)%size );
+//        setMedia(searchTable.getSelectionModel().getSelectedItem());
     }
     
     protected void setup(ObjectProperty<TAB> t,ObjectProperty<Media> m){

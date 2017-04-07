@@ -54,12 +54,13 @@ public class CoreController implements Initializable {
     public void setStatsController(FXMLLoader ldr){ 
         chartTab.setContent(ldr.getRoot());
         statsController = ldr.getController(); 
+        statsController.setup(currentTab,currentMedia);
     }
     
     public void setMediaController(FXMLLoader ldr){ 
         mediaTab.setContent(ldr.getRoot());
         mediaController = ldr.getController();
-        mediaController.setup(currentTab,currentMedia,currentReview);
+        mediaController.setup(currentTab,currentMedia,currentReview,this::nextPreviousMedia);
     }
     
     public void setReviewController(FXMLLoader ldr){ 
@@ -89,7 +90,26 @@ public class CoreController implements Initializable {
         // This is just for test, try not to put it in a really release
 //        if(DataManager.getMedia().size()==0)
 //            Dumpster.createMedia(1000);
-        
+        searchTab.selectedProperty().addListener((observe,old,neo)->{
+            if(neo)
+                setTab(TAB.SEARCH);
+        });
+        mediaTab.selectedProperty().addListener((observe,old,neo)->{
+            if(neo)
+                setTab(TAB.MEDIA);
+        });
+        reviewTab.selectedProperty().addListener((observe,old,neo)->{
+            if(neo)
+                setTab(TAB.REVIEW);
+        });
+        chartTab.selectedProperty().addListener((observe,old,neo)->{
+            if(neo)
+                setTab(TAB.CHART);
+        });
+        listTab.selectedProperty().addListener((observe,old,neo)->{
+            if(neo)
+                setTab(TAB.LIST);
+        });
         currentTab.set(TAB.SEARCH);
         currentTab.addListener((observe,old,neo)->{
             Tab tab;
@@ -148,5 +168,16 @@ public class CoreController implements Initializable {
         mediaTab.setDisable(true);
         reviewTab.setDisable(true);
         chartTab.setDisable(true);
+    }
+    
+    private void setTab(TAB aTab){
+        currentTab.set(aTab);
+    }
+    
+    protected void nextPreviousMedia(Integer i){
+        if(i>0)
+            searchController.next();
+        else
+            searchController.previous();
     }
 }

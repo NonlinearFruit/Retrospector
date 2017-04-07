@@ -11,6 +11,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -26,6 +28,7 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
@@ -33,22 +36,22 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.StackedBarChart;
 import javafx.scene.chart.XYChart;
-import javafx.scene.chart.XYChart.Data;
-import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ListView;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
 import javafx.util.StringConverter;
+import retrospector.fxml.CoreController.TAB;
 import retrospector.model.DataManager;
 import retrospector.model.Media;
 import retrospector.model.Review;
 import retrospector.util.NaturalOrderComparator;
-import retrospector.util.PropertyManager;
 import retrospector.util.Stroolean;
 
 /**
@@ -59,9 +62,11 @@ import retrospector.util.Stroolean;
 public class StatsTabController implements Initializable {
 
     private List<Stroolean> strooleans = new ArrayList<>();
-    private Media currentMedia;
+    private ObjectProperty<Media> currentMedia;
+    private ObjectProperty<TAB> currentTab;
     private ObservableList<Media> allMedia = FXCollections.observableArrayList();
     private FilteredList<Media> mediaTableFilter = new FilteredList(allMedia);
+    private String[] colors = new String[]{"red","orange","yellowgreen","seagreen","lightseagreen","skyblue","royalblue","grey","mediumpurple","palevioletred","firebrick"};
     
     @FXML
     private LineChart<Number, Number> chartRatingOverTime;
@@ -193,6 +198,7 @@ public class StatsTabController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+//        Collections.rotate(Arrays.asList(colors), -5);
         // Bug Work Around
         chartReviewsPerYear.getData().add(new XYChart.Series(FXCollections.observableArrayList(new XYChart.Data("",0))));
         chartReviewsPerDay.getData().add(new XYChart.Series(FXCollections.observableArrayList(new XYChart.Data("",0))));
@@ -267,9 +273,18 @@ public class StatsTabController implements Initializable {
         });
     }
     
+    public void setup(ObjectProperty<TAB> aTab, ObjectProperty<Media> aMedia){
+        currentMedia = aMedia;
+        currentTab = aTab;
+    }
+    
+    private Media getMedia(){
+        return currentMedia.get();
+    }
+    
        
     public void update(Media media){
-        currentMedia = media;
+        currentMedia.set(media);
         checkTitle.setText("Title: "+media.getTitle());
         checkCreator.setText("Creator: "+media.getCreator());
         checkSeason.setText("Season: "+media.getSeasonId());
@@ -287,6 +302,12 @@ public class StatsTabController implements Initializable {
     }
     
     private void updateOverall(){
+        
+        // Constants
+        int last__days = 20;
+        
+        // Graph Title
+        chartReviewsPerDay.setTitle("Past "+last__days+" Days");
         
         // Data Mining - Vars
         Set<String> titleSet = new HashSet<>();
@@ -321,7 +342,7 @@ public class StatsTabController implements Initializable {
             for (Review r : m.getReviews()) {
                 if(r.getDate().isBefore(earliest))
                     earliest = r.getDate();
-                if(ChronoUnit.DAYS.between(r.getDate(), LocalDate.now())<=25){
+                if(ChronoUnit.DAYS.between(r.getDate(), LocalDate.now())<=last__days){
                     Map<String,Integer> cat2Num = last30Days.getOrDefault(r.getDate(), new HashMap<>());
                     Integer num = cat2Num.getOrDefault(m.getCategory(), 1);
                     cat2Num.put(m.getCategory(), num+1);
@@ -353,41 +374,40 @@ public class StatsTabController implements Initializable {
         overallAllRating.setText(String.format("%.2f", aveAll)+" All");
         
         // Chart # Media / Category
-//        overallReviewsPerWeekday.setData(FXCollections.observableArrayList(
-//                userWeekdays.keySet()
-//                .stream()
-//                .sorted()
-//                .map(user -> new Series<String,Number>(user,FXCollections.observableArrayList(
-//                        userWeekdays.get(user).keySet()
-//                        .stream()
-//                        .sorted((x,y)->new Integer(orderedDaysOfWeek.indexOf(x)).compareTo(new Integer(orderedDaysOfWeek.indexOf(y))))
-//                        .map(weekday -> new Data<String,Number>(weekday,userWeekdays.get(user).get(weekday)))
-//                        .collect(Collectors.toList())
-//                    ))
-//                )
-//                .collect(Collectors.toList())
-//        ));
-        
         chartMediaPerCategory.setData(
                 FXCollections.observableArrayList(
                     Arrays.asList(DataManager.getCategories())
                         .stream()
                         .map(c -> {
                                 int count = categories.getOrDefault(c, 0);
-                                return new PieChart.Data(c + " - " + count, count);
+                                PieChart.Data data = new PieChart.Data(c + " - " + count, count);
+                                return data;
                             }
                         )
                         .collect(Collectors.toList())
                 )
         );
+        for (PieChart.Data data : chartMediaPerCategory.getData()) {
+            String category = data.getName().substring(0,data.getName().indexOf(" - "));
+            int i = Arrays.asList(DataManager.getCategories()).indexOf(category);
+            data.getNode().setStyle("-fx-pie-color: " + colors[ (i>0?i:0) % colors.length] + ";");
+        }
+        for (Node node : chartMediaPerCategory.lookupAll("Label.chart-legend-item")) {
+            Shape symbol = new Circle(5);
+            Label label = (Label) node;
+            String category = label.getText().substring(0,label.getText().indexOf(" - "));
+            int i = Arrays.asList(DataManager.getCategories()).indexOf(category);
+            symbol.setStyle("-fx-fill: " + colors[ (i>0?i:0) % colors.length]);
+            label.setGraphic(symbol);
+        }
         
         // Chart # Reviews / Day
-        ObservableList list = FXCollections.observableArrayList();
+        ObservableList<XYChart.Series<String,Number>> list = FXCollections.observableArrayList();
         LocalDate now = LocalDate.now();
         for (String category : DataManager.getCategories()) {
             XYChart.Series data = new XYChart.Series();
             data.setName(category);
-            for (int i = 25; i > -1; i--) {
+            for (int i = last__days; i > -1; i--) {
                 LocalDate target = now.minusDays(i);
                 int count = last30Days.getOrDefault(target, new HashMap<>()).getOrDefault(category, 0);
                 String key = target.getDayOfMonth()+"";
@@ -395,14 +415,34 @@ public class StatsTabController implements Initializable {
             }
             list.add(data);
         }
-//        chartReviewsPerDay.getData().clear();
         chartReviewsPerDay.setData(list);
+        for (Node node : chartReviewsPerDay.lookupAll("Label.chart-legend-item")) {
+            Shape symbol = new Rectangle(7,7);
+            Label label = (Label) node;
+            String category = label.getText();
+            int i = Arrays.asList(DataManager.getCategories()).indexOf(category);
+            symbol.setStyle("-fx-fill: " + colors[ (i>0?i:0) % colors.length]);
+            label.setGraphic(symbol);
+        }
+        
+        for (XYChart.Series<String,Number> serie : chartReviewsPerDay.getData()) {
+            String category = serie.getName();
+            int i = Arrays.asList(DataManager.getCategories()).indexOf(category);
+            for (XYChart.Data<String,Number> data : serie.getData()) {
+                data.getNode().setStyle("-fx-background-color: " + colors[ (i>0?i:0) % colors.length] + ";");
+            }
+        }
     }
     
     private void updateCategory(){
         
         // Category Chooser
         String category = categorySelector.getValue();
+        
+        // Colors
+        int index = Arrays.asList(DataManager.getCategories()).indexOf(category);
+        chartReviewsPerYear.setStyle("CHART_COLOR_1: "+colors[ (index>0?index:0) % colors.length]+";");
+        chartReviewsPerRating.setStyle("CHART_COLOR_1: "+colors[ (index>0?index:0) % colors.length]+";");
             
         // Data Mining - Vars
         Map<String, Integer> reviewMap = new HashMap<>();
@@ -503,6 +543,10 @@ public class StatsTabController implements Initializable {
     
     private void updateMedia(){
         
+        // Colors
+        int index = Arrays.asList(DataManager.getCategories()).indexOf(getMedia().getCategory());
+        chartRatingOverTime.setStyle("CHART_COLOR_1: "+colors[ (index>0?index:0) % colors.length]+";");
+        
         // Media Filtering
         Boolean title = checkTitle.isSelected();
         Boolean creator = checkCreator.isSelected();
@@ -512,11 +556,11 @@ public class StatsTabController implements Initializable {
         
         // Filter Table
         mediaTableFilter.setPredicate(m->
-                ( ( checkTitle.isSelected() && currentMedia.getTitle().equals(((Media)m).getTitle()) ) || !checkTitle.isSelected() ) &&
-                ( ( checkCreator.isSelected() && currentMedia.getCreator().equals(((Media)m).getCreator()) ) || !checkCreator.isSelected() ) &&
-                ( ( checkSeason.isSelected() && currentMedia.getSeasonId().equals(((Media)m).getSeasonId()) ) || !checkSeason.isSelected() ) &&
-                ( ( checkEpisode.isSelected() && currentMedia.getEpisodeId().equals(((Media)m).getEpisodeId()) ) || !checkEpisode.isSelected() ) &&
-                ( ( checkCategory.isSelected() && currentMedia.getCategory().equals(((Media)m).getCategory()) ) || !checkCategory.isSelected() )
+                ( ( checkTitle.isSelected() && getMedia().getTitle().equals(((Media)m).getTitle()) ) || !checkTitle.isSelected() ) &&
+                ( ( checkCreator.isSelected() && getMedia().getCreator().equals(((Media)m).getCreator()) ) || !checkCreator.isSelected() ) &&
+                ( ( checkSeason.isSelected() && getMedia().getSeasonId().equals(((Media)m).getSeasonId()) ) || !checkSeason.isSelected() ) &&
+                ( ( checkEpisode.isSelected() && getMedia().getEpisodeId().equals(((Media)m).getEpisodeId()) ) || !checkEpisode.isSelected() ) &&
+                ( ( checkCategory.isSelected() && getMedia().getCategory().equals(((Media)m).getCategory()) ) || !checkCategory.isSelected() )
         );
 
         // Data Mining - Vars

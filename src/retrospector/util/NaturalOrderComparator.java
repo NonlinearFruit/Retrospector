@@ -17,6 +17,9 @@ import java.util.List;
  *   - Then ordered by the resulting integer value
  * + Alphabetic characters come third
  *   - Alphabetically ordered
+ * + Length comes last
+ *   - The shorter comes first
+ * 
  * For example, {A,C,03,1,b,002,$} would be sorted into {$,1,002,03,A,b,C}. 
  * @author NonlinearFruit
  */
@@ -100,8 +103,8 @@ public class NaturalOrderComparator implements Comparator<String> {
         if(Type.getType(b)!=Type.ALPHA)
             throw new IllegalArgumentException(b+" is not of Type Alpha");
         
-        char lowB = Character.toLowerCase(b);
         char lowA = Character.toLowerCase(a);
+        char lowB = Character.toLowerCase(b);
         
         if(lowA==lowB)
             return Character.compare(a, b);

@@ -29,6 +29,7 @@ import retrospector.fxml.CoreController.TAB;
 import retrospector.model.DataManager;
 import retrospector.model.Media;
 import retrospector.model.Review;
+import java.util.function.Consumer;
 
 /**
  * FXML Controller class
@@ -89,10 +90,15 @@ public class MediaTabController implements Initializable {
     private HBox mediaSeasonBox;
     @FXML
     private HBox mediaEpisodeBox;
+    @FXML
+    private Button nextBtn;
+    @FXML
+    private Button prevBtn;
     
     private ObjectProperty<Media> currentMedia;
     private ObjectProperty<Review> currentReview;
     private ObjectProperty<TAB> currentTab;
+    private Consumer<Integer> nextPreviousFunct;
 
     /**
      * Initializes the controller class.
@@ -106,10 +112,11 @@ public class MediaTabController implements Initializable {
         return currentMedia.get();
     }
     
-    public void setup(ObjectProperty<TAB> t, ObjectProperty<Media> m,ObjectProperty<Review> r){
+    public void setup(ObjectProperty<TAB> t, ObjectProperty<Media> m,ObjectProperty<Review> r, Consumer<Integer> np){
         currentTab = t;
         currentMedia = m;
         currentReview = r;
+        nextPreviousFunct = np;
     }
     
     public void update(){
@@ -269,6 +276,16 @@ public class MediaTabController implements Initializable {
                 System.err.println("Media got a -1 id (mediaAddEpisode#setOnAction");
             updateMediaTab();
             mediaEpisode.requestFocus();
+        });
+        
+        nextBtn.setOnAction(e->{
+            nextPreviousFunct.accept(1);
+            update();
+        });
+        
+        prevBtn.setOnAction(e->{
+            nextPreviousFunct.accept(-1);
+            update();
         });
     }
 }
