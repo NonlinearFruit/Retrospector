@@ -109,6 +109,31 @@
                   <TextArea fx:id="mediaDescription" maxWidth="600.0" prefHeight="200.0" prefWidth="200.0" wrapText="true" VBox.vgrow="ALWAYS" />
                </children>
             </VBox>
+            <VBox spacing="3.0">
+               <children>
+                  <HBox alignment="CENTER" VBox.vgrow="SOMETIMES">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Factoids" />
+                        <Button fx:id="mediaNewFactoid" mnemonicParsing="false" text="New" />
+                        <Button fx:id="mediaEditFactoid" mnemonicParsing="false" text="Edit" />
+                        <Button fx:id="mediaDeleteFactoid" mnemonicParsing="false" text="Delete" />
+                     </children>
+                  </HBox>
+                  <TableView fx:id="mediaFactoidTable" VBox.vgrow="ALWAYS">
+                     <columns>
+                        <TableColumn fx:id="mediaTitleColumn" prefWidth="66.0" text="Type" />
+                        <TableColumn fx:id="mediaContentColumn" prefWidth="142.0" text="Content" />
+                     </columns>
+                  </TableView>
+                  <HBox>
+                     <children>
+                        <ChoiceBox fx:id="mediaTitleFactoid" prefWidth="150.0" />
+                        <TextField fx:id="mediaContentFactoid" prefColumnCount="10" promptText="Content" />
+                        <Button fx:id="mediaSaveFactoid" mnemonicParsing="false" text="Save" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
             <VBox spacing="3.0" HBox.hgrow="NEVER">
                <children>
                   <HBox alignment="CENTER" VBox.vgrow="SOMETIMES">

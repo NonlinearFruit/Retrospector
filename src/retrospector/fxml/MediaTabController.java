@@ -30,6 +30,9 @@ import retrospector.model.DataManager;
 import retrospector.model.Media;
 import retrospector.model.Review;
 import java.util.function.Consumer;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.scene.control.TableRow;
+import retrospector.model.Factoid;
 
 /**
  * FXML Controller class
@@ -94,10 +97,29 @@ public class MediaTabController implements Initializable {
     private Button nextBtn;
     @FXML
     private Button prevBtn;
+    @FXML
+    private Button mediaNewFactoid;
+    @FXML
+    private Button mediaEditFactoid;
+    @FXML
+    private Button mediaDeleteFactoid;
+    @FXML
+    private TableView<Factoid> mediaFactoidTable;
+    @FXML
+    private TableColumn<Factoid, String> mediaTitleColumn;
+    @FXML
+    private TableColumn<Factoid, String> mediaContentColumn;
+    @FXML
+    private ChoiceBox<String> mediaTitleFactoid;
+    @FXML
+    private TextField mediaContentFactoid;
+    @FXML
+    private Button mediaSaveFactoid;
     
     private ObjectProperty<Media> currentMedia;
     private ObjectProperty<Review> currentReview;
     private ObjectProperty<TAB> currentTab;
+    private ObjectProperty<Factoid> currentFactoid;
     private Consumer<Integer> nextPreviousFunct;
 
     /**
@@ -139,7 +161,29 @@ public class MediaTabController implements Initializable {
         currentTab.set(t);
     }
     
+    private void setFactoid(Factoid factoid) {
+        currentFactoid.set(factoid);
+        if (factoid == null) {
+            mediaTitleFactoid.getSelectionModel().clearSelection();
+            mediaContentFactoid.setText("");
+        } else {
+            mediaTitleFactoid.getSelectionModel().select(factoid.getTitle());
+            mediaContentFactoid.setText(factoid.getContent());
+        }
+    }
+    
+    private Factoid getFactoid() {
+        if(currentFactoid.get() == null) {
+            currentFactoid.set(new Factoid());
+            currentFactoid.get().setMediaId(getMedia().getId());
+        }
+        currentFactoid.get().setTitle(mediaTitleFactoid.getValue());
+        currentFactoid.get().setContent(mediaContentFactoid.getText());
+        return currentFactoid.get();
+    }
+    
     private void updateMediaTab(){
+        // Media Stuff
         setMedia(DataManager.getMedia(getMedia().getId()));
         mediaTitle.setText(getMedia().getTitle());
         mediaCreator.setText(getMedia().getCreator());
@@ -153,6 +197,14 @@ public class MediaTabController implements Initializable {
         mediaType.setValue(getMedia().getType());
         mediaDescription.setText(getMedia().getDescription());
         
+        // Factoid Stuff
+        setFactoid(null);
+        mediaFactoidTable.setItems(FXCollections.observableArrayList(getMedia().getFactoids()));
+        mediaFactoidTable.refresh();
+        if(mediaFactoidTable.getItems().size()>0)
+            mediaFactoidTable.getSelectionModel().select(0);
+        
+        // Review Stuff
         mediaReviewTable.setItems(FXCollections.observableArrayList(getMedia().getReviews()));
         mediaReviewTable.refresh();
         if(mediaReviewTable.getItems().size()>0)
@@ -160,6 +212,7 @@ public class MediaTabController implements Initializable {
     }
     
     private void initMediaTab(){
+        // Rating Stuff
         mediaStars.setPartialRating(true);
         mediaStars.setDisable(true);
         mediaStars.setMax(DataManager.getMaxRating()/2);
@@ -170,6 +223,8 @@ public class MediaTabController implements Initializable {
         mediaCategory.getSelectionModel().selectedItemProperty().addListener((observe,old,neo)->{
             
         });
+        
+        // Media Stuff
         mediaType.setItems(FXCollections.observableArrayList(Media.Type.values()));
         mediaType.getSelectionModel().selectedItemProperty().addListener((observe,old,neo)->{
             switch(neo){
@@ -190,30 +245,7 @@ public class MediaTabController implements Initializable {
             }
         });
         
-        mediaReviewTable.getSelectionModel().selectedItemProperty().addListener((observe, old, neo)->{
-            setReview(neo);
-        });
-        mediaRatingColumn.setCellValueFactory(new PropertyValueFactory<Review,Double>("Rating"));
-        mediaUserColumn.setCellValueFactory(new PropertyValueFactory<Review,String>("User"));
-        mediaDateColumn.setCellValueFactory(new PropertyValueFactory<Review,LocalDate>("Date"));
-        
-        mediaNewReview.setOnAction(e->{
-            Review review = new Review();
-            review.setMediaId(getMedia().getId());
-            review.setId(DataManager.createDB(review));
-            setReview(review);
-            setTab(TAB.REVIEW);
-        });
-        mediaEditReview.setOnAction(e->{
-            setTab(TAB.REVIEW);
-        });
-        mediaDeleteReview.setOnAction(e->{
-            if(new Alert(Alert.AlertType.WARNING,"Are you sure you want to delete this?",ButtonType.NO,ButtonType.YES).showAndWait().get().equals(ButtonType.YES)){
-                DataManager.deleteDB(getReview());
-                updateMediaTab();
-            }
-        });
-        
+        // Buttons
         mediaSave.setOnAction(e->{
             Media m = new Media();
             m.clone(getMedia());
@@ -286,6 +318,102 @@ public class MediaTabController implements Initializable {
         prevBtn.setOnAction(e->{
             nextPreviousFunct.accept(-1);
             update();
+        });
+        
+        // Factoid Stuff
+        mediaTitleFactoid.setItems(FXCollections.observableArrayList(DataManager.getFactiodTypes()));
+        mediaTitleFactoid.setDisable(true);
+        mediaContentFactoid.setDisable(true);
+        mediaSaveFactoid.setDisable(true);
+        mediaEditFactoid.setDisable(true);
+        mediaDeleteFactoid.setDisable(true);
+        currentFactoid = new SimpleObjectProperty<>();
+        currentFactoid.addListener((observe,old,neo)->{
+            boolean tf = false;
+            if (neo==null)
+                tf = true;
+            mediaTitleFactoid.setDisable(tf);
+            mediaContentFactoid.setDisable(tf);
+            mediaSaveFactoid.setDisable(tf);
+            mediaEditFactoid.setDisable(tf);
+            mediaDeleteFactoid.setDisable(tf);
+        });
+        mediaFactoidTable.getSelectionModel().selectedItemProperty().addListener((observe, old, neo)->{
+            boolean tf = false;
+            if (neo==null)
+                tf = true;
+            mediaEditFactoid.setDisable(tf);
+            mediaDeleteFactoid.setDisable(tf);
+        });
+        mediaFactoidTable.setRowFactory(tv -> {
+            TableRow<Factoid> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && (!row.isEmpty())){
+                    setFactoid(row.getItem());
+                }
+            });
+            return row;
+        });
+        mediaTitleColumn.setCellValueFactory(new PropertyValueFactory<Factoid,String>("Title"));
+        mediaContentColumn.setCellValueFactory(new PropertyValueFactory<Factoid,String>("Content"));
+        
+        mediaNewFactoid.setOnAction(e->{
+            Factoid factoid = new Factoid();
+            factoid.setMediaId(getMedia().getId());
+            factoid.setId(DataManager.createDB(factoid));
+            mediaFactoidTable.getItems().add(factoid);
+            setFactoid(factoid);
+        });
+        mediaEditFactoid.setOnAction(e->{
+            setFactoid(mediaFactoidTable.getSelectionModel().getSelectedItem());
+        });
+        mediaDeleteFactoid.setOnAction(e->{
+            if(new Alert(Alert.AlertType.WARNING,"Are you sure you want to delete this?",ButtonType.NO,ButtonType.YES).showAndWait().get().equals(ButtonType.YES)){
+                DataManager.deleteDB(mediaFactoidTable.getSelectionModel().getSelectedItem());
+                updateMediaTab();
+            }
+        });
+        mediaSaveFactoid.setOnAction(e->{
+            Factoid factoid = getFactoid();
+            if (factoid.getId() > 0)
+                DataManager.updateDB(factoid);
+            else
+                DataManager.createDB(factoid);
+            updateMediaTab();
+        });
+        
+        // Review Stuff
+        mediaReviewTable.getSelectionModel().selectedItemProperty().addListener((observe, old, neo)->{
+            setReview(neo);
+        });
+        mediaReviewTable.setRowFactory(tv -> {
+            TableRow<Review> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && (!row.isEmpty())){
+                    setTab(TAB.REVIEW);
+                }
+            });
+            return row;
+        });
+        mediaRatingColumn.setCellValueFactory(new PropertyValueFactory<Review,Double>("Rating"));
+        mediaUserColumn.setCellValueFactory(new PropertyValueFactory<Review,String>("User"));
+        mediaDateColumn.setCellValueFactory(new PropertyValueFactory<Review,LocalDate>("Date"));
+        
+        mediaNewReview.setOnAction(e->{
+            Review review = new Review();
+            review.setMediaId(getMedia().getId());
+            review.setId(DataManager.createDB(review));
+            setReview(review);
+            setTab(TAB.REVIEW);
+        });
+        mediaEditReview.setOnAction(e->{
+            setTab(TAB.REVIEW);
+        });
+        mediaDeleteReview.setOnAction(e->{
+            if(new Alert(Alert.AlertType.WARNING,"Are you sure you want to delete this?",ButtonType.NO,ButtonType.YES).showAndWait().get().equals(ButtonType.YES)){
+                DataManager.deleteDB(getReview());
+                updateMediaTab();
+            }
         });
     }
 }

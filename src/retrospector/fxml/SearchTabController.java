@@ -7,8 +7,10 @@ package retrospector.fxml;
 
 import java.math.BigDecimal;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle;
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ObservableValue;
@@ -35,6 +37,7 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import retrospector.fxml.CoreController.TAB;
 import retrospector.model.DataManager;
+import retrospector.model.Factoid;
 import retrospector.model.Media;
 import retrospector.model.Review;
 import retrospector.util.NaturalOrderComparator;
@@ -178,29 +181,27 @@ public class SearchTabController implements Initializable {
         boolean pass = true;
         if(query.endsWith("|") && !query.endsWith("||"))
             query = query.substring(0, query.length()-1);
-        String[] queries = query.split(":");
+        String[] queries = query.toLowerCase().split(":");
+        List<String> searchables = new ArrayList<>();
+        searchables.addAll(Arrays.asList(
+                media.getTitle().toLowerCase(),
+                media.getCreator().toLowerCase(),
+                media.getSeasonId().toLowerCase(),
+                media.getEpisodeId().toLowerCase(),
+                media.getCategory().toLowerCase()
+        ));
+        for (Factoid fact : media.getFactoids()) {
+            searchables.add(fact.getContent().toLowerCase());
+        }
         for (String q : queries) {
             String[] optns = q.split("\\|\\|");
             boolean minorPass = false;
             for (String optn : optns) {
                 boolean negator = optn.length()>1 && optn.startsWith("!");
-                if ( !negator &&
-                        (  media.getTitle().toLowerCase().contains(optn)
-                        || media.getCreator().toLowerCase().contains(optn)
-                        || media.getSeasonId().toLowerCase().contains(optn)
-                        || media.getEpisodeId().toLowerCase().contains(optn)
-                        || media.getCategory().toLowerCase().contains(optn) )
-                        )
+                if ( !negator && searchables.stream().anyMatch(s -> s.contains(optn)) )
                     minorPass = true;
-                if ( negator && 
-                        !( media.getTitle().toLowerCase().contains(optn.substring(1))
-                        || media.getCreator().toLowerCase().contains(optn.substring(1))
-                        || media.getSeasonId().toLowerCase().contains(optn.substring(1))
-                        || media.getEpisodeId().toLowerCase().contains(optn.substring(1))
-                        || media.getCategory().toLowerCase().contains(optn.substring(1)) )
-                        )
+                if ( negator && !searchables.stream().anyMatch(s -> s.contains(optn.substring(1))) )
                     minorPass = true;
-                System.out.println(negator);
             }
             if (!minorPass) {
                 pass = false;

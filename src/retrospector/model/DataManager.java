@@ -17,7 +17,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import retrospector.model.Media.Type;
 import retrospector.util.PropertyManager;
-import retrospector.util.UtilityCloset;
 
 /**
  *
@@ -41,6 +40,10 @@ public class DataManager {
     
     public static String[] getCategories(){
         return PropertyManager.loadProperties().getCategories();
+    }
+    
+    public static String[] getFactiodTypes(){
+        return PropertyManager.loadProperties().getFactoids();
     }
     
     
@@ -89,6 +92,20 @@ public class DataManager {
                             } catch(SQLException e){System.err.println("Get review failed. (getMedia)");}
                         }
                     } catch(SQLException e){System.err.println("Get review list failed. (getMedia)");}
+                    try{
+                        rs2 = stmt.executeQuery("select * from factoid where mediaID="+medium.getId());
+                        while(rs2.next()){
+                            try{
+                                Factoid factoid = new Factoid();
+                                factoid.setId(rs2.getInt("id"));
+                                factoid.setMediaId(rs2.getInt("mediaID"));
+                                factoid.setTitle(rs2.getString("title"));
+                                factoid.setContent(rs2.getString("content"));
+
+                                medium.getFactoids().add(factoid);
+                            } catch(SQLException e){System.err.println("Get factoid failed. (getMedia)");}
+                        }
+                    } catch(SQLException e){System.err.println("Get factoid list failed. (getMedia)");}
                     list.add(medium);
                 } catch(SQLException e){System.err.println("Get media failed. (getMedia)");}
             }
@@ -119,6 +136,28 @@ public class DataManager {
             }
         } catch (SQLException e) {System.err.println("Get review list failed. (getReviews)");}
         return reviews;
+    }
+    
+    public static ObservableList<Factoid> getFactoids(){
+        Statement stmt;
+        ResultSet rs = null;
+
+        ObservableList<Factoid> factoids = FXCollections.observableArrayList();
+        try {
+            stmt = getConnection().createStatement();       
+            rs = stmt.executeQuery("select * from factoid");
+            while (rs.next()) {
+                try {
+                    Factoid factoid = new Factoid();
+                    factoid.setId(rs.getInt("id"));
+                    factoid.setMediaId(rs.getInt("mediaID"));
+                    factoid.setTitle(rs.getString("title"));
+                    factoid.setContent(rs.getString("content"));
+                    factoids.add(factoid);
+                } catch (SQLException e) {System.err.println("Get factoid failed. (getFactoids)");}
+            }
+        } catch (SQLException e) {System.err.println("Get factoid list failed. (getFactoids)");}
+        return factoids;
     }
     
     public static ObservableList<String> getUsers(){
@@ -165,6 +204,14 @@ public class DataManager {
         + "constraint primary_key_review primary key (id),"
         + "constraint foreign_key_review foreign key (mediaID) references media (id) on delete cascade)";
         
+        String createFactoid = ""
+        + "create table if not exists factoid ("
+        + "id integer not null generated always as identity (start with 1, increment by 1),   "
+        + "mediaID integer not null,   "
+        + "title varchar(1000000),"
+        + "content varchar(1000000),"
+        + "constraint primary_key_factoid primary key (id),"
+        + "constraint foreign_key_factoid foreign key (mediaID) references media (id) on delete cascade)";
       
         try {
             connString += "/Retrospector";
@@ -173,8 +220,9 @@ public class DataManager {
             stmt = getConnection().createStatement();
             stmt.execute(createMedia);
             stmt.execute(createReview);
+            stmt.executeQuery(createFactoid);
         } catch (SQLException ex) {
-            System.out.println("Create error in startDB in connection" + ex);
+            System.err.println("Create error in startDB in connection" + ex);
         }
     }
     
@@ -218,10 +266,14 @@ public class DataManager {
                 id = rs.getInt(1);
                 for (Review review : media.getReviews()) {
                     review.setMediaId(id);
-                    createDB(review);
+                    review.setId(createDB(review));
                 }
-            } else if(media.getReviews().size()>0) {
-                System.err.println("Reviews not Saved! :(");
+                for (Factoid factoid : media.getFactoids()) {
+                    factoid.setMediaId(id);
+                    factoid.setId(createDB(factoid));
+                }
+            } else if(media.getFactoids().size()>0 || media.getReviews().size()>0) {
+                System.err.println("Reviews/Factoids not Saved! :(");
             }
             
         } catch (SQLException ex) {
@@ -263,6 +315,36 @@ public class DataManager {
     }
     
     /**
+     * Create a new factoid in the DB
+     * @param factoid 
+     */
+    public static int createDB(Factoid factoid){
+        int id = -1;
+        try {
+            PreparedStatement pstmt;
+
+            pstmt = getConnection().prepareStatement(
+                    "insert into factoid(mediaId,title,content) values(?,?,?)",
+                    Statement.RETURN_GENERATED_KEYS);
+            pstmt.setInt(1, factoid.getMediaId());
+            pstmt.setString(2, factoid.getTitle());
+            pstmt.setString(3, factoid.getContent());
+            int updated = pstmt.executeUpdate();
+            
+            ResultSet rs = pstmt.getGeneratedKeys();
+            boolean key = rs.next();
+            if(updated==1 && key){
+                id = rs.getInt(1);
+            }
+            
+            
+        } catch (SQLException ex) {
+            System.err.println("createDB error in connection" + ex);
+        }
+        return id;
+    }
+    
+    /**
      * Update an existing media in DB
      * @param media 
      */
@@ -276,7 +358,7 @@ public class DataManager {
             pstmt.setString(3, media.getSeasonId());
             pstmt.setString(4, media.getEpisodeId());
             pstmt.setString(5, media.getDescription());
-            pstmt.setString(6, media.getCategory().toString());                  
+            pstmt.setString(6, media.getCategory());                  
             pstmt.setString(7, media.getType().toString());                  
             pstmt.setInt(8, media.getId());                  
             pstmt.executeUpdate();
@@ -314,6 +396,28 @@ public class DataManager {
     }
     
     /**
+     * Update an existing factoid in DB
+     * @param factoid 
+     */
+    public static void updateDB(Factoid factoid){
+        try {
+            PreparedStatement pstmt;
+
+            pstmt = getConnection().prepareStatement("update factoid set mediaId=?, title=?, content=? where id=?");
+            pstmt.setInt(1, factoid.getMediaId());
+            pstmt.setString(2, factoid.getTitle());
+            pstmt.setString(3, factoid.getContent());
+            pstmt.setInt(4, factoid.getId()); 
+            pstmt.executeUpdate();
+            
+            if(factoid.getId()==-1)
+                System.err.println("Bad factoid update");
+        } catch (SQLException ex) {
+            System.err.println("in connection" + ex);
+        }
+    }
+    
+    /**
      * Delete media from DB
      * @param media 
      */
@@ -326,7 +430,7 @@ public class DataManager {
             pstmt.executeUpdate();
             
         } catch (SQLException ex) {
-            System.err.println("in connection" + ex);
+            System.err.println("(deleteMedia) in connection" + ex);
         }
     }
     
@@ -343,7 +447,24 @@ public class DataManager {
             pstmt.executeUpdate();
             
         } catch (SQLException ex) {
-            System.err.println("in connection" + ex);
+            System.err.println("(deleteReview) in connection" + ex);
+        }
+    }
+    
+    /**
+     * Delete factoid from DB
+     * @param factoid 
+     */
+    public static void deleteDB(Factoid factoid){
+        try {
+            PreparedStatement pstmt;
+
+            pstmt = getConnection().prepareStatement("delete from factoid where id=?");
+            pstmt.setInt(1, factoid.getId()); 
+            pstmt.executeUpdate();
+            
+        } catch (SQLException ex) {
+            System.err.println("(deleteFactoid) in connection" + ex);
         }
     }
     
@@ -387,14 +508,27 @@ public class DataManager {
                         } catch(SQLException e){System.err.println("Get review failed. (getMedia)");}
                     }
                 } catch(SQLException e){System.err.println("Get review list failed. (getMedia)");}
+                try{
+                    rs2 = stmt.executeQuery("select * from factoid where mediaID="+medium.getId());
+                    while(rs2.next()){
+                        try{
+                            Factoid factoid = new Factoid();
+                            factoid.setId(rs2.getInt("id"));
+                            factoid.setMediaId(rs2.getInt("mediaID"));
+                            factoid.setTitle(rs2.getString("title"));
+                            factoid.setContent(rs2.getString("content"));
+
+                            medium.getFactoids().add(factoid);
+                        } catch(SQLException e){System.err.println("Get factoid failed. (getMedia)");}
+                    }
+                } catch(SQLException e){System.err.println("Get factoid list failed. (getMedia)");}
             } catch(SQLException e){System.err.println("Get media failed. (getMedia)");}
-        } catch (SQLException e) {System.err.println("Get review list failed. (getReviews)");}
+        } catch (SQLException e) {System.err.println("Get media list failed. (getMedia)");}
         
         return medium;
     }
     
     /**
-     * Gets the review from the observable list
      * @param id
      * @return 
      */
@@ -414,8 +548,31 @@ public class DataManager {
                 review.setReview(rs.getString("review"));
                 review.setRating(rs.getBigDecimal("rate"));
 
-            } catch (SQLException e) {System.err.println("Get review failed. (getReviews)");}
-        } catch (SQLException e) {System.err.println("Get review list failed. (getReviews)");}
+            } catch (SQLException e) {System.err.println("Set review failed. (getReviews)");}
+        } catch (SQLException e) {System.err.println("Get review from db failed. (getReviews)");}
         return review;
+    }
+    
+    /**
+     * @param id
+     * @return 
+     */
+    public static Factoid getFactoid(int id){
+        Statement stmt;
+        ResultSet rs = null;
+        Factoid factoid = new Factoid();
+        try {
+            stmt = getConnection().createStatement();       
+            rs = stmt.executeQuery("select * from factoid where id="+id);
+            rs.next();
+            try {
+                factoid.setId(rs.getInt("id"));
+                factoid.setMediaId(rs.getInt("mediaID"));
+                factoid.setTitle(rs.getString("title"));
+                factoid.setContent(rs.getString("content"));
+
+            } catch (SQLException e) {System.err.println("Set factoid failed. (getFactoids)");}
+        } catch (SQLException e) {System.err.println("Get factoid from db failed. (getFactoids)");}
+        return factoid;
     }
 }

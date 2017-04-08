@@ -21,13 +21,14 @@ public class PropertyManager {
     private static Configuration config = null;
 
     public static class Configuration{
-        public static enum prop{DEFAULT_USER,MAX_RATING,DEFAULT_RATING,CATEGORIES,ENABLE_TROPE};
+        public static enum prop{DEFAULT_USER,MAX_RATING,DEFAULT_RATING,CATEGORIES,FACTOIDS};
         
         private String defaultUser;
         private Integer maxRating;
         private Integer defaultRating;
         private String[] categories;
-        
+        private String[] factoids;
+
         public Configuration(){
             defaultUser = "Ben";
             maxRating = 10;
@@ -46,13 +47,19 @@ public class PropertyManager {
                 "Product",
                 "Other"
             };
+            factoids = new String[]{
+                "Genre",
+                "Year",
+                "Creator"
+            };
         }
         
-        public Configuration(String user, Integer maxRate, Integer defaultRate, String[] category){
+        public Configuration(String user, Integer maxRate, Integer defaultRate, String[] category, String[] factoid){
             defaultUser = user;
             maxRating = maxRate;
             defaultRating = defaultRate;
             categories = category;
+            factoids = factoid;
         }
 
         public String getDefaultUser() {
@@ -86,6 +93,15 @@ public class PropertyManager {
         public void setCategories(String[] categories) {
             this.categories = categories;
         }
+        
+        public String[] getFactoids() {
+            return factoids;
+        }
+
+        public void setFactoids(String[] factoids) {
+            this.factoids = factoids;
+        }
+        
     }
     
     public static void saveProperties(Configuration config) throws IOException,URISyntaxException{
@@ -95,6 +111,7 @@ public class PropertyManager {
         prop.setProperty(Configuration.prop.MAX_RATING.name(), config.getMaxRating().toString());
         prop.setProperty(Configuration.prop.DEFAULT_RATING.name(), config.getDefaultRating().toString());
         prop.setProperty(Configuration.prop.CATEGORIES.name(), String.join(",",config.getCategories()));
+        prop.setProperty(Configuration.prop.FACTOIDS.name(), String.join(",",config.getFactoids()));
         FileOutputStream out = new FileOutputStream(configPath);
         saveProperties(prop, out);
     }
@@ -110,7 +127,8 @@ public class PropertyManager {
                     prop.getProperty(Configuration.prop.DEFAULT_USER.name()),
                     Integer.parseInt(prop.getProperty(Configuration.prop.MAX_RATING.name())),
                     Integer.parseInt(prop.getProperty(Configuration.prop.DEFAULT_RATING.name())),
-                    prop.getProperty(Configuration.prop.CATEGORIES.name()).split(",")
+                    prop.getProperty(Configuration.prop.CATEGORIES.name()).split(","),
+                    prop.getProperty(Configuration.prop.FACTOIDS.name()).split(",")
             );
             return config;
         } catch(IOException|NumberFormatException e) {

@@ -22,6 +22,7 @@ public class Media {
     public static enum Type{MINISERIES,SERIES,SINGLE}
     
     private List<Review> reviews;
+    private List<Factoid> factoids;
     private String title;
     private String description;
     private String creator;
@@ -30,14 +31,6 @@ public class Media {
     private String seasonId;
     private String episodeId;
     private Integer id;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
     
     public Media(){
         this("");
@@ -60,14 +53,35 @@ public class Media {
     }
     
     public Media(String title, String creator, String category, Type type, List<Review> reviews){
+        this(title, creator, category, type, reviews, new ArrayList<>());
+    }
+    
+    public Media(String title, String creator, String category, Type type, List<Review> reviews, List<Factoid> factoids){
         setTitle(title);
         setCreator(creator);
         setCategory(category);
         setType(type);
         setReviews(reviews);
+        setFactoids(factoids);
         setSeasonId("");
         setEpisodeId("");
         setDescription("");
+    }
+
+    public List<Factoid> getFactoids() {
+        return factoids;
+    }
+
+    private void setFactoids(List<Factoid> factoids) {
+        this.factoids = factoids;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public List<Review> getReviews() {
@@ -200,5 +214,7 @@ public class Media {
         setType(media.getType());
         getReviews().clear();
         getReviews().addAll(media.getReviews());
+        getFactoids().clear();
+        getFactoids().addAll(media.getFactoids());
     }
 }
