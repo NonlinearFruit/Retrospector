@@ -326,7 +326,7 @@ public class StatsTabController implements Initializable {
         Set<String> userSet = new HashSet<>();
         Map<String, Integer> categories = new HashMap<>();
         Map<LocalDate, Map<String, Integer>> last30Days = new HashMap<>();
-        int media = allMedia.size();
+        int media = 0;
         int reviews = 0;
         int users = 0;
         int titles = 0;
@@ -342,15 +342,7 @@ public class StatsTabController implements Initializable {
         
         // Data Mining - Calcs
         for (Media m : allMedia) {
-            switch(m.getType()){
-                case SINGLE:singles++;break;
-                case MINISERIES:minis++;break;
-                case SERIES:series++;break;
-            }
-            aveCurrent += m.getCurrentRating().intValue();
-            titleSet.add(m.getTitle()+m.getCreator());
-            creatorSet.add(m.getCreator());
-            categories.put(m.getCategory(), categories.getOrDefault(m.getCategory(), 0)+1);
+            boolean used = false;
             for (Review r : m.getReviews()) {
                 if (strooleans.filtered(x->x.getString().equalsIgnoreCase(r.getUser())).get(0).isBoolean()) {
                     if(r.getDate().isBefore(earliest))
@@ -364,7 +356,20 @@ public class StatsTabController implements Initializable {
                     userSet.add(r.getUser());
                     aveAll += r.getRating().intValue();
                     reviews++;
+                    used = true;
                 }
+            }
+            if (used) {
+                switch(m.getType()){
+                    case SINGLE:singles++;break;
+                    case MINISERIES:minis++;break;
+                    case SERIES:series++;break;
+                }
+                aveCurrent += m.getCurrentRating().intValue();
+                titleSet.add(m.getTitle()+m.getCreator());
+                creatorSet.add(m.getCreator());
+                categories.put(m.getCategory(), categories.getOrDefault(m.getCategory(), 0)+1);
+                media++;
             }
         }
         users = userSet.size();
@@ -483,15 +488,7 @@ public class StatsTabController implements Initializable {
         // Data Mining - Calcs
         for (Media m : allMedia) {
             if(category.equals(m.getCategory())){
-                switch(m.getType()){
-                    case SINGLE:singles++;break;
-                    case MINISERIES:minis++;break;
-                    case SERIES:series++;break;
-                }
-                aveCurrent += m.getCurrentRating().intValue();
-                titleSet.add(m.getTitle()+m.getCreator());
-                creatorSet.add(m.getCreator());
-                media++;
+                boolean used = false;
                 for (Review r : m.getReviews()) {
                     if (strooleans.filtered(x->x.getString().equalsIgnoreCase(r.getUser())).get(0).isBoolean()) {
                         if(r.getDate().isBefore(earliest))
@@ -502,7 +499,19 @@ public class StatsTabController implements Initializable {
                         aveAll += r.getRating().intValue();
                         userSet.add(r.getUser());
                         reviews++;
+                        used = true;
                     }
+                }
+                if (used) {
+                    switch(m.getType()){
+                        case SINGLE:singles++;break;
+                        case MINISERIES:minis++;break;
+                        case SERIES:series++;break;
+                    }
+                    aveCurrent += m.getCurrentRating().intValue();
+                    titleSet.add(m.getTitle()+m.getCreator());
+                    creatorSet.add(m.getCreator());
+                    media++;
                 }
             }
         }
@@ -602,21 +611,7 @@ public class StatsTabController implements Initializable {
         
         // Data Mining - Calcs
         for (Media m : mediaTable.getItems()) {
-            switch (m.getType()) {
-                case SINGLE:
-                    singles++;
-                    break;
-                case MINISERIES:
-                    minis++;
-                    break;
-                case SERIES:
-                    series++;
-                    break;
-            }
-            aveCurrent += m.getCurrentRating().intValue();
-            titleSet.add(m.getTitle());
-            creatorSet.add(m.getCreator());
-            media++;
+            boolean used = false;
             for (Review r : m.getReviews()) {
                 if (strooleans.filtered(x->x.getString().equalsIgnoreCase(r.getUser())).get(0).isBoolean()) {
                     if (r.getDate().isBefore(earliest)) {
@@ -626,7 +621,25 @@ public class StatsTabController implements Initializable {
                     userSet.add(r.getUser());
                     reviews++;
                     data.getData().add(new XYChart.Data(dateToDouble(r.getDate()), r.getRating().intValue()));
+                    used = true;
                 }
+            }
+            if (used) {
+                switch (m.getType()) {
+                    case SINGLE:
+                        singles++;
+                        break;
+                    case MINISERIES:
+                        minis++;
+                        break;
+                    case SERIES:
+                        series++;
+                        break;
+                }
+                aveCurrent += m.getCurrentRating().intValue();
+                titleSet.add(m.getTitle());
+                creatorSet.add(m.getCreator());
+                media++;
             }
         }
         users = userSet.stream().distinct().count();
