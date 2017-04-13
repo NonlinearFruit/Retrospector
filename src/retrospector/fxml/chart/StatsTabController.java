@@ -39,8 +39,10 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -61,7 +63,7 @@ import retrospector.util.Stroolean;
  */
 public class StatsTabController implements Initializable {
 
-    private List<Stroolean> strooleans = new ArrayList<>();
+    private ObservableList<Stroolean> strooleans = FXCollections.observableArrayList();
     private ObjectProperty<Media> currentMedia;
     private ObjectProperty<TAB> currentTab;
     private ObservableList<Media> allMedia = FXCollections.observableArrayList();
@@ -192,6 +194,8 @@ public class StatsTabController implements Initializable {
     private NumberAxis chartRpyY;
     @FXML
     private CategoryAxis chartRpyX;
+    @FXML
+    private ListView<Stroolean> overallUserList;
 
     /**
      * Initializes the controller class.
@@ -204,6 +208,13 @@ public class StatsTabController implements Initializable {
         chartReviewsPerDay.getData().add(new XYChart.Series(FXCollections.observableArrayList(new XYChart.Data("",0))));
         chartReviewsPerRating.getData().add(new XYChart.Series(FXCollections.observableArrayList(new XYChart.Data("",0))));
         // Overall
+        for (String user : DataManager.getUsers()) {
+            Stroolean c = new Stroolean(user,true);
+            c.booleanProperty().addListener((observe,old,neo)->update());
+            strooleans.add(c);
+            overallUserList.getItems().add(c);
+        }
+        overallUserList.setCellFactory(CheckBoxListCell.forListView(Stroolean::booleanProperty));
         chartMediaPerCategory.setLegendVisible(true);
         chartRpdX.setLabel("Days");
         chartRpdY.setLabel("Reviews");
@@ -312,11 +323,12 @@ public class StatsTabController implements Initializable {
         // Data Mining - Vars
         Set<String> titleSet = new HashSet<>();
         Set<String> creatorSet = new HashSet<>();
+        Set<String> userSet = new HashSet<>();
         Map<String, Integer> categories = new HashMap<>();
         Map<LocalDate, Map<String, Integer>> last30Days = new HashMap<>();
         int media = allMedia.size();
         int reviews = 0;
-        int users = DataManager.getUsers().size();
+        int users = 0;
         int titles = 0;
         int creators = 0;
         double aveAll = 0;
@@ -340,18 +352,22 @@ public class StatsTabController implements Initializable {
             creatorSet.add(m.getCreator());
             categories.put(m.getCategory(), categories.getOrDefault(m.getCategory(), 0)+1);
             for (Review r : m.getReviews()) {
-                if(r.getDate().isBefore(earliest))
-                    earliest = r.getDate();
-                if(ChronoUnit.DAYS.between(r.getDate(), LocalDate.now())<=last__days){
-                    Map<String,Integer> cat2Num = last30Days.getOrDefault(r.getDate(), new HashMap<>());
-                    Integer num = cat2Num.getOrDefault(m.getCategory(), 1);
-                    cat2Num.put(m.getCategory(), num+1);
-                    last30Days.put(r.getDate(), cat2Num);
+                if (strooleans.filtered(x->x.getString().equalsIgnoreCase(r.getUser())).get(0).isBoolean()) {
+                    if(r.getDate().isBefore(earliest))
+                        earliest = r.getDate();
+                    if(ChronoUnit.DAYS.between(r.getDate(), LocalDate.now())<=last__days){
+                        Map<String,Integer> cat2Num = last30Days.getOrDefault(r.getDate(), new HashMap<>());
+                        Integer num = cat2Num.getOrDefault(m.getCategory(), 1);
+                        cat2Num.put(m.getCategory(), num+1);
+                        last30Days.put(r.getDate(), cat2Num);
+                    }
+                    userSet.add(r.getUser());
+                    aveAll += r.getRating().intValue();
+                    reviews++;
                 }
-                aveAll += r.getRating().intValue();
-                reviews++;
             }
         }
+        users = userSet.size();
         titles = titleSet.size();
         creators = creatorSet.size();
         aveAll = reviews==0? 0 : aveAll/reviews;
@@ -477,14 +493,16 @@ public class StatsTabController implements Initializable {
                 creatorSet.add(m.getCreator());
                 media++;
                 for (Review r : m.getReviews()) {
-                    if(r.getDate().isBefore(earliest))
-                        earliest = r.getDate();
-                    reviewsPerRating[r.getRating().intValue()] += 1;
-                    String key = r.getDate().getMonthValue()+"-"+r.getDate().getYear();
-                    reviewMap.put(key, reviewMap.getOrDefault(key, 0)+1);
-                    aveAll += r.getRating().intValue();
-                    userSet.add(r.getUser());
-                    reviews++;
+                    if (strooleans.filtered(x->x.getString().equalsIgnoreCase(r.getUser())).get(0).isBoolean()) {
+                        if(r.getDate().isBefore(earliest))
+                            earliest = r.getDate();
+                        reviewsPerRating[r.getRating().intValue()] += 1;
+                        String key = r.getDate().getMonthValue()+"-"+r.getDate().getYear();
+                        reviewMap.put(key, reviewMap.getOrDefault(key, 0)+1);
+                        aveAll += r.getRating().intValue();
+                        userSet.add(r.getUser());
+                        reviews++;
+                    }
                 }
             }
         }
@@ -600,13 +618,15 @@ public class StatsTabController implements Initializable {
             creatorSet.add(m.getCreator());
             media++;
             for (Review r : m.getReviews()) {
-                if (r.getDate().isBefore(earliest)) {
-                    earliest = r.getDate();
+                if (strooleans.filtered(x->x.getString().equalsIgnoreCase(r.getUser())).get(0).isBoolean()) {
+                    if (r.getDate().isBefore(earliest)) {
+                        earliest = r.getDate();
+                    }
+                    aveAll += r.getRating().intValue();
+                    userSet.add(r.getUser());
+                    reviews++;
+                    data.getData().add(new XYChart.Data(dateToDouble(r.getDate()), r.getRating().intValue()));
                 }
-                aveAll += r.getRating().intValue();
-                userSet.add(r.getUser());
-                reviews++;
-                data.getData().add(new XYChart.Data(dateToDouble(r.getDate()), r.getRating().intValue()));
             }
         }
         users = userSet.stream().distinct().count();

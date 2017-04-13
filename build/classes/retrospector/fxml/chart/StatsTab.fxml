@@ -9,6 +9,7 @@
 <?import javafx.scene.chart.StackedBarChart?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -16,7 +17,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
-
 
 <SplitPane dividerPositions="0.5, 0.5" orientation="VERTICAL" prefHeight="1000.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="retrospector.fxml.chart.StatsTabController">
    <items>
@@ -29,6 +29,7 @@
                         <Font size="25.0" />
                      </font>
                   </Text>
+                  <ListView fx:id="overallUserList" />
                </children>
             </VBox>
             <StackedBarChart fx:id="chartReviewsPerDay" maxWidth="580.0" title="Last 25 Days" HBox.hgrow="ALWAYS">
