@@ -16,6 +16,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import retrospector.fxml.achievements.AchievementTabController;
 import retrospector.model.*;
 
 /**
@@ -25,7 +26,10 @@ import retrospector.model.*;
  */
 public class CoreController implements Initializable {
 
-    public static enum TAB{ SEARCH, MEDIA, REVIEW, CHART, LIST} 
+    @FXML
+    private Tab achievementTab;
+
+    public static enum TAB{ SEARCH, MEDIA, REVIEW, CHART, LIST, ACHIEVEMENT} 
     public static final DecimalFormat ratingFormat =  new DecimalFormat("#.#");
     
     @FXML
@@ -50,6 +54,7 @@ public class CoreController implements Initializable {
     private MediaTabController mediaController;
     private ReviewTabController reviewController;
     private ListsTabController listsController;
+    private AchievementTabController achieveController;
     
     public void setStatsController(FXMLLoader ldr){ 
         chartTab.setContent(ldr.getRoot());
@@ -81,6 +86,12 @@ public class CoreController implements Initializable {
         searchController.setup(currentTab,currentMedia); 
     }
     
+    public void setAchieveController(FXMLLoader ldr){ 
+        achievementTab.setContent(ldr.getRoot());
+        achieveController = ldr.getController();
+        achieveController.setup(currentTab); 
+    }
+    
     /**
      * Initializes the controller class.
      */
@@ -110,6 +121,10 @@ public class CoreController implements Initializable {
             if(neo)
                 setTab(TAB.LIST);
         });
+        achievementTab.selectedProperty().addListener((observe,old,neo)->{
+            if(neo)
+                setTab(TAB.ACHIEVEMENT);
+        });
         currentTab.set(TAB.SEARCH);
         currentTab.addListener((observe,old,neo)->{
             Tab tab;
@@ -130,6 +145,9 @@ public class CoreController implements Initializable {
                 case LIST:
                     tab = listTab;
                     break;
+                case ACHIEVEMENT:
+                    tab = achievementTab;
+                    break;
             }
             anchorCenter.getSelectionModel().select(tab);
         });
@@ -145,6 +163,8 @@ public class CoreController implements Initializable {
                 statsController.update(currentMedia.get());
             else if(neo.getText().equals("List"))
                 listsController.update();
+            else if(neo.getText().equals("Achievement"))
+                achieveController.update();
         });
         
         currentMedia.addListener((observe, old, neo)->{

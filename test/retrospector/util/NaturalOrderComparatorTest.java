@@ -116,46 +116,17 @@ public class NaturalOrderComparatorTest {
         result = instance.compare(o1, o2);
         assertTrue(result>0);
         
+        o1 = "1234567";
+        o2 = "0999999";
+        instance = new NaturalOrderComparator();
+        result = instance.compare(o1, o2);
+        assertTrue(result>0);
         
-        Arrays.asList(
-                "U1B",
-                "01",
-                "U01A",
-                "1.1.2-a U1",
-                "001",
-                "01B U01",
-                "001C",
-                "1.1b",
-                ".2-a U1.001.2-b",
-                "1.001.2-b",
-                "1.1a",
-                ".2-a U1.01.02-b",
-                "1.01.02-b",
-                "1C U001B",
-                "U01C U1A",
-                "1.01.2-b",
-                "01A U001C",
-                "U01B U1",
-                ".1.2-b U1.1a",
-                ".2-a U1.01.2-b",
-                "1.001.2-a",
-                "01C",
-                "001A U1",
-                ".01.2-a U1",
-                ".001.2-a U1.1.2-a",
-                "1.01.2-a",
-                "1",
-                "1.1.2-b",
-                "1A U1.1b.2-a",
-                "001B U001A",
-                "U1.01.02-a",
-                "1B U1C",
-                "U001",
-                "1.01.02-a"
-        )
-                .stream()
-                .sorted(new NaturalOrderComparator())
-                .forEach(System.out::println);
+        o1 = "10";
+        o2 = "0000000001";
+        instance = new NaturalOrderComparator();
+        result = instance.compare(o1, o2);
+        assertTrue(result>0);
     }
     
 }

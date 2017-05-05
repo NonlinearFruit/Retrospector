@@ -26,6 +26,7 @@ public class DataManager {
     static String connString = "jdbc:hsqldb:file:"+PropertyManager.retroFolder;
     static Connection conn = null;
 
+    // Config File Stuff
     public static String getDefaultUser(){
         return PropertyManager.loadProperties().getDefaultUser();
     }
@@ -44,6 +45,10 @@ public class DataManager {
     
     public static String[] getFactiodTypes(){
         return PropertyManager.loadProperties().getFactoids();
+    }
+    
+    public static String getGithubUser() {
+        return PropertyManager.loadProperties().getGithubUser();
     }
     
     
@@ -160,6 +165,28 @@ public class DataManager {
         return factoids;
     }
     
+    public static ObservableList<Factoid> getFactoidsByType(String type){
+        Statement stmt;
+        ResultSet rs = null;
+
+        ObservableList<Factoid> factoids = FXCollections.observableArrayList();
+        try {
+            stmt = getConnection().createStatement();       
+            rs = stmt.executeQuery("select * from factoid where title='"+type+"'");
+            while (rs.next()) {
+                try {
+                    Factoid factoid = new Factoid();
+                    factoid.setId(rs.getInt("id"));
+                    factoid.setMediaId(rs.getInt("mediaID"));
+                    factoid.setTitle(rs.getString("title"));
+                    factoid.setContent(rs.getString("content"));
+                    factoids.add(factoid);
+                } catch (SQLException e) {System.err.println("Get factoid failed. (getFactoids)");}
+            }
+        } catch (SQLException e) {System.err.println("Get factoid list failed. (getFactoids)");}
+        return factoids;
+    }
+    
     public static ObservableList<String> getUsers(){
         Statement stmt;
         ResultSet rs = null;
@@ -212,15 +239,39 @@ public class DataManager {
         + "content varchar(1000000),"
         + "constraint primary_key_factoid primary key (id),"
         + "constraint foreign_key_factoid foreign key (mediaID) references media (id) on delete cascade)";
-      
+        
+        String createAchievement = ""
+        + "create table if not exists achievement ("
+        + "id integer not null generated always as identity (start with 1, increment by 1),   "
+        + "title varchar(1000000),"
+        + "description varchar(1000000),"
+        + "achieved boolean not null,   "
+        + "unlockFunction varchar(1000000),"
+        + "symbol varchar(1000000),"
+        + "constraint primary_key_factoid primary key (id)";
+        
         try {
+            long start;
             connString += "/Retrospector";
             System.out.println(connString);
             Statement stmt;
+        
+            start = System.currentTimeMillis();
             stmt = getConnection().createStatement();
+            System.out.println("\tCreate:      "+(System.currentTimeMillis()-start));
+            
+            start = System.currentTimeMillis();
             stmt.execute(createMedia);
+            System.out.println("\tMedia:       "+(System.currentTimeMillis()-start));
+            
+            start = System.currentTimeMillis();
             stmt.execute(createReview);
-            stmt.executeQuery(createFactoid);
+            System.out.println("\tReview:      "+(System.currentTimeMillis()-start));
+            
+            start = System.currentTimeMillis();
+            stmt.execute(createFactoid);
+            System.out.println("\tFactoid:     "+(System.currentTimeMillis()-start));
+            
         } catch (SQLException ex) {
             System.err.println("Create error in startDB in connection" + ex);
         }

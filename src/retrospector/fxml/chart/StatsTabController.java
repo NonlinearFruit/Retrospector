@@ -68,7 +68,7 @@ public class StatsTabController implements Initializable {
     private ObjectProperty<TAB> currentTab;
     private ObservableList<Media> allMedia = FXCollections.observableArrayList();
     private FilteredList<Media> mediaTableFilter = new FilteredList(allMedia);
-    private String[] colors = new String[]{"red","orange","yellowgreen","seagreen","lightseagreen","skyblue","royalblue","grey","mediumpurple","palevioletred","firebrick"};
+    public static final String[] colors = new String[]{"red","orange","yellowgreen","seagreen","lightseagreen","skyblue","royalblue","grey","mediumpurple","palevioletred","firebrick"};
     
     @FXML
     private LineChart<Number, Number> chartRatingOverTime;
@@ -216,16 +216,16 @@ public class StatsTabController implements Initializable {
         }
         overallUserList.setCellFactory(CheckBoxListCell.forListView(Stroolean::booleanProperty));
         chartMediaPerCategory.setLegendVisible(true);
-        chartRpdX.setLabel("Days");
+        chartRpdX.setLabel("Day");
         chartRpdY.setLabel("Reviews");
         // Category
         categorySelector.setItems(FXCollections.observableArrayList(DataManager.getCategories()));
         categorySelector.setValue(DataManager.getCategories()[0]);
         categorySelector.valueProperty().addListener((observe,old,neo)->updateCategory());
         chartReviewsPerRating.setLegendVisible(false);
-        chartRprX.setLabel("Ratings");
+        chartRprX.setLabel("Rating");
         chartRprY.setLabel("Reviews");
-        chartRpyX.setLabel("Months");
+        chartRpyX.setLabel("Month");
         chartRpyY.setLabel("Reviews");
         // Media
         checkTitle.setSelected(true);
@@ -254,7 +254,7 @@ public class StatsTabController implements Initializable {
         mediaColumnSeason.setCellValueFactory(new PropertyValueFactory<>("SeasonId"));
         mediaColumnEpisode.setCellValueFactory(new PropertyValueFactory<>("EpisodeId"));
         mediaColumnCategory.setCellValueFactory(new PropertyValueFactory<>("Category"));
-        chartRotY.setLabel("Reviews");
+        chartRotY.setLabel("Rating");
         chartRotY.setAutoRanging(false);
         chartRotY.setLowerBound(0);
         chartRotY.setUpperBound(10);
@@ -344,7 +344,7 @@ public class StatsTabController implements Initializable {
         for (Media m : allMedia) {
             boolean used = false;
             for (Review r : m.getReviews()) {
-                if (strooleans.filtered(x->x.getString().equalsIgnoreCase(r.getUser())).get(0).isBoolean()) {
+                if (strooleans.stream().anyMatch(x->x.getString().equalsIgnoreCase(r.getUser()) && x.isBoolean())) {
                     if(r.getDate().isBefore(earliest))
                         earliest = r.getDate();
                     if(ChronoUnit.DAYS.between(r.getDate(), LocalDate.now())<=last__days){
@@ -378,7 +378,7 @@ public class StatsTabController implements Initializable {
         aveAll = reviews==0? 0 : aveAll/reviews;
         aveCurrent = media==0? 0 : aveCurrent/media;
         days = ChronoUnit.DAYS.between(earliest, LocalDate.now())+1;
-        perMonth = days<2? 0 : (media+0.0)/days*30;
+        perMonth = days<2? 0 : (reviews+0.0)/days*30;
         
         // Stats
         overallMedia.setText(media+" Media");
@@ -490,7 +490,7 @@ public class StatsTabController implements Initializable {
             if(category.equals(m.getCategory())){
                 boolean used = false;
                 for (Review r : m.getReviews()) {
-                    if (strooleans.filtered(x->x.getString().equalsIgnoreCase(r.getUser())).get(0).isBoolean()) {
+                    if (strooleans.stream().anyMatch(x->x.getString().equalsIgnoreCase(r.getUser()) && x.isBoolean())) {
                         if(r.getDate().isBefore(earliest))
                             earliest = r.getDate();
                         reviewsPerRating[r.getRating().intValue()] += 1;
@@ -521,7 +521,7 @@ public class StatsTabController implements Initializable {
         aveAll = reviews==0? 0 : aveAll/reviews;
         aveCurrent = media==0? 0 : aveCurrent/media;
         days = ChronoUnit.DAYS.between(earliest, LocalDate.now())+1;
-        perMonth = days<2? 0 : (media+0.0)/days*30;
+        perMonth = days<2? 0 : (reviews+0.0)/days*30;
         
         
         // Stats
@@ -613,7 +613,7 @@ public class StatsTabController implements Initializable {
         for (Media m : mediaTable.getItems()) {
             boolean used = false;
             for (Review r : m.getReviews()) {
-                if (strooleans.filtered(x->x.getString().equalsIgnoreCase(r.getUser())).get(0).isBoolean()) {
+                if (strooleans.stream().anyMatch(x->x.getString().equalsIgnoreCase(r.getUser()) && x.isBoolean())) {
                     if (r.getDate().isBefore(earliest)) {
                         earliest = r.getDate();
                     }
@@ -648,7 +648,7 @@ public class StatsTabController implements Initializable {
         aveAll = reviews == 0 ? 0 : aveAll / reviews;
         aveCurrent = media == 0 ? 0 : aveCurrent / media;
         days = ChronoUnit.DAYS.between(earliest, LocalDate.now()) + 1;
-        perMonth = days<2 ? 0 : (media + 0.0) / days * 30;
+        perMonth = days<2 ? 0 : (reviews + 0.0) / days * 30;
 
         // Stats
         mediaMedia.setText(media + " Media");

@@ -5,6 +5,7 @@
  */
 package retrospector.util;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -21,9 +22,10 @@ public class PropertyManager {
     private static Configuration config = null;
 
     public static class Configuration{
-        public static enum prop{DEFAULT_USER,MAX_RATING,DEFAULT_RATING,CATEGORIES,FACTOIDS};
+        public static enum prop{DEFAULT_USER,MAX_RATING,DEFAULT_RATING,CATEGORIES,FACTOIDS,GITHUB_USER};
         
         private String defaultUser;
+        private String githubUser;
         private Integer maxRating;
         private Integer defaultRating;
         private String[] categories;
@@ -33,6 +35,7 @@ public class PropertyManager {
             defaultUser = "Ben";
             maxRating = 10;
             defaultRating = 6;
+            githubUser = "";
             categories = new String[]{
                 "Movie",
                 "TV Series",
@@ -54,8 +57,9 @@ public class PropertyManager {
             };
         }
         
-        public Configuration(String user, Integer maxRate, Integer defaultRate, String[] category, String[] factoid){
+        public Configuration(String user, String github, Integer maxRate, Integer defaultRate, String[] category, String[] factoid){
             defaultUser = user;
+            githubUser = github;
             maxRating = maxRate;
             defaultRating = defaultRate;
             categories = category;
@@ -102,16 +106,28 @@ public class PropertyManager {
             this.factoids = factoids;
         }
         
+        public String getGithubUser() {
+            return githubUser;
+        }
+        
+        public void setGithubUser(String github) {
+            githubUser = github;
+        }
+        
     }
     
     public static void saveProperties(Configuration config) throws IOException,URISyntaxException{
         PropertyManager.config = config;
         Properties prop = new Properties();
         prop.setProperty(Configuration.prop.DEFAULT_USER.name(), config.getDefaultUser());
+        prop.setProperty(Configuration.prop.GITHUB_USER.name(), config.getGithubUser());
         prop.setProperty(Configuration.prop.MAX_RATING.name(), config.getMaxRating().toString());
         prop.setProperty(Configuration.prop.DEFAULT_RATING.name(), config.getDefaultRating().toString());
         prop.setProperty(Configuration.prop.CATEGORIES.name(), String.join(",",config.getCategories()));
         prop.setProperty(Configuration.prop.FACTOIDS.name(), String.join(",",config.getFactoids()));
+        File directory = new File(retroFolder);
+            if (!directory.exists())
+                directory.mkdir();
         FileOutputStream out = new FileOutputStream(configPath);
         saveProperties(prop, out);
     }
@@ -125,6 +141,7 @@ public class PropertyManager {
             prop = loadProperties(in);
             config = new Configuration(
                     prop.getProperty(Configuration.prop.DEFAULT_USER.name()),
+                    prop.getProperty(Configuration.prop.GITHUB_USER.name()),
                     Integer.parseInt(prop.getProperty(Configuration.prop.MAX_RATING.name())),
                     Integer.parseInt(prop.getProperty(Configuration.prop.DEFAULT_RATING.name())),
                     prop.getProperty(Configuration.prop.CATEGORIES.name()).split(","),

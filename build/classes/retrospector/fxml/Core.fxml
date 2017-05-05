@@ -3,7 +3,6 @@
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 
-
 <TabPane fx:id="anchorCenter" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1300.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="retrospector.fxml.CoreController">
   <tabs>
     <Tab fx:id="searchTab" text="Search" />
@@ -11,5 +10,6 @@
     <Tab fx:id="reviewTab" text="Review" />
       <Tab fx:id="chartTab" text="Chart" />
       <Tab fx:id="listTab" text="List" />
+      <Tab fx:id="achievementTab" text="Achievements" />
   </tabs>
 </TabPane>

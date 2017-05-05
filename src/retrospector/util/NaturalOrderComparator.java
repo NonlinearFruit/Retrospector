@@ -3,9 +3,7 @@
 package retrospector.util;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 
 
 /**
@@ -89,55 +87,34 @@ public class NaturalOrderComparator implements Comparator<String> {
     }
     
     /**
-     * Takes two characters and compares them based on Alphabetical ordering.
+     * Takes two characters and compares them based on Alphabetical ordering. 
+     * This also works for ASCIIbetical sorting of non-letters.
      * @param a
      * @param b
      * @return a negative integer, zero, or a positive integer as the
      *         first argument is less than, equal to, or greater than the
      *         second.
      */
-    private int compareAlphaUnits(char a, char b)
+    private int compareNonDigitUnits(char a, char b)
     {
-        if(Type.getType(a)!=Type.ALPHA)
-            throw new IllegalArgumentException(a+" is not of Type Alpha");
-        if(Type.getType(b)!=Type.ALPHA)
-            throw new IllegalArgumentException(b+" is not of Type Alpha");
-        
         char lowA = Character.toLowerCase(a);
         char lowB = Character.toLowerCase(b);
         
-        if(lowA==lowB)
+        if(lowA == lowB)
             return Character.compare(a, b);
         
         return Character.compare(lowA, lowB);
     }
 
     /**
-     * Takes two character of Type Other and compares them based on their ASCII
-     * values.
-     * @param a
-     * @param b
-     * @return a negative integer, zero, or a positive integer as the
-     *         first argument is less than, equal to, or greater than the
-     *         second. 
-     */
-    private int compareOtherUnits(char a, char b)
-    {
-        if(Type.getType(a)!=Type.OTHER)
-            throw new IllegalArgumentException(a+" is not of Type Other");
-        if(Type.getType(b)!=Type.OTHER)
-            throw new IllegalArgumentException(b+" is not of Type Other");
-        return Character.compare(a, b);
-    }
-
-    /**
      * This takes two strings and compares them based on natural ordering/
-     * @param o1 String of characters
-     * @param o2 String of characters
+     * @param s1 String of characters
+     * @param s2 String of characters
      * @return a negative integer, zero, or a positive integer as the
      *         first argument is less than, equal to, or greater than the
      *         second.
      */
+    @Override
     public int compare(String s1, String s2)
     {
         StringBuilder a = new StringBuilder(s1);
@@ -158,18 +135,10 @@ public class NaturalOrderComparator implements Comparator<String> {
             if(result != 0)
                 return result;
             
-            switch(aUnitType){
-                case ALPHA:
-                    result = compareAlphaUnits(nextAUnit.charAt(0), nextBUnit.charAt(0));
-                    break;
-                case DIGIT:
-                    result = compareDigitUnits(nextAUnit, nextBUnit);
-                    break;
-                case OTHER:
-                default:
-                    result = compareOtherUnits(nextAUnit.charAt(0), nextBUnit.charAt(0));
-                    break;
-            }
+            if(aUnitType == Type.DIGIT)
+                result = compareDigitUnits(nextAUnit, nextBUnit);
+            else
+                result = compareNonDigitUnits(nextAUnit.charAt(0), nextBUnit.charAt(0));
             
             if(result != 0)
                 return result;
@@ -187,7 +156,7 @@ public class NaturalOrderComparator implements Comparator<String> {
      * @param s
      * @return a character or a string of digits
      */
-    private static String getNextUnit(String s){
+    private String getNextUnit(String s){
         char firstChar = s.charAt(0);
         if(!Character.isDigit(firstChar))
             return String.valueOf(firstChar);
