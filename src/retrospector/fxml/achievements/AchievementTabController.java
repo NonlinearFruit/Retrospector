@@ -6,12 +6,17 @@
 package retrospector.fxml.achievements;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -51,9 +56,7 @@ public class AchievementTabController implements Initializable {
     }
     
     public void update() {
-        
-        achievementPane.getChildren().clear();
-        header.getChildren().clear();
+        List<Node> list = new ArrayList<>();
         
         // Header Vars
         int first = 0;
@@ -62,10 +65,10 @@ public class AchievementTabController implements Initializable {
         int locked = 0;
         
         // Achievement Pane
-        achievementPane.setVgap(50);
-        achievementPane.prefWidthProperty().bind(Bindings.add(-70,anchor.widthProperty()));
+        long start = System.currentTimeMillis();
+        
         for (Achievement achievement : AchievementFactory.getAchievements()) {
-            achievementPane.getChildren().add(new AchievementManager(achievement).getDisplay());
+            list.add(new AchievementManager(achievement).getDisplay());
             
             if( !achievement.isUnlocked() ) {
                 locked++;
@@ -79,6 +82,13 @@ public class AchievementTabController implements Initializable {
                 default: locked++;
             }
         }
+        System.err.println("\tUpdate:  "+(System.currentTimeMillis()-start));
+        
+        
+//        achievementPane.getChildren().clear();
+        header.getChildren().clear();
+        // Achievement Display
+        achievementPane.getChildren().addAll(list);
         
         // Header Display
         header.getChildren().add(new Text(first+" "));
@@ -92,7 +102,11 @@ public class AchievementTabController implements Initializable {
     }
     
     public void initAchievementTab() {
-//        update();
-        btnRefresh.setOnAction(e->update());
+        achievementPane.setVgap(50);
+        achievementPane.prefWidthProperty().bind(Bindings.add(-70,anchor.widthProperty()));
+        update();
+        btnRefresh.setOnAction(e->{
+            update();
+                });
     }
 }

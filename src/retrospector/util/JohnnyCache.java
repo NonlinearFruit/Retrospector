@@ -13,7 +13,7 @@ import java.util.function.Supplier;
  * @author nonfrt
  */
 public class JohnnyCache<T> {
-    public static final long LIFESPAN_MS = 500;
+    public static final long LIFESPAN_MS = 5000;
     private T value;
     private Supplier<T> function;
     private long lastAsked;
