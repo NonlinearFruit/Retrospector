@@ -13,9 +13,8 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/home/nonfrt/NetBeansProjects/Retrospector/src/retrospector/fxml/achievements/AchievementFactory.java</file>
-            <file>file:/home/nonfrt/NetBeansProjects/Retrospector/src/retrospector/fxml/MediaTabController.java</file>
-            <file>file:/home/nonfrt/NetBeansProjects/Retrospector/src/retrospector/fxml/chart/StatsTabController.java</file>
-            <file>file:/home/nonfrt/NetBeansProjects/Retrospector/src/retrospector/util/PropertyManager.java</file>
+            <file>file:/home/nonfrt/NetBeansProjects/Retrospector/src/retrospector/Retrospector.java</file>
+            <file>file:/home/nonfrt/NetBeansProjects/Retrospector/src/retrospector/fxml/achievements/AchievementTabController.java</file>
             <file>file:/home/nonfrt/NetBeansProjects/Retrospector/src/retrospector/fxml/achievements/AchievementManager.java</file>
         </group>
     </open-files>

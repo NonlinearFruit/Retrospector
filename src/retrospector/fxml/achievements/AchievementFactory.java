@@ -207,21 +207,21 @@ public class AchievementFactory {
                                 .filter(u->!u.equals(DataManager.getDefaultUser()))
                                 .mapToInt(u->getReviewsPerUser(u))
                                 .max()
-                                .getAsInt()/10
+                                .orElse(0)/10
                 ),
                 new Achievement("","Chums","100 reviews from a user",2,()->
                         DataManager.getUsers().stream()
                                 .filter(u->!u.equals(DataManager.getDefaultUser()))
                                 .mapToInt(u->getReviewsPerUser(u))
                                 .max()
-                                .getAsInt()
+                                .orElse(0)
                 ),
                 new Achievement("","Friends","10 reviews from a user",3,()->
                         DataManager.getUsers().stream()
                                 .filter(u->!u.equals(DataManager.getDefaultUser()))
                                 .mapToInt(u->getReviewsPerUser(u))
                                 .max()
-                                .getAsInt()
+                                .orElse(0)*10
                 ),
                 new Achievement("","Trivia Expert","Collect 10,000 factoids",1,()->DataManager.getFactoids().size()/100),
                 new Achievement("","Trivia Pro","Collect 1,000 factoids",2,()->DataManager.getFactoids().size()/10),
