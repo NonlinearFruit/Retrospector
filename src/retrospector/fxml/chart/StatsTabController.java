@@ -41,6 +41,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -215,6 +216,15 @@ public class StatsTabController implements Initializable {
             overallUserList.getItems().add(c);
         }
         overallUserList.setCellFactory(CheckBoxListCell.forListView(Stroolean::booleanProperty));
+        overallUserList.setOnMouseClicked(e->{
+            if (e.getClickCount() == 2){
+                Stroolean me = overallUserList.getSelectionModel().getSelectedItem();
+                for (Stroolean stroolean : strooleans) {
+                    stroolean.setBoolean(false);
+                }
+                me.setBoolean(true);
+            }
+        });
         chartMediaPerCategory.setLegendVisible(true);
         chartRpdX.setLabel("Day");
         chartRpdY.setLabel("Reviews");
@@ -315,7 +325,7 @@ public class StatsTabController implements Initializable {
     private void updateOverall(){
         
         // Constants
-        int last__days = 20;
+        int last__days = DataManager.getPastDays();
         
         // Graph Title
         chartReviewsPerDay.setTitle("Past "+last__days+" Days");
@@ -349,7 +359,7 @@ public class StatsTabController implements Initializable {
                         earliest = r.getDate();
                     if(ChronoUnit.DAYS.between(r.getDate(), LocalDate.now())<=last__days){
                         Map<String,Integer> cat2Num = last30Days.getOrDefault(r.getDate(), new HashMap<>());
-                        Integer num = cat2Num.getOrDefault(m.getCategory(), 1);
+                        Integer num = cat2Num.getOrDefault(m.getCategory(), 0);
                         cat2Num.put(m.getCategory(), num+1);
                         last30Days.put(r.getDate(), cat2Num);
                     }

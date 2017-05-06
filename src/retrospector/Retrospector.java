@@ -221,17 +221,16 @@ public class Retrospector extends Application {
         mainStage.setTitle("Retrospector");
 
         Scene scene = new Scene(root, 1300, 800);
-//        primaryStage.getScene().setRoot(root);
         mainStage.setScene(scene);
         mainStage.setTitle("Retrospector");
-        mainStage.getIcons().add(new Image("file:/retrospector/res/star-half-full-16.png"));
-        mainStage.getIcons().add(new Image("file:/retrospector/res/star-half-full-22.png"));
-        mainStage.getIcons().add(new Image("file:/retrospector/res/star-half-full-24.png"));
-        mainStage.getIcons().add(new Image("file:/retrospector/res/star-half-full-32.png"));
-        mainStage.getIcons().add(new Image("file:/retrospector/res/star-half-full-48.png"));
-        mainStage.getIcons().add(new Image("file:/retrospector/res/star-half-full-64.png"));
-        mainStage.getIcons().add(new Image("file:/retrospector/res/star-half-full-128.png"));
-        mainStage.getIcons().add(new Image("file:/retrospector/res/star-half-full-256.png"));
+        mainStage.getIcons().add(new Image(Retrospector.class.getResourceAsStream( "res/star-half-full-16.png" ))); 
+        mainStage.getIcons().add(new Image(Retrospector.class.getResourceAsStream( "res/star-half-full-22.png" ))); 
+        mainStage.getIcons().add(new Image(Retrospector.class.getResourceAsStream( "res/star-half-full-24.png" ))); 
+        mainStage.getIcons().add(new Image(Retrospector.class.getResourceAsStream( "res/star-half-full-32.png" ))); 
+        mainStage.getIcons().add(new Image(Retrospector.class.getResourceAsStream( "res/star-half-full-48.png" ))); 
+        mainStage.getIcons().add(new Image(Retrospector.class.getResourceAsStream( "res/star-half-full-64.png" ))); 
+        mainStage.getIcons().add(new Image(Retrospector.class.getResourceAsStream( "res/star-half-full-128.png" ))); 
+        mainStage.getIcons().add(new Image(Retrospector.class.getResourceAsStream( "res/star-half-full-256.png" ))); 
         mainStage.show();
     }
 

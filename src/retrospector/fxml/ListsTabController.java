@@ -8,6 +8,7 @@ package retrospector.fxml;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -51,7 +52,13 @@ public class ListsTabController implements Initializable {
     @FXML
     private ToggleButton listTop10;
     @FXML
+    private ToggleButton listTop25;
+    @FXML
+    private ToggleButton listTop50;
+    @FXML
     private ToggleButton listTop100;
+    @FXML
+    private ToggleButton listTop500;
     @FXML
     private ToggleButton listTop1000;
     @FXML
@@ -129,13 +136,16 @@ public class ListsTabController implements Initializable {
                                   title?   Chartagories.TITLE:
                                            Chartagories.CREATOR;
         
-        Integer top = listTop10.isSelected()?  10:
+        Integer top = listTop10.isSelected()?   10:
+                      listTop25.isSelected()?   25:
+                      listTop50.isSelected()?   50:
                       listTop100.isSelected()? 100:
+                      listTop500.isSelected()? 500:
                                                1000;
         
-        LocalDate start = listCustomDateRange.isSelected()? listStartDate.getValue() : LocalDate.of(Integer.parseInt(listYear.getText())-1, 12, 31);
+        LocalDate start = listCustomDateRange.isSelected()? listStartDate.getValue().minus(1,ChronoUnit.DAYS) : LocalDate.of(Integer.parseInt(listYear.getText())-1, 12, 31);
             start = listUseAllTime.isSelected()? LocalDate.MIN : start;
-        LocalDate end = listCustomDateRange.isSelected()? listEndDate.getValue() : LocalDate.of(Integer.parseInt(listYear.getText())+1, 1, 1);
+        LocalDate end = listCustomDateRange.isSelected()? listEndDate.getValue().plus(1,ChronoUnit.DAYS) : LocalDate.of(Integer.parseInt(listYear.getText())+1, 1, 1);
             end = listUseAllTime.isSelected()? LocalDate.MAX : end;
         
         String user = listUser.getText();
@@ -177,8 +187,6 @@ public class ListsTabController implements Initializable {
                                 if(review.getDate().isBefore(end) && 
                                    review.getDate().isAfter(start)){
                                         m.getReviews().add(review);
-                                } else if(review.getDate().isEqual(start) || review.getDate().isEqual(end)){
-                                        m.getReviews().add(review);
                                 }
                             }
                         }
@@ -205,6 +213,15 @@ public class ListsTabController implements Initializable {
             listIncludeList.getItems().add(c);
         }
         listIncludeList.setCellFactory(CheckBoxListCell.forListView(Stroolean::booleanProperty));
+        listIncludeList.setOnMouseClicked(e->{
+            if (e.getClickCount() == 2){
+                Stroolean me = listIncludeList.getSelectionModel().getSelectedItem();
+                for (Stroolean stroolean : strooleans) {
+                    stroolean.setBoolean(false);
+                }
+                me.setBoolean(true);
+            }
+        });
         
         // Group By
         listGroupCreator.setSelected(true);
@@ -253,7 +270,30 @@ public class ListsTabController implements Initializable {
         listTop10.selectedProperty().addListener((observe,old,neo)->{
             updateListTab();
             if(neo){
+                listTop25.setSelected(false);
+                listTop50.setSelected(false);
                 listTop100.setSelected(false);
+                listTop500.setSelected(false);
+                listTop1000.setSelected(false);
+            }
+        });
+        listTop25.selectedProperty().addListener((observe,old,neo)->{
+            updateListTab();
+            if(neo){
+                listTop10.setSelected(false);
+                listTop50.setSelected(false);
+                listTop100.setSelected(false);
+                listTop500.setSelected(false);
+                listTop1000.setSelected(false);
+            }
+        });
+        listTop50.selectedProperty().addListener((observe,old,neo)->{
+            updateListTab();
+            if(neo){
+                listTop10.setSelected(false);
+                listTop25.setSelected(false);
+                listTop100.setSelected(false);
+                listTop500.setSelected(false);
                 listTop1000.setSelected(false);
             }
         });
@@ -261,14 +301,30 @@ public class ListsTabController implements Initializable {
             updateListTab();
             if(neo){
                 listTop10.setSelected(false);
+                listTop25.setSelected(false);
+                listTop50.setSelected(false);
+                listTop500.setSelected(false);
+                listTop1000.setSelected(false);
+            }
+        });
+        listTop500.selectedProperty().addListener((observe,old,neo)->{
+            updateListTab();
+            if(neo){
+                listTop10.setSelected(false);
+                listTop25.setSelected(false);
+                listTop50.setSelected(false);
+                listTop100.setSelected(false);
                 listTop1000.setSelected(false);
             }
         });
         listTop1000.selectedProperty().addListener((observe,old,neo)->{
             updateListTab();
             if(neo){
-                listTop100.setSelected(false);
                 listTop10.setSelected(false);
+                listTop25.setSelected(false);
+                listTop50.setSelected(false);
+                listTop100.setSelected(false);
+                listTop500.setSelected(false);
             }
         });
         

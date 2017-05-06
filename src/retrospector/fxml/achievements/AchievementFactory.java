@@ -17,12 +17,22 @@ import java.util.Scanner;
 import retrospector.fxml.chart.StatsTabController;
 import retrospector.model.DataManager;
 import retrospector.model.Review;
+import retrospector.util.PropertyManager;
 
 /**
  *
  * @author nonfrt
  */
 public class AchievementFactory {
+    
+    /* Unimplemented:
+        Binge
+        Spree
+        Marathon
+        Paranoia
+        A True Masterpiece
+        Inconsistency
+    */
 
     
     public static List<Achievement> getAchievements() {
@@ -38,11 +48,71 @@ public class AchievementFactory {
                     }
                     return result;
                 }),
+                new Achievement("","Inspector","Edit the .config file",2,()->{
+                    PropertyManager.Configuration dusty = new PropertyManager.Configuration();
+                    if( dusty.getDefaultUser().equals(DataManager.getDefaultUser()) && 
+                            dusty.getCategories().length == DataManager.getCategories().length)
+                        return 0;
+                    return 100;
+                }),
+                new Achievement("","Never Again","Give a 1 star review",3,()->DataManager.getReviews().stream()
+                        .filter(r->r.getUser().equals(DataManager.getDefaultUser()))
+                        .anyMatch(r->r.getRating().equals(BigDecimal.ONE))?
+                        100:0
+                ),
                 new Achievement("","Spectrum","Have more categories than colors",1,()->(int)(DataManager.getCategories().length*100.0/(StatsTabController.colors.length+1))),
                 new Achievement("","Trivial Pursuit","Have 5+ factoids",3,()->DataManager.getFactiodTypes().length*20),
                 new Achievement("","Diversify","Have 5+ categories",3,()->DataManager.getCategories().length*20),
                 new Achievement("","Social","Have 3+ users",3,()->DataManager.getUsers().size()*34),
-                new Achievement("","Loyalist","Retrospect for 1 year",2,()->(int)Math.floor(
+                new Achievement("","Rock","Media with Rock in the title",3,()->
+                        DataManager.getMedia().stream()
+                        .anyMatch(m->m.getTitle().contains("Rock"))?
+                                100:0
+                ),
+                new Achievement("","Paper","Media with Paper in the title",3,()->
+                        DataManager.getMedia().stream()
+                        .anyMatch(m->m.getTitle().contains("Paper"))?
+                                100:0
+                ),
+                new Achievement("","Scissors","Media with Scissors in the title",3,()->
+                        DataManager.getMedia().stream()
+                        .anyMatch(m->m.getTitle().contains("Scissors"))?
+                                100:0
+                ),
+                new Achievement("","Lizard","Media with Lizard in the title",3,()->
+                        DataManager.getMedia().stream()
+                        .anyMatch(m->m.getTitle().contains("Lizard"))?
+                                100:0
+                ),
+                new Achievement("","Spock","Media with Star Trek in the title",3,()->
+                        DataManager.getMedia().stream()
+                        .anyMatch(m->m.getTitle().contains("Star Trek"))?
+                                100:0
+                ),
+                new Achievement("","Star Wars","Media with Star Wars in the title",3,()->
+                        DataManager.getMedia().stream()
+                        .anyMatch(m->m.getTitle().contains("Star Wars"))?
+                                100:0
+                ),
+                new Achievement("","Master","Retrospect for 10 years",1,()->(int)Math.floor(
+                        ChronoUnit.DAYS.between(
+                                DataManager.getReviews().stream()
+                                        .filter(r->r.getUser().equals(DataManager.getDefaultUser()))
+                                        .reduce((a,b)->a.getDate().isBefore(b.getDate())?a:b)
+                                        .get().getDate(),
+                                LocalDate.now()
+                        )*0.027)
+                ),
+                new Achievement("","Journeyman","Retrospect for 5 years",2,()->(int)Math.floor(
+                        ChronoUnit.DAYS.between(
+                                DataManager.getReviews().stream()
+                                        .filter(r->r.getUser().equals(DataManager.getDefaultUser()))
+                                        .reduce((a,b)->a.getDate().isBefore(b.getDate())?a:b)
+                                        .get().getDate(),
+                                LocalDate.now()
+                        )*0.055)
+                ),
+                new Achievement("","Apprentice","Retrospect for 1 year",3,()->(int)Math.floor(
                         ChronoUnit.DAYS.between(
                                 DataManager.getReviews().stream()
                                         .filter(r->r.getUser().equals(DataManager.getDefaultUser()))
@@ -161,7 +231,10 @@ public class AchievementFactory {
                 new Achievement("","Hobbyist","Collect 100 media",3,()->DataManager.getMedia().size()),
                 new Achievement("","Fanatic","1 review/day for a year",1,()->(int)(getLongestConsecutiveDays(1)*0.274)),
                 new Achievement("","Obsessed","1 review/day for a 90 days",2,()->(int)(getLongestConsecutiveDays(1)*3.33)),
-                new Achievement("","Hooked","1 review/day for a month",3,()->(int)(getLongestConsecutiveDays(1)*3.33))
+                new Achievement("","Hooked","1 review/day for a month",3,()->(int)(getLongestConsecutiveDays(1)*3.33)),
+                new Achievement("","Anthropologist","10,000 reviews from users",1,()->(int)((DataManager.getReviews().size()-getReviewsPerUser(DataManager.getDefaultUser()))/100)),
+                new Achievement("","Famous","1,000 reviews from users",2,()->(int)((DataManager.getReviews().size()-getReviewsPerUser(DataManager.getDefaultUser()))/10)),
+                new Achievement("","Popular","100 reviews from users",3,()->(int)((DataManager.getReviews().size()-getReviewsPerUser(DataManager.getDefaultUser()))))
         ));
         return achievements;
     }

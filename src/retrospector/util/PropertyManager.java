@@ -22,12 +22,13 @@ public class PropertyManager {
     private static Configuration config = null;
 
     public static class Configuration{
-        public static enum prop{DEFAULT_USER,MAX_RATING,DEFAULT_RATING,CATEGORIES,FACTOIDS,GITHUB_USER};
+        public static enum prop{DEFAULT_USER,MAX_RATING,DEFAULT_RATING,CATEGORIES,FACTOIDS,GITHUB_USER,VIEW_PAST_DAYS};
         
         private String defaultUser;
         private String githubUser;
         private Integer maxRating;
         private Integer defaultRating;
+        private Integer viewPastDays;
         private String[] categories;
         private String[] factoids;
 
@@ -35,20 +36,13 @@ public class PropertyManager {
             defaultUser = "Ben";
             maxRating = 10;
             defaultRating = 6;
+            viewPastDays = 20;
             githubUser = "";
             categories = new String[]{
                 "Movie",
                 "TV Series",
                 "Book",
-                "Comic",
-                "Podcast",
-                "YouTube",
                 "Poem",
-                "Music",
-                "Video Game",
-                "Tabletop Game",
-                "Product",
-                "Other"
             };
             factoids = new String[]{
                 "Genre",
@@ -57,13 +51,22 @@ public class PropertyManager {
             };
         }
         
-        public Configuration(String user, String github, Integer maxRate, Integer defaultRate, String[] category, String[] factoid){
+        public Configuration(String user, String github, Integer maxRate, Integer defaultRate, Integer past, String[] category, String[] factoid){
             defaultUser = user;
             githubUser = github;
             maxRating = maxRate;
             defaultRating = defaultRate;
+            viewPastDays = past;
             categories = category;
             factoids = factoid;
+        }
+
+        public Integer getViewPastDays() {
+            return viewPastDays;
+        }
+
+        public void setViewPastDays(Integer viewPastDays) {
+            this.viewPastDays = viewPastDays;
         }
 
         public String getDefaultUser() {
@@ -123,6 +126,7 @@ public class PropertyManager {
         prop.setProperty(Configuration.prop.GITHUB_USER.name(), config.getGithubUser());
         prop.setProperty(Configuration.prop.MAX_RATING.name(), config.getMaxRating().toString());
         prop.setProperty(Configuration.prop.DEFAULT_RATING.name(), config.getDefaultRating().toString());
+        prop.setProperty(Configuration.prop.VIEW_PAST_DAYS.name(), config.getDefaultRating().toString());
         prop.setProperty(Configuration.prop.CATEGORIES.name(), String.join(",",config.getCategories()));
         prop.setProperty(Configuration.prop.FACTOIDS.name(), String.join(",",config.getFactoids()));
         File directory = new File(retroFolder);
@@ -144,6 +148,7 @@ public class PropertyManager {
                     prop.getProperty(Configuration.prop.GITHUB_USER.name()),
                     Integer.parseInt(prop.getProperty(Configuration.prop.MAX_RATING.name())),
                     Integer.parseInt(prop.getProperty(Configuration.prop.DEFAULT_RATING.name())),
+                    Integer.parseInt(prop.getProperty(Configuration.prop.VIEW_PAST_DAYS.name())),
                     prop.getProperty(Configuration.prop.CATEGORIES.name()).split(","),
                     prop.getProperty(Configuration.prop.FACTOIDS.name()).split(",")
             );

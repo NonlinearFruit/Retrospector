@@ -5,7 +5,6 @@
  */
 package retrospector.model;
 
-import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -49,6 +48,10 @@ public class DataManager {
     
     public static String getGithubUser() {
         return PropertyManager.loadProperties().getGithubUser();
+    }
+    
+    public static Integer getPastDays() {
+        return PropertyManager.loadProperties().getViewPastDays();
     }
     
     

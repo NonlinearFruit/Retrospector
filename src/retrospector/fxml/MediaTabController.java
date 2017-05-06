@@ -196,6 +196,7 @@ public class MediaTabController implements Initializable {
         mediaCategory.setValue(getMedia().getCategory());
         mediaType.setValue(getMedia().getType());
         mediaDescription.setText(getMedia().getDescription());
+        mediaSave.setDisable(true);
         
         // Factoid Stuff
         setFactoid(null);
@@ -225,6 +226,12 @@ public class MediaTabController implements Initializable {
         });
         
         // Media Stuff
+        mediaTitle.textProperty().addListener((observe,old,neo)->mediaSave.setDisable(false));
+        mediaCreator.textProperty().addListener((observe,old,neo)->mediaSave.setDisable(false));
+        mediaSeason.textProperty().addListener((observe,old,neo)->mediaSave.setDisable(false));
+        mediaEpisode.textProperty().addListener((observe,old,neo)->mediaSave.setDisable(false));
+        mediaDescription.textProperty().addListener((observe,old,neo)->mediaSave.setDisable(false));
+        mediaCategory.getSelectionModel().selectedItemProperty().addListener((observe,old,neo)->mediaSave.setDisable(false));
         mediaType.setItems(FXCollections.observableArrayList(Media.Type.values()));
         mediaType.getSelectionModel().selectedItemProperty().addListener((observe,old,neo)->{
             switch(neo){
@@ -259,6 +266,7 @@ public class MediaTabController implements Initializable {
             m.setDescription(mediaDescription.getText());
             DataManager.updateDB(m);
             setMedia(m);
+            mediaSave.setDisable(true);
         });
         mediaDelete.setOnAction(e->{
             if(new Alert(Alert.AlertType.WARNING,"Are you sure you want to delete this?",ButtonType.NO,ButtonType.YES).showAndWait().get().equals(ButtonType.YES)){
