@@ -82,7 +82,7 @@ public class AchievementTabController implements Initializable {
                 default: locked++;
             }
         }
-        System.err.println("\tUpdate:  "+(System.currentTimeMillis()-start));
+        System.out.println("\tUpdate:  "+(System.currentTimeMillis()-start));
         
         
 //        achievementPane.getChildren().clear();
@@ -104,7 +104,7 @@ public class AchievementTabController implements Initializable {
     public void initAchievementTab() {
         achievementPane.setVgap(50);
         achievementPane.prefWidthProperty().bind(Bindings.add(-70,anchor.widthProperty()));
-        update();
+//        update();
         btnRefresh.setOnAction(e->{
             update();
                 });

@@ -13,6 +13,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import retrospector.Retrospector;
 
 /**
  *
@@ -25,7 +26,8 @@ public class AchievementManager {
     public static final Color secondColor = Color.SILVER;
     public static final Color thirdColor = new Color(205.0/255,127.0/255,50.0/255,1);
     private static final Double imageSize = 70.0;
-    private static final Font fa = Font.loadFont("file:src/retrospector/res/fontawesome-webfont.ttf", imageSize);
+    private static final Font fa = Font.loadFont(Retrospector.class.getResourceAsStream("res/fontawesome-webfont.ttf"), imageSize);
+//    private static final Font fa = Font.loadFont("file:src/retrospector/res/fontawesome-webfont.ttf", imageSize);
     
     public static Color tierColor(Integer tier) {
         if(tier==0)
