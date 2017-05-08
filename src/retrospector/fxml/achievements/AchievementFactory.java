@@ -61,9 +61,9 @@ public class AchievementFactory {
                         100:0
                 ),
                 new Achievement("","Spectrum","Have more categories than colors",1,()->(int)(DataManager.getCategories().length*100.0/(StatsTabController.colors.length+1))),
-                new Achievement("","Trivial Pursuit","Have 5+ factoids",3,()->DataManager.getFactiodTypes().length*20),
-                new Achievement("","Diversify","Have 5+ categories",3,()->DataManager.getCategories().length*20),
-                new Achievement("","Social","Have 3+ users",3,()->DataManager.getUsers().size()*34),
+                new Achievement("","Trivial Pursuit","Have 5 factoids",3,()->DataManager.getFactiodTypes().length*20),
+                new Achievement("","Diversify","Have 5 categories",3,()->DataManager.getCategories().length*20),
+                new Achievement("","Social","Have 3 users",3,()->DataManager.getUsers().size()*34),
                 new Achievement("","Rock","Media with Rock in the title",3,()->
                         DataManager.getMedia().stream()
                         .anyMatch(m->m.getTitle().contains("Rock"))?
@@ -128,19 +128,19 @@ public class AchievementFactory {
                         Arrays.asList(DataManager.getCategories()).stream()
                             .mapToInt(c->getReviewsPerCategory(c))
                             .max()
-                            .getAsInt()/100
+                            .orElse(0)/100
                 ),
                 new Achievement("","Enthusiast","Category with 1,000 media",2,()->
                         Arrays.asList(DataManager.getCategories()).stream()
                             .mapToInt(c->getReviewsPerCategory(c))
                             .max()
-                            .getAsInt()/10
+                            .orElse(0)/10
                 ),
                 new Achievement("","Dabbler","Category with 100 media",3,()->
                         Arrays.asList(DataManager.getCategories()).stream()
                             .mapToInt(c->getReviewsPerCategory(c))
                             .max()
-                            .getAsInt()
+                            .orElse(0)
                 ),
                 new Achievement("","Iconic","Review 1 media 20 times",1,()->Math.toIntExact(
                         DataManager.getMedia().stream()
@@ -164,19 +164,58 @@ public class AchievementFactory {
                         Arrays.asList(DataManager.getCategories()).stream()
                             .mapToInt(c->getReviewsPerCategory(c))
                             .min()
-                            .getAsInt()/10
+                            .orElse(0)/10
                 ),
                 new Achievement("","Well Rounded","100 reviews in each category",2,()->
                         Arrays.asList(DataManager.getCategories()).stream()
                             .mapToInt(c->getReviewsPerCategory(c))
                             .min()
-                            .getAsInt()
+                            .orElse(0)
                 ),
                 new Achievement("","Jack of All Trades","10 reviews in each category",3,()->
                         Arrays.asList(DataManager.getCategories()).stream()
                             .mapToInt(c->getReviewsPerCategory(c))
                             .min()
-                            .getAsInt()*10
+                            .orElse(0)*10
+                ),
+                new Achievement("","Enigmatologist","Factoid with 10,000 facts",1,()->
+                        Arrays.stream(DataManager.getFactiodTypes())
+                            .mapToInt(f->DataManager.getFactoidsByType(f).size())
+                            .max()
+                            .orElse(0)/100
+                ),
+                new Achievement("","Riddler","Factoid with 1,000 facts",2,()->
+                        Arrays.stream(DataManager.getFactiodTypes())
+                            .mapToInt(f->DataManager.getFactoidsByType(f).size())
+                            .max()
+                            .orElse(0)/10
+                ),
+                new Achievement("","Puzzler","Factoid with 100 facts",3,()->
+                        Arrays.stream(DataManager.getFactiodTypes())
+                            .mapToInt(f->DataManager.getFactoidsByType(f).size())
+                            .max()
+                            .orElse(0)
+                ),
+                new Achievement("","Researcher","1,000 facts for each factoid",1,()->
+                        DataManager.getFactiodTypes().length < 5?0:
+                        Arrays.stream(DataManager.getFactiodTypes())
+                            .mapToInt(f->DataManager.getFactoidsByType(f).size())
+                            .min()
+                            .orElse(0)/10
+                ),
+                new Achievement("","Scientist","100 facts for each factoid",2,()->
+                        DataManager.getFactiodTypes().length < 5?0:
+                        Arrays.stream(DataManager.getFactiodTypes())
+                            .mapToInt(f->DataManager.getFactoidsByType(f).size())
+                            .min()
+                            .orElse(0)
+                ),
+                new Achievement("","Objective","10 facts for each factoid",3,()->
+                        DataManager.getFactiodTypes().length < 5?0:
+                        Arrays.stream(DataManager.getFactiodTypes())
+                            .mapToInt(f->DataManager.getFactoidsByType(f).size())
+                            .min()
+                            .orElse(0)*10
                 ),
                 new Achievement("","Scholarly","Give 100 looong reviews",1,()->Math.toIntExact(
                         DataManager.getReviews()
@@ -192,7 +231,7 @@ public class AchievementFactory {
                                 .stream()
                                 .mapToInt(r->r.getReview().length())
                                 .max()
-                                .getAsInt()/10
+                                .orElse(0)/10
                 ),
                 new Achievement("","Wordy","Give a looong review",3,()->
                         DataManager.getReviews()
@@ -200,7 +239,7 @@ public class AchievementFactory {
                                 .stream()
                                 .mapToInt(r->r.getReview().length())
                                 .max()
-                                .getAsInt()/10
+                                .orElse(0)/10
                 ),
                 new Achievement("","BFFs","1,000 reviews from a user",1,()->
                         DataManager.getUsers().stream()

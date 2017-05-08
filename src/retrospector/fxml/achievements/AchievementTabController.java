@@ -9,14 +9,12 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -56,6 +54,8 @@ public class AchievementTabController implements Initializable {
     }
     
     public void update() {
+        achievementPane.getChildren().clear();
+        header.getChildren().clear();
         List<Node> list = new ArrayList<>();
         
         // Header Vars
@@ -65,8 +65,6 @@ public class AchievementTabController implements Initializable {
         int locked = 0;
         
         // Achievement Pane
-        long start = System.currentTimeMillis();
-        
         for (Achievement achievement : AchievementFactory.getAchievements()) {
             list.add(new AchievementManager(achievement).getDisplay());
             
@@ -82,11 +80,7 @@ public class AchievementTabController implements Initializable {
                 default: locked++;
             }
         }
-        System.out.println("\tUpdate:  "+(System.currentTimeMillis()-start));
         
-        
-//        achievementPane.getChildren().clear();
-        header.getChildren().clear();
         // Achievement Display
         achievementPane.getChildren().addAll(list);
         
