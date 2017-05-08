@@ -254,26 +254,17 @@ public class DataManager {
         + "constraint primary_key_factoid primary key (id)";
         
         try {
-            long start;
             connString += "/Retrospector";
             System.out.println(connString);
             Statement stmt;
         
-            start = System.currentTimeMillis();
             stmt = getConnection().createStatement();
-            System.out.println("\tCreate:      "+(System.currentTimeMillis()-start));
             
-            start = System.currentTimeMillis();
             stmt.execute(createMedia);
-            System.out.println("\tMedia:       "+(System.currentTimeMillis()-start));
             
-            start = System.currentTimeMillis();
             stmt.execute(createReview);
-            System.out.println("\tReview:      "+(System.currentTimeMillis()-start));
             
-            start = System.currentTimeMillis();
             stmt.execute(createFactoid);
-            System.out.println("\tFactoid:     "+(System.currentTimeMillis()-start));
             
         } catch (SQLException ex) {
             System.err.println("Create error in startDB in connection" + ex);

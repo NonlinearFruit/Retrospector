@@ -20,7 +20,7 @@
 
 <SplitPane dividerPositions="0.5, 0.5" orientation="VERTICAL" prefHeight="1000.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="retrospector.fxml.chart.StatsTabController">
    <items>
-      <HBox spacing="5.0">
+      <HBox fx:id="overallContainer" spacing="5.0">
          <children>
             <VBox maxWidth="120.0" minWidth="120.0">
                <children>
@@ -40,20 +40,20 @@
                 <NumberAxis fx:id="chartRpdY" side="LEFT" />
               </yAxis>
             </StackedBarChart>
-            <VBox prefHeight="200.0" prefWidth="100.0">
+            <VBox fx:id="categoryStatBox1" prefHeight="200.0" prefWidth="100.0">
                <children>
-                  <Text fx:id="overallMedia" strokeType="OUTSIDE" strokeWidth="0.0" text="Media" />
-                  <Text fx:id="overallReview" strokeType="OUTSIDE" strokeWidth="0.0" text="Review" />
-                  <Text fx:id="overallUser" strokeType="OUTSIDE" strokeWidth="0.0" text="User" />
-                  <Text fx:id="overallTime" strokeType="OUTSIDE" strokeWidth="0.0" text="Time" />
-                  <Text fx:id="overallTitle" strokeType="OUTSIDE" strokeWidth="0.0" text="Title" />
-                  <Text fx:id="overallCreator" strokeType="OUTSIDE" strokeWidth="0.0" text="Creator" />
-                  <Text fx:id="overallSingle" strokeType="OUTSIDE" strokeWidth="0.0" text="Single" />
-                  <Text fx:id="overallMiniseries" strokeType="OUTSIDE" strokeWidth="0.0" text="Miniseries" />
-                  <Text fx:id="overallSeries" strokeType="OUTSIDE" strokeWidth="0.0" text="Series" />
-                  <Text fx:id="overallPerMonth" strokeType="OUTSIDE" strokeWidth="0.0" text="Per Month" />
-                  <Text fx:id="overallCurrentRating" strokeType="OUTSIDE" strokeWidth="0.0" text="Current" />
-                  <Text fx:id="overallAllRating" strokeType="OUTSIDE" strokeWidth="0.0" text="All" />
+                  <Text fx:id="categoryMedia1" strokeType="OUTSIDE" strokeWidth="0.0" text="Media" />
+                  <Text fx:id="categoryReview1" strokeType="OUTSIDE" strokeWidth="0.0" text="Review" />
+                  <Text fx:id="categoryUser1" strokeType="OUTSIDE" strokeWidth="0.0" text="User" />
+                  <Text fx:id="categoryTime1" strokeType="OUTSIDE" strokeWidth="0.0" text="Time" />
+                  <Text fx:id="categoryTitle1" strokeType="OUTSIDE" strokeWidth="0.0" text="Title" />
+                  <Text fx:id="categoryCreator1" strokeType="OUTSIDE" strokeWidth="0.0" text="Creator" />
+                  <Text fx:id="categorySingle1" strokeType="OUTSIDE" strokeWidth="0.0" text="Single" />
+                  <Text fx:id="categoryMiniseries1" strokeType="OUTSIDE" strokeWidth="0.0" text="Miniseries" />
+                  <Text fx:id="categorySeries1" strokeType="OUTSIDE" strokeWidth="0.0" text="Series" />
+                  <Text fx:id="categoryPerMonth1" strokeType="OUTSIDE" strokeWidth="0.0" text="Per Month" />
+                  <Text fx:id="categoryCurrentRating1" strokeType="OUTSIDE" strokeWidth="0.0" text="Current" />
+                  <Text fx:id="categoryAllRating1" strokeType="OUTSIDE" strokeWidth="0.0" text="All" />
                </children>
             </VBox>
             <PieChart fx:id="chartMediaPerCategory" title="Category Size" HBox.hgrow="SOMETIMES" />
@@ -62,7 +62,7 @@
             <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
          </padding>
       </HBox>
-      <HBox spacing="5.0">
+      <HBox fx:id="categoryContainer" spacing="5.0">
          <children>
             <VBox maxWidth="120.0" minWidth="120.0">
                <children>
@@ -82,7 +82,7 @@
                 <NumberAxis fx:id="chartRprY" side="LEFT" />
               </yAxis>
             </BarChart>
-            <VBox prefHeight="200.0" prefWidth="100.0">
+            <VBox fx:id="categoryStatBox" prefHeight="200.0" prefWidth="100.0">
                <children>
                   <Text fx:id="categoryMedia" strokeType="OUTSIDE" strokeWidth="0.0" text="Media" />
                   <Text fx:id="categoryReview" strokeType="OUTSIDE" strokeWidth="0.0" text="Review" />
@@ -111,7 +111,7 @@
             <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
          </padding>
       </HBox>
-      <HBox spacing="5.0">
+      <HBox fx:id="mediaContainer" spacing="5.0">
          <children>
             <VBox maxWidth="700.0" HBox.hgrow="ALWAYS">
                <children>
@@ -149,7 +149,7 @@
                   </TableView>
                </children>
             </VBox>
-            <VBox prefHeight="200.0" prefWidth="100.0">
+            <VBox fx:id="mediaStatBox" prefHeight="200.0" prefWidth="100.0">
                <children>
                   <Text fx:id="mediaMedia" strokeType="OUTSIDE" strokeWidth="0.0" text="Media" />
                   <Text fx:id="mediaReview" strokeType="OUTSIDE" strokeWidth="0.0" text="Review" />

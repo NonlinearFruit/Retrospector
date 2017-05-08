@@ -45,6 +45,8 @@ import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
@@ -52,6 +54,7 @@ import javafx.scene.text.Text;
 import javafx.util.StringConverter;
 import retrospector.fxml.CoreController.TAB;
 import retrospector.model.DataManager;
+import retrospector.model.Factoid;
 import retrospector.model.Media;
 import retrospector.model.Review;
 import retrospector.util.NaturalOrderComparator;
@@ -87,16 +90,6 @@ public class StatsTabController implements Initializable {
     private CheckBox checkEpisode;
     @FXML
     private CheckBox checkCategory;
-    @FXML
-    private Text overallMedia;
-    @FXML
-    private Text overallReview;
-    @FXML
-    private Text overallUser;
-    @FXML
-    private Text overallTime;
-    @FXML
-    private Text overallPerMonth;
     @FXML
     private Text categoryMedia;
     @FXML
@@ -138,16 +131,6 @@ public class StatsTabController implements Initializable {
     @FXML
     private Text mediaAllRating;
     @FXML
-    private Text overallSingle;
-    @FXML
-    private Text overallMiniseries;
-    @FXML
-    private Text overallSeries;
-    @FXML
-    private Text overallCurrentRating;
-    @FXML
-    private Text overallAllRating;
-    @FXML
     private Text categoryCurrentRating;
     @FXML
     private Text categoryAllRating;
@@ -163,10 +146,6 @@ public class StatsTabController implements Initializable {
     private Text mediaSingle;
     @FXML
     private LineChart<Number, Number> chartReviewsPerYear;
-    @FXML
-    private Text overallTitle;
-    @FXML
-    private Text overallCreator;
     @FXML
     private Text categoryTitle;
     @FXML
@@ -197,6 +176,17 @@ public class StatsTabController implements Initializable {
     private CategoryAxis chartRpyX;
     @FXML
     private ListView<Stroolean> overallUserList;
+    private VBox overallStatBox;
+    @FXML
+    private VBox categoryStatBox;
+    @FXML
+    private VBox mediaStatBox;
+    @FXML
+    private HBox overallContainer;
+    @FXML
+    private HBox categoryContainer;
+    @FXML
+    private HBox mediaContainer;
 
     /**
      * Initializes the controller class.
@@ -331,78 +321,37 @@ public class StatsTabController implements Initializable {
         chartReviewsPerDay.setTitle("Past "+last__days+" Days");
         
         // Data Mining - Vars
-        Set<String> titleSet = new HashSet<>();
-        Set<String> creatorSet = new HashSet<>();
-        Set<String> userSet = new HashSet<>();
         Map<String, Integer> categories = new HashMap<>();
         Map<LocalDate, Map<String, Integer>> last30Days = new HashMap<>();
-        int media = 0;
-        int reviews = 0;
-        int users = 0;
-        int titles = 0;
-        int creators = 0;
-        double aveAll = 0;
-        double aveCurrent = 0;
-        LocalDate earliest = LocalDate.now();
-        int singles = 0;
-        int minis = 0;
-        int series = 0;
-        long days = 0;
-        double perMonth = 0;
+        InfoBlipAccumulator info = new InfoBlipAccumulator();
         
         // Data Mining - Calcs
         for (Media m : allMedia) {
             boolean used = false;
             for (Review r : m.getReviews()) {
                 if (strooleans.stream().anyMatch(x->x.getString().equalsIgnoreCase(r.getUser()) && x.isBoolean())) {
-                    if(r.getDate().isBefore(earliest))
-                        earliest = r.getDate();
                     if(ChronoUnit.DAYS.between(r.getDate(), LocalDate.now())<=last__days){
                         Map<String,Integer> cat2Num = last30Days.getOrDefault(r.getDate(), new HashMap<>());
                         Integer num = cat2Num.getOrDefault(m.getCategory(), 0);
                         cat2Num.put(m.getCategory(), num+1);
                         last30Days.put(r.getDate(), cat2Num);
                     }
-                    userSet.add(r.getUser());
-                    aveAll += r.getRating().intValue();
-                    reviews++;
+                    info.accumulate(r);
                     used = true;
                 }
             }
             if (used) {
-                switch(m.getType()){
-                    case SINGLE:singles++;break;
-                    case MINISERIES:minis++;break;
-                    case SERIES:series++;break;
-                }
-                aveCurrent += m.getCurrentRating().intValue();
-                titleSet.add(m.getTitle()+m.getCreator());
-                creatorSet.add(m.getCreator());
                 categories.put(m.getCategory(), categories.getOrDefault(m.getCategory(), 0)+1);
-                media++;
+                info.accumulate(m);
+                for (Factoid f : m.getFactoids()) {
+                    info.accumulate(f);
+                }
+//                media++;
             }
         }
-        users = userSet.size();
-        titles = titleSet.size();
-        creators = creatorSet.size();
-        aveAll = reviews==0? 0 : aveAll/reviews;
-        aveCurrent = media==0? 0 : aveCurrent/media;
-        days = ChronoUnit.DAYS.between(earliest, LocalDate.now())+1;
-        perMonth = days<2? 0 : (reviews+0.0)/days*30;
-        
-        // Stats
-        overallMedia.setText(media+" Media");
-        overallReview.setText(reviews+" Review(s)");
-        overallUser.setText(users+" User(s)");  
-        overallTime.setText(days+" Days");
-        overallTitle.setText(titles + " Titles");
-        overallCreator.setText(creators + " Creators");
-        overallSingle.setText(singles+" Single(s)");
-        overallMiniseries.setText(minis+" Mini(s)");
-        overallSeries.setText(series+" Serie(s)");
-        overallPerMonth.setText(String.format("%.2f", perMonth)+" / Month");
-        overallCurrentRating.setText(String.format("%.2f", aveCurrent)+" Current");
-        overallAllRating.setText(String.format("%.2f", aveAll)+" All");
+        if (overallContainer.getChildren().size()>3)
+            overallContainer.getChildren().remove(2);
+        overallContainer.getChildren().add(2,info.getInfo());
         
         // Chart # Media / Category
         chartMediaPerCategory.setData(
@@ -477,23 +426,8 @@ public class StatsTabController implements Initializable {
             
         // Data Mining - Vars
         Map<String, Integer> reviewMap = new HashMap<>();
-        List<String> userSet = new ArrayList<>();
-        Set<String> titleSet = new HashSet<>();
-        Set<String> creatorSet = new HashSet<>();
         int[] reviewsPerRating = new int[DataManager.getMaxRating()+1];
-        int media = 0;
-        int reviews = 0;
-        long users = 0;
-        int titles = 0;
-        int creators = 0;
-        double aveAll = 0;
-        double aveCurrent = 0;
-        LocalDate earliest = LocalDate.now();
-        int singles = 0;
-        int minis = 0;
-        int series = 0;
-        long days = 0;
-        double perMonth = 0;
+        InfoBlipAccumulator info = new InfoBlipAccumulator();
         
         // Data Mining - Calcs
         for (Media m : allMedia) {
@@ -501,61 +435,33 @@ public class StatsTabController implements Initializable {
                 boolean used = false;
                 for (Review r : m.getReviews()) {
                     if (strooleans.stream().anyMatch(x->x.getString().equalsIgnoreCase(r.getUser()) && x.isBoolean())) {
-                        if(r.getDate().isBefore(earliest))
-                            earliest = r.getDate();
                         reviewsPerRating[r.getRating().intValue()] += 1;
                         String key = r.getDate().getMonthValue()+"-"+r.getDate().getYear();
                         reviewMap.put(key, reviewMap.getOrDefault(key, 0)+1);
-                        aveAll += r.getRating().intValue();
-                        userSet.add(r.getUser());
-                        reviews++;
+                        info.accumulate(r);
                         used = true;
                     }
                 }
                 if (used) {
-                    switch(m.getType()){
-                        case SINGLE:singles++;break;
-                        case MINISERIES:minis++;break;
-                        case SERIES:series++;break;
+                    info.accumulate(m);
+                    for (Factoid f : m.getFactoids()) {
+                        info.accumulate(f);
                     }
-                    aveCurrent += m.getCurrentRating().intValue();
-                    titleSet.add(m.getTitle()+m.getCreator());
-                    creatorSet.add(m.getCreator());
-                    media++;
                 }
             }
         }
-        users = userSet.stream().distinct().count();
-        titles = titleSet.size();
-        creators = creatorSet.size();
-        aveAll = reviews==0? 0 : aveAll/reviews;
-        aveCurrent = media==0? 0 : aveCurrent/media;
-        days = ChronoUnit.DAYS.between(earliest, LocalDate.now())+1;
-        perMonth = days<2? 0 : (reviews+0.0)/days*30;
-        
-        
-        // Stats
-        categoryMedia.setText(media+" Media");
-        categoryReview.setText(reviews+" Review(s)");
-        categoryUser.setText(users+" User(s)");
-        categoryTime.setText(days+" Days");
-        categoryTitle.setText(titles + " Titles");
-        categoryCreator.setText(creators + " Creators");
-        categorySingle.setText(singles+" Single(s)");
-        categoryMiniseries.setText(minis+" Mini(s)");
-        categorySeries.setText(series+" Serie(s)");
-        categoryPerMonth.setText(String.format("%.2f", perMonth)+" / Month");
-        categoryCurrentRating.setText(String.format("%.2f", aveCurrent)+" Current");
-        categoryAllRating.setText(String.format("%.2f", aveAll)+" All");
+        if (categoryContainer.getChildren().size() > 3)
+            categoryContainer.getChildren().remove(2);
+        categoryContainer.getChildren().add(2,info.getInfo());
         
         // Chart - # Reviewed / Year
         chartReviewsPerYear.setLegendVisible(false);
         chartReviewsPerYear.getData().clear();
         
         XYChart.Series data = new XYChart.Series();
-        int year = earliest.getYear();
-        int month = earliest.getMonthValue();
-        for (int i=0; i <= ChronoUnit.MONTHS.between(earliest, LocalDate.now())+1; i++) {
+        int year = info.getEarliest().getYear();
+        int month = info.getEarliest().getMonthValue();
+        for (int i=0; i <= ChronoUnit.MONTHS.between(info.getEarliest(), LocalDate.now())+1; i++) {
             String key = month+"-"+year;
             data.getData().add(new XYChart.Data(key, reviewMap.getOrDefault(key, 0)));
             ++month;
@@ -601,84 +507,36 @@ public class StatsTabController implements Initializable {
         );
 
         // Data Mining - Vars
-        List<String> userSet = new ArrayList<>();
-        Set<String> titleSet = new HashSet<>();
-        Set<String> creatorSet = new HashSet<>();
         XYChart.Series data = new XYChart.Series();
-        int media = 0;
-        int reviews = 0;
-        long users = 0;
-        int titles = 0;
-        int creators = 0;
-        double aveAll = 0;
-        double aveCurrent = 0;
-        LocalDate earliest = LocalDate.now();
-        int singles = 0;
-        int minis = 0;
-        int series = 0;
-        long days = 0;
-        double perMonth = 0;
+        InfoBlipAccumulator info = new InfoBlipAccumulator();
         
         // Data Mining - Calcs
         for (Media m : mediaTable.getItems()) {
             boolean used = false;
             for (Review r : m.getReviews()) {
                 if (strooleans.stream().anyMatch(x->x.getString().equalsIgnoreCase(r.getUser()) && x.isBoolean())) {
-                    if (r.getDate().isBefore(earliest)) {
-                        earliest = r.getDate();
-                    }
-                    aveAll += r.getRating().intValue();
-                    userSet.add(r.getUser());
-                    reviews++;
                     data.getData().add(new XYChart.Data(dateToDouble(r.getDate()), r.getRating().intValue()));
+                    info.accumulate(r);
                     used = true;
                 }
             }
             if (used) {
-                switch (m.getType()) {
-                    case SINGLE:
-                        singles++;
-                        break;
-                    case MINISERIES:
-                        minis++;
-                        break;
-                    case SERIES:
-                        series++;
-                        break;
+                info.accumulate(m);
+                for (Factoid f : m.getFactoids()) {
+                    info.accumulate(f);
                 }
-                aveCurrent += m.getCurrentRating().intValue();
-                titleSet.add(m.getTitle());
-                creatorSet.add(m.getCreator());
-                media++;
             }
         }
-        users = userSet.stream().distinct().count();
-        titles = titleSet.size();
-        creators = creatorSet.size();
-        aveAll = reviews == 0 ? 0 : aveAll / reviews;
-        aveCurrent = media == 0 ? 0 : aveCurrent / media;
-        days = ChronoUnit.DAYS.between(earliest, LocalDate.now()) + 1;
-        perMonth = days<2 ? 0 : (reviews + 0.0) / days * 30;
-
-        // Stats
-        mediaMedia.setText(media + " Media");
-        mediaReview.setText(reviews + " Review(s)");
-        mediaUser.setText(users + " User(s)");
-        mediaTime.setText(days + " Days");
-        mediaTitle.setText(titles + " Titles");
-        mediaCreator.setText(creators + " Creators");
-        mediaSingle.setText(singles + " Single(s)");
-        mediaMiniseries.setText(minis + " Mini(s)");
-        mediaSeries.setText(series + " Serie(s)");
-        mediaPerMonth.setText(String.format("%.2f", perMonth) + " / Month");
-        mediaCurrentRating.setText(String.format("%.2f", aveCurrent) + " Current");
-        mediaAllRating.setText(String.format("%.2f", aveAll) + " All");
+        
+        if (mediaContainer.getChildren().size() > 2)
+            mediaContainer.getChildren().remove(1);
+        mediaContainer.getChildren().add(1,info.getInfo());
         
         // Chart
         chartRatingOverTime.getData().clear();
         if(data.getData().size()<1500)
             chartRatingOverTime.getData().add(data);
-        chartRotX.setLowerBound(dateToDouble(earliest)-1.0/12);
+        chartRotX.setLowerBound(dateToDouble(info.getEarliest())-1.0/12);
         chartRotX.setUpperBound(dateToDouble(LocalDate.now())+1.0/12);
     }
     

@@ -7,13 +7,11 @@ package retrospector.fxml.chart;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import retrospector.model.DataManager;
+import retrospector.model.Factoid;
 import retrospector.model.Media;
 import retrospector.model.Review;
 
@@ -25,6 +23,7 @@ public class InfoBlipAccumulator {
     
     private int media;
     private int reviews;
+    private int facts;
     private int users;
     private long days;
     private int titles;
@@ -40,6 +39,7 @@ public class InfoBlipAccumulator {
     private Set<String> creatorSet = new HashSet<>();
     private Set<String> userSet = new HashSet<>();
     private LocalDate earliest = LocalDate.now();
+    private LocalDate latest = LocalDate.now();
         
     public void accumulate(Media aMedia){
         switch (aMedia.getType()) {
@@ -57,16 +57,22 @@ public class InfoBlipAccumulator {
         aveCurrent += aMedia.getCurrentRating().intValue();
         titleSet.add(aMedia.getTitle() + aMedia.getCreator());
         creatorSet.add(aMedia.getCreator());
-//        aMedia.getReviews().forEach(this::accumulate);
     }
     
     public void accumulate(Review aReview){
         if (aReview.getDate().isBefore(earliest)) {
             earliest = aReview.getDate();
         }
+        if (aReview.getDate().isAfter(latest)) {
+            latest = aReview.getDate();
+        }
         reviews++;
         aveAll += aReview.getRating().intValue();
         userSet.add(aReview.getUser());
+    }
+    
+    public void accumulate(Factoid aFact) {
+        facts++;
     }
     
     private void calc(){
@@ -79,16 +85,17 @@ public class InfoBlipAccumulator {
         perMonth = days < 2 ? 0 : (media + 0.0) / days * 30;
     }
     
-    public HBox getInfo(){
+    public VBox getInfo(){
         // Setup
-        HBox hbox = new HBox();
+        VBox box = new VBox();
         
         calc();
         
         // Stats
-        hbox.getChildren().addAll(
+        box.getChildren().addAll(
             new Text(media+" Media"),
             new Text(reviews+" Review(s)"),
+            new Text(facts+" Fact(s)"),
             new Text(users+" User(s)"),  
             new Text(days+" Days"),
             new Text(titles + " Titles"),
@@ -101,7 +108,7 @@ public class InfoBlipAccumulator {
             new Text(String.format("%.2f", aveAll)+" All")
         );
         
-        return hbox;
+        return box;
     }
 
     public int getMedia() {
@@ -110,6 +117,10 @@ public class InfoBlipAccumulator {
 
     public int getReviews() {
         return reviews;
+    }
+    
+    public int getFacts() {
+        return facts;
     }
 
     public int getUsers() {
