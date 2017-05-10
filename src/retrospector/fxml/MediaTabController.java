@@ -415,9 +415,9 @@ public class MediaTabController implements Initializable {
             });
             return row;
         });
-        mediaRatingColumn.setCellValueFactory(new PropertyValueFactory<Review,Double>("Rating"));
-        mediaUserColumn.setCellValueFactory(new PropertyValueFactory<Review,String>("User"));
-        mediaDateColumn.setCellValueFactory(new PropertyValueFactory<Review,LocalDate>("Date"));
+        mediaRatingColumn.setCellValueFactory(new PropertyValueFactory<>("Rating"));
+        mediaUserColumn.setCellValueFactory(new PropertyValueFactory<>("User"));
+        mediaDateColumn.setCellValueFactory(new PropertyValueFactory<>("Date"));
         
         mediaNewReview.setOnAction(e->{
             Review review = new Review();

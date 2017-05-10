@@ -64,6 +64,16 @@ public class DataManager {
             
     }
     
+    public static void makeBackup(){
+        try{
+        String backupDir = "'"+PropertyManager.retroFolder+"/Backup/'";
+        Statement stmt = getConnection().createStatement();
+        ResultSet rs = stmt.executeQuery("BACKUP DATABASE TO "+backupDir);
+        } catch(SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+    
     public static ObservableList<Media> getMedia(){
         Statement stmt;
         ResultSet rs = null;

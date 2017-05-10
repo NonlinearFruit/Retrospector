@@ -237,11 +237,11 @@ public class SearchTabController implements Initializable {
         mediaSortable.comparatorProperty().bind(searchTable.comparatorProperty());
         
         // Link to data properties
-        searchTitleColumn.setCellValueFactory(new PropertyValueFactory<Media,String>("Title"));
-        searchCreatorColumn.setCellValueFactory(new PropertyValueFactory<Media,String>("Creator"));
-        searchSeasonColumn.setCellValueFactory(new PropertyValueFactory<Media,String>("SeasonId"));
-        searchEpisodeColumn.setCellValueFactory(new PropertyValueFactory<Media,String>("EpisodeId"));
-        searchCategoryColumn.setCellValueFactory(new PropertyValueFactory<Media,String>("Category"));
+        searchTitleColumn.setCellValueFactory(new PropertyValueFactory<>("Title"));
+        searchCreatorColumn.setCellValueFactory(new PropertyValueFactory<>("Creator"));
+        searchSeasonColumn.setCellValueFactory(new PropertyValueFactory<>("SeasonId"));
+        searchEpisodeColumn.setCellValueFactory(new PropertyValueFactory<>("EpisodeId"));
+        searchCategoryColumn.setCellValueFactory(new PropertyValueFactory<>("Category"));
         
         // Values for special columns
         searchNumberColumn.setSortable(false);
