@@ -74,7 +74,7 @@ public class AchievementFactory {
                         .anyMatch(m->m.getTitle().contains("Paper"))?
                                 100:0
                 ),
-                new Achievement("","Scissors","Media with Scissors in the title",3,()->
+                new Achievement("","Scissors","Media with Scissor in the title",3,()->
                         DataManager.getMedia().stream()
                         .anyMatch(m->m.getTitle().contains("Scissor"))?
                                 100:0

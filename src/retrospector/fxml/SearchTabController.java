@@ -91,6 +91,8 @@ public class SearchTabController implements Initializable {
     private ObservableList<Media> searchTableData;
     private ObjectProperty<Media> currentMedia;
     private ObjectProperty<TAB> currentTab;
+    @FXML
+    private Text searchResults;
 
     /**
      * Initializes the controller class.
@@ -173,6 +175,7 @@ public class SearchTabController implements Initializable {
             totalCurrentRating += media.getCurrentRating().intValue();
         }
 
+        searchResults.setText(totalNumberMedia+"");
         searchMeanAverage.setText(String.format("%.2f", totalReviewRating * 1.0 / totalNumberReviews));
         searchCurrentAverage.setText(String.format("%.2f", totalCurrentRating * 1.0 / totalNumberMedia));
     }

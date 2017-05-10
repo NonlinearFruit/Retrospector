@@ -12,7 +12,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-
 <VBox prefHeight="200.0" prefWidth="100.0" spacing="3.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="retrospector.fxml.SearchTabController">
    <children>
       <TextField fx:id="searchBox" style="-fx-background-image: url('/retrospector/fxml/searchGlass.png'); -fx-background-repeat: no-repeat; -fx-background-position: right center; -fx-background-size: 20;" />
@@ -44,7 +43,9 @@
             <Button fx:id="searchEditMedia" mnemonicParsing="false" text="Edit" />
             <Button fx:id="searchDeleteMedia" mnemonicParsing="false" text="Delete" />
             <Pane HBox.hgrow="ALWAYS" />
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Mean:" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Results: " />
+            <Text fx:id="searchResults" strokeType="OUTSIDE" strokeWidth="0.0" text="--" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text=" | Mean:" />
             <Text fx:id="searchMeanAverage" strokeType="OUTSIDE" strokeWidth="0.0" text="--" />
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text=" | Current:" />
             <Text fx:id="searchCurrentAverage" strokeType="OUTSIDE" strokeWidth="0.0" text="--" />
