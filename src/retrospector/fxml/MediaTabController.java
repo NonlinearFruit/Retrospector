@@ -296,7 +296,13 @@ public class MediaTabController implements Initializable {
                     getMedia().getType()
             );
             media.setDescription(getMedia().getDescription());
-            setMedia(DataManager.getMedia(DataManager.createDB(media)));
+            int id = DataManager.createDB(media);
+            for (Factoid factoid : getMedia().getFactoids()) {
+                Factoid fact = new Factoid(factoid.getTitle(),factoid.getContent());
+                fact.setMediaId(id);
+                DataManager.createDB(fact);
+            }
+            setMedia(DataManager.getMedia(id));
             if(getMedia().getId()==-1)
                 System.err.println("Media got a -1 id (mediaAddSeason#setOnAction");
             updateMediaTab();
@@ -311,7 +317,13 @@ public class MediaTabController implements Initializable {
             );
             media.setDescription(getMedia().getDescription());
             media.setSeasonId(getMedia().getSeasonId());
-            setMedia(DataManager.getMedia(DataManager.createDB(media)));
+            int id = DataManager.createDB(media);
+            for (Factoid factoid : getMedia().getFactoids()) {
+                Factoid fact = new Factoid(factoid.getTitle(),factoid.getContent());
+                fact.setMediaId(id);
+                DataManager.createDB(fact);
+            }
+            setMedia(DataManager.getMedia(id));
             if(getMedia().getId()==-1)
                 System.err.println("Media got a -1 id (mediaAddEpisode#setOnAction");
             updateMediaTab();
@@ -362,8 +374,8 @@ public class MediaTabController implements Initializable {
             });
             return row;
         });
-        mediaTitleColumn.setCellValueFactory(new PropertyValueFactory<Factoid,String>("Title"));
-        mediaContentColumn.setCellValueFactory(new PropertyValueFactory<Factoid,String>("Content"));
+        mediaTitleColumn.setCellValueFactory(new PropertyValueFactory<>("Title"));
+        mediaContentColumn.setCellValueFactory(new PropertyValueFactory<>("Content"));
         
         mediaNewFactoid.setOnAction(e->{
             Factoid factoid = new Factoid();
