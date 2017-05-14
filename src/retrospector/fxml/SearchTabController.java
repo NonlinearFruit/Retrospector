@@ -93,6 +93,8 @@ public class SearchTabController implements Initializable {
     private ObjectProperty<TAB> currentTab;
     @FXML
     private Text searchResults;
+    @FXML
+    private MenuItem searchBackup;
 
     /**
      * Initializes the controller class.
@@ -312,6 +314,7 @@ public class SearchTabController implements Initializable {
             setMedia(neo);
             setTab(TAB.MEDIA);
         });
+        searchBackup.setOnAction(e->DataManager.makeBackup());
         searchEditMedia.setOnAction(e->{
             setTab(TAB.MEDIA);
         });

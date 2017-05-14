@@ -5,6 +5,7 @@
  */
 package retrospector.fxml.achievements;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
@@ -55,6 +56,9 @@ public class AchievementFactory {
                         return 0;
                     return 100;
                 }),
+                new Achievement("","Paranoia","Keep a backup",2,()->
+                    new File(PropertyManager.retroFolder+"/Backup").list().length>0? 100:0
+                ),
                 new Achievement("","Never Again","Give a 1 star review",3,()->DataManager.getReviews().stream()
                         .filter(r->r.getUser().equals(DataManager.getDefaultUser()))
                         .anyMatch(r->r.getRating().equals(BigDecimal.ONE))?

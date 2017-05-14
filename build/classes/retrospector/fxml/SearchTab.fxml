@@ -38,6 +38,7 @@
                <items>
                   <MenuItem fx:id="searchQuickEntry" mnemonicParsing="false" text="Quick Entry" />
                   <MenuItem fx:id="searchStandardEntry" mnemonicParsing="false" text="Standard Entry" />
+                  <MenuItem fx:id="searchBackup" mnemonicParsing="false" text="Backup" />
                </items>
             </SplitMenuButton>
             <Button fx:id="searchEditMedia" mnemonicParsing="false" text="Edit" />
