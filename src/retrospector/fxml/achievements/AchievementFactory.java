@@ -56,16 +56,18 @@ public class AchievementFactory {
                         return 0;
                     return 100;
                 }),
-                new Achievement("","Paranoia","Keep a backup",2,()->
-                    new File(PropertyManager.retroFolder+"/Backup").list().length>0? 100:0
-                ),
+                new Achievement("","Paranoia","Keep a backup",2,()->{
+                    try {
+                    return new File(PropertyManager.retroFolder+"/Backup").list().length>0? 100:0;
+                    } catch(Exception ex) { return 0; }
+                            }),
                 new Achievement("","Never Again","Give a 1 star review",3,()->DataManager.getReviews().stream()
                         .filter(r->r.getUser().equals(DataManager.getDefaultUser()))
                         .anyMatch(r->r.getRating().equals(BigDecimal.ONE))?
                         100:0
                 ),
                 new Achievement("","Spectrum","Have more categories than colors",1,()->(int)(DataManager.getCategories().length*100.0/(StatsTabController.colors.length+1))),
-                new Achievement("","Trivial Pursuit","Have 5 factoids",3,()->DataManager.getFactiodTypes().length*20),
+                new Achievement("","Trivial Pursuit","Have 5 factoid types",3,()->DataManager.getFactiodTypes().length*20),
                 new Achievement("","Diversify","Have 5 categories",3,()->DataManager.getCategories().length*20),
                 new Achievement("","Social","Have 3 users",3,()->DataManager.getUsers().size()*34),
                 new Achievement("","Rock","Media with Rock in the title",3,()->
