@@ -49,6 +49,7 @@ public class AchievementFactory {
                     }
                     return result;
                 }),
+                new Achievement("","Spectrum","Have more categories than colors",1,()->(int)(DataManager.getCategories().length*100.0/(StatsTabController.colors.length+1))),
                 new Achievement("","Inspector","Edit the .config file",2,()->{
                     PropertyManager.Configuration dusty = new PropertyManager.Configuration();
                     if( dusty.getDefaultUser().equals(DataManager.getDefaultUser()) && 
@@ -66,7 +67,6 @@ public class AchievementFactory {
                         .anyMatch(r->r.getRating().equals(BigDecimal.ONE))?
                         100:0
                 ),
-                new Achievement("","Spectrum","Have more categories than colors",1,()->(int)(DataManager.getCategories().length*100.0/(StatsTabController.colors.length+1))),
                 new Achievement("","Trivial Pursuit","Have 5 factoid types",3,()->DataManager.getFactiodTypes().length*20),
                 new Achievement("","Diversify","Have 5 categories",3,()->DataManager.getCategories().length*20),
                 new Achievement("","Social","Have 3 users",3,()->DataManager.getUsers().size()*34),
@@ -128,8 +128,8 @@ public class AchievementFactory {
                         )*0.274)
                 ),
                 new Achievement("","Unemployed","10 review/day for 20 days",1,()->(int)(getLongestConsecutiveDays(10)*5)),
-                new Achievement("","Vacation","10 review/day for a week",2,()->(int)(getLongestConsecutiveDays(10)*14.29)),
-                new Achievement("","Weekend","10 review/day for 3 days",3,()->(int)(getLongestConsecutiveDays(10)*33.33)),
+                new Achievement("","Vacation","10 review/day for a week",2,()->(int)(getLongestConsecutiveDays(10)*14.3)),
+                new Achievement("","Weekend","10 review/day for 3 days",3,()->(int)(getLongestConsecutiveDays(10)*33.4)),
                 new Achievement("","Academic","Category with 10,000 media",1,()->
                         Arrays.asList(DataManager.getCategories()).stream()
                             .mapToInt(c->getReviewsPerCategory(c))

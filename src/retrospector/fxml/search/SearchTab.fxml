@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<VBox prefHeight="200.0" prefWidth="100.0" spacing="3.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="retrospector.fxml.SearchTabController">
+<VBox prefHeight="200.0" prefWidth="100.0" spacing="3.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="retrospector.fxml.search.SearchTabController">
    <children>
       <TextField fx:id="searchBox" style="-fx-background-image: url('/retrospector/fxml/searchGlass.png'); -fx-background-repeat: no-repeat; -fx-background-position: right center; -fx-background-size: 20;" />
       <TableView fx:id="searchTable" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
@@ -39,6 +39,7 @@
                   <MenuItem fx:id="searchQuickEntry" mnemonicParsing="false" text="Quick Entry" />
                   <MenuItem fx:id="searchStandardEntry" mnemonicParsing="false" text="Standard Entry" />
                   <MenuItem fx:id="searchBackup" mnemonicParsing="false" text="Backup" />
+                  <MenuItem fx:id="searchCheatsheet" mnemonicParsing="false" text="Cheatsheet" />
                </items>
             </SplitMenuButton>
             <Button fx:id="searchEditMedia" mnemonicParsing="false" text="Edit" />

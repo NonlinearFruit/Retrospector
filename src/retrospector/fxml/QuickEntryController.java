@@ -175,7 +175,7 @@ public class QuickEntryController implements Initializable {
         clear();
     }
     
-    protected void setup(ObjectProperty<TAB> t){
+    public void setup(ObjectProperty<TAB> t){
         currentTab = t;
     }
     

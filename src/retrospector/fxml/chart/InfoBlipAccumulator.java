@@ -7,7 +7,9 @@ package retrospector.fxml.chart;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -34,7 +36,11 @@ public class InfoBlipAccumulator {
     private double perMonth;
     private double aveCurrent;
     private double aveAll;
+    private double sdCurrent;
+    private double sdAll;
     
+    private List<Integer> allCurrentRatings = new ArrayList<>();
+    private List<Integer> allRatings = new ArrayList<>();
     private Set<String> titleSet = new HashSet<>();
     private Set<String> creatorSet = new HashSet<>();
     private Set<String> userSet = new HashSet<>();
@@ -55,6 +61,7 @@ public class InfoBlipAccumulator {
         }
         media++;
         aveCurrent += aMedia.getCurrentRating().intValue();
+        allCurrentRatings.add(aMedia.getCurrentRating().intValue());
         titleSet.add(aMedia.getTitle() + aMedia.getCreator());
         creatorSet.add(aMedia.getCreator());
     }
@@ -68,6 +75,7 @@ public class InfoBlipAccumulator {
         }
         reviews++;
         aveAll += aReview.getRating().intValue();
+        allRatings.add(aReview.getRating().intValue());
         userSet.add(aReview.getUser());
     }
     
@@ -81,6 +89,20 @@ public class InfoBlipAccumulator {
         users = userSet.size();
         aveAll = reviews == 0 ? 0 : aveAll / reviews;
         aveCurrent = media == 0 ? 0 : aveCurrent / media;
+        sdAll = 
+                reviews == 0 ?
+                    0 : 
+                    Math.sqrt(allRatings.stream()
+                            .mapToDouble(x->Math.pow(x-aveAll,2))
+                            .sum()/reviews
+                    );
+        sdCurrent = 
+                media == 0 ?
+                    0 : 
+                    Math.sqrt(allCurrentRatings.stream()
+                            .mapToDouble(x->Math.pow(x-aveCurrent,2))
+                            .sum()/media
+                    );
         days = ChronoUnit.DAYS.between(earliest, LocalDate.now()) + 1;
         perMonth = days < 2 ? 0 : (media + 0.0) / days * 30;
     }
@@ -104,8 +126,8 @@ public class InfoBlipAccumulator {
             new Text(minis+" Mini(s)"),
             new Text(series+" Serie(s)"),
             new Text(String.format("%.2f", perMonth)+" / Month"),
-            new Text(String.format("%.2f", aveCurrent)+" Current"),
-            new Text(String.format("%.2f", aveAll)+" All")
+            new Text(String.format("%.2f", aveCurrent)+" ± "+String.format("%.2f", sdCurrent)+" Current"),
+            new Text(String.format("%.2f", aveAll)+" ± "+String.format("%.2f", sdAll)+" All")
         );
         
         return box;

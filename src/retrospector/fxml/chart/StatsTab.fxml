@@ -7,12 +7,9 @@
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.chart.PieChart?>
 <?import javafx.scene.chart.StackedBarChart?>
-<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -113,42 +110,24 @@
       </HBox>
       <HBox fx:id="mediaContainer" spacing="5.0">
          <children>
-            <VBox maxWidth="700.0" HBox.hgrow="ALWAYS">
+            <VBox maxWidth="120.0" minWidth="120.0" HBox.hgrow="ALWAYS">
                <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Media">
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Factoid">
                      <font>
                         <Font size="25.0" />
                      </font>
                   </Text>
-                  <HBox spacing="25.0">
-                     <children>
-                        <VBox>
-                           <children>
-                              <CheckBox fx:id="checkTitle" mnemonicParsing="false" text="Title" />
-                              <CheckBox fx:id="checkCreator" mnemonicParsing="false" text="Creator" />
-                           </children>
-                        </VBox>
-                        <VBox>
-                           <children>
-                              <CheckBox fx:id="checkSeason" mnemonicParsing="false" text="Season" />
-                              <CheckBox fx:id="checkEpisode" mnemonicParsing="false" text="Episode" />
-                           </children>
-                        </VBox>
-                        <CheckBox fx:id="checkCategory" mnemonicParsing="false" text="Category" />
-                     </children>
-                  </HBox>
-                  <TableView fx:id="mediaTable" maxWidth="700.0">
-                    <columns>
-                        <TableColumn fx:id="mediaColumnRowNumber" minWidth="7.0" prefWidth="29.0" text="#" />
-                      <TableColumn fx:id="mediaColumnTitle" prefWidth="154.0" text="Title" />
-                      <TableColumn fx:id="mediaColumnCreator" prefWidth="110.0" text="Creator" />
-                        <TableColumn fx:id="mediaColumnSeason" prefWidth="105.00003051757812" text="Season" />
-                        <TableColumn fx:id="mediaColumnEpisode" prefWidth="119.0" text="Episode" />
-                        <TableColumn fx:id="mediaColumnCategory" prefWidth="92.0" text="Category" />
-                    </columns>
-                  </TableView>
+                  <ChoiceBox fx:id="factoidSelector" prefWidth="150.0" />
                </children>
             </VBox>
+            <BarChart fx:id="chartAverageFactRating" maxWidth="580.0" title="Average Rating" HBox.hgrow="ALWAYS">
+              <xAxis>
+                <CategoryAxis side="BOTTOM" />
+              </xAxis>
+              <yAxis>
+                <NumberAxis side="LEFT" />
+              </yAxis>
+            </BarChart>
             <VBox fx:id="mediaStatBox" prefHeight="200.0" prefWidth="100.0">
                <children>
                   <Text fx:id="mediaMedia" strokeType="OUTSIDE" strokeWidth="0.0" text="Media" />
@@ -165,14 +144,14 @@
                   <Text fx:id="mediaAllRating" strokeType="OUTSIDE" strokeWidth="0.0" text="All" />
                </children>
             </VBox>
-            <LineChart fx:id="chartRatingOverTime" legendVisible="false" title="Rating over Time" HBox.hgrow="SOMETIMES">
+            <BarChart fx:id="chartNumOfFacts" title="# of Facts" HBox.hgrow="SOMETIMES">
               <xAxis>
-                <NumberAxis fx:id="chartRotX" side="BOTTOM" />
+                <CategoryAxis side="BOTTOM" />
               </xAxis>
               <yAxis>
-                <NumberAxis fx:id="chartRotY" side="LEFT" />
+                <NumberAxis side="LEFT" />
               </yAxis>
-            </LineChart>
+            </BarChart>
          </children>
          <padding>
             <Insets bottom="10.0" left="10.0" right="10.0" top="5.0" />

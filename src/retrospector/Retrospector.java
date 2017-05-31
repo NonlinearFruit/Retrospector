@@ -167,13 +167,13 @@ public class Retrospector extends Application {
                 updateProgress(2,8);
                 
                 updateMessage("Loading Search . . .");
-                FXMLLoader searchldr = new FXMLLoader(getClass().getResource("/retrospector/fxml/SearchTab.fxml"));
+                FXMLLoader searchldr = new FXMLLoader(getClass().getResource("/retrospector/fxml/search/SearchTab.fxml"));
                     searchldr.load();
                     core.setSearchController(searchldr);
                 updateProgress(3,8);
                 
                 updateMessage("Loading Media . . .");
-                FXMLLoader medialdr = new FXMLLoader(getClass().getResource("/retrospector/fxml/MediaTab.fxml"));
+                FXMLLoader medialdr = new FXMLLoader(getClass().getResource("/retrospector/fxml/media/MediaTab.fxml"));
                     medialdr.load();
                     core.setMediaController(medialdr);
                 updateProgress(4,8);

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package retrospector.fxml;
+package retrospector.fxml.search;
 
 import java.math.BigDecimal;
 import java.net.URL;
@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.application.Application;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ObservableValue;
@@ -36,6 +37,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import retrospector.fxml.CoreController.TAB;
+import retrospector.fxml.QuickEntryController;
 import retrospector.model.DataManager;
 import retrospector.model.Factoid;
 import retrospector.model.Media;
@@ -87,14 +89,16 @@ public class SearchTabController implements Initializable {
     private Text searchMeanAverage;
     @FXML
     private Text searchCurrentAverage;
-    
-    private ObservableList<Media> searchTableData;
-    private ObjectProperty<Media> currentMedia;
-    private ObjectProperty<TAB> currentTab;
     @FXML
     private Text searchResults;
     @FXML
     private MenuItem searchBackup;
+    @FXML
+    private MenuItem searchCheatsheet;
+    
+    private ObservableList<Media> searchTableData;
+    private ObjectProperty<Media> currentMedia;
+    private ObjectProperty<TAB> currentTab;
 
     /**
      * Initializes the controller class.
@@ -121,21 +125,21 @@ public class SearchTabController implements Initializable {
         return currentMedia.get();
     }
     
-    protected void next(){
+    public void next(){
         int size = searchTable.getItems().size();
         int index = searchTable.getSelectionModel().getFocusedIndex()+1;
         searchTable.getSelectionModel().select(index%size);
 //        setMedia(searchTable.getSelectionModel().getSelectedItem());
     }
     
-    protected void previous(){
+    public void previous(){
         int size = searchTable.getItems().size();
         int index = searchTable.getSelectionModel().getFocusedIndex()-1;
         searchTable.getSelectionModel().select( (index+size)%size );
 //        setMedia(searchTable.getSelectionModel().getSelectedItem());
     }
     
-    protected void setup(ObjectProperty<TAB> t,ObjectProperty<Media> m){
+    public void setup(ObjectProperty<TAB> t,ObjectProperty<Media> m){
         currentTab = t;
         currentMedia = m;
         
@@ -158,7 +162,7 @@ public class SearchTabController implements Initializable {
         currentTab.set(t);
     }
     
-    protected void update(){
+    public void update(){
         updateSearchTab();
     }
     
@@ -279,12 +283,12 @@ public class SearchTabController implements Initializable {
         });
         
         searchBox.textProperty().addListener((observa,old,neo)->{
-            String query = neo.toLowerCase();
+            String query = neo;
             if(query==null || query.equals(""))
                 mediaFiltered.setPredicate(x->true);
             else{
                 String[] queries = query.split(":");
-                mediaFiltered.setPredicate(x->isMatchForMedia(query,x));
+                mediaFiltered.setPredicate(x->QueryProcessor.isMatchForMedia(query,x));
             }
             updateStats();
         });
@@ -315,6 +319,9 @@ public class SearchTabController implements Initializable {
             setTab(TAB.MEDIA);
         });
         searchBackup.setOnAction(e->DataManager.makeBackup());
+        searchCheatsheet.setOnAction(e->{
+                  new Cheatsheet().start(new Stage());
+        });
         searchEditMedia.setOnAction(e->{
             setTab(TAB.MEDIA);
         });

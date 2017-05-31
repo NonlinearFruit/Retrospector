@@ -5,6 +5,8 @@
  */
 package retrospector.fxml;
 
+import retrospector.fxml.media.MediaTabController;
+import retrospector.fxml.search.SearchTabController;
 import retrospector.fxml.chart.StatsTabController;
 import java.net.URL;
 import java.text.DecimalFormat;
@@ -160,7 +162,7 @@ public class CoreController implements Initializable {
             else if(neo.getText().equals("Review"))
                 reviewController.update();
             else if(neo.getText().equals("Chart"))
-                statsController.update(currentMedia.get());
+                statsController.update();
             else if(neo.getText().equals("List"))
                 listsController.update();
             else if(neo.getText().equals("Achievement"))
@@ -171,10 +173,10 @@ public class CoreController implements Initializable {
             if(neo==null){
                 mediaTab.setDisable(true);
                 reviewTab.setDisable(true);
-                chartTab.setDisable(true);
+//                chartTab.setDisable(true);
             } else {
                 mediaTab.setDisable(false);
-                chartTab.setDisable(false);
+//                chartTab.setDisable(false);
             }
         });
         
@@ -187,7 +189,7 @@ public class CoreController implements Initializable {
         });
         mediaTab.setDisable(true);
         reviewTab.setDisable(true);
-        chartTab.setDisable(true);
+//        chartTab.setDisable(true);
     }
     
     private void setTab(TAB aTab){

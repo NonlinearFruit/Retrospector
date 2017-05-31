@@ -3,11 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package retrospector.fxml;
+package retrospector.fxml.media;
 
 import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
@@ -32,6 +33,7 @@ import retrospector.model.Review;
 import java.util.function.Consumer;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.TableRow;
+import retrospector.fxml.CoreController;
 import retrospector.model.Factoid;
 
 /**
