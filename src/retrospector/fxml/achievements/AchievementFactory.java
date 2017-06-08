@@ -19,6 +19,8 @@ import retrospector.fxml.chart.StatsTabController;
 import retrospector.model.DataManager;
 import retrospector.model.Review;
 import retrospector.util.PropertyManager;
+import retrospector.util.SlowAsMolassesInJanuaryException;
+import retrospector.util.SpeedRacer;
 
 /**
  *
@@ -40,14 +42,20 @@ public class AchievementFactory {
         List<Achievement> achievements = new ArrayList<>();
         achievements.addAll(Arrays.asList(
                 new Achievement("","Star Gazer","Star Retrospector",1,()->{
-                    int result = 0;
-                    try (Scanner scanner = new Scanner(new URL("https://api.github.com/repos/NonlinearFruit/Retrospector/stargazers").openStream())) {
-                        String responseBody = scanner.useDelimiter("\\A").next();
-                        result = Arrays.asList(responseBody.split("\n")).stream().anyMatch(s->s.contains("login")&&s.contains(DataManager.getGithubUser())&&!DataManager.getGithubUser().isEmpty())?100:0;
-                    } catch(Exception ex) {
-                        System.err.println(ex.getMessage());
+                    try{
+                        return SpeedRacer.go(()->{
+                            int result = 0;
+                            try (Scanner scanner = new Scanner(new URL("https://api.github.com/repos/NonlinearFruit/Retrospector/stargazers").openStream())) {
+                                String responseBody = scanner.useDelimiter("\\A").next();
+                                result = Arrays.asList(responseBody.split("\n")).stream().anyMatch(s->s.contains("login")&&s.contains(DataManager.getGithubUser())&&!DataManager.getGithubUser().isEmpty())?100:0;
+                            } catch(Exception ex) {
+                                System.err.println(ex.getMessage());
+                            }
+                            return result;
+                        });
+                    } catch(SlowAsMolassesInJanuaryException ex) {
+                        return 0;
                     }
-                    return result;
                 }),
                 new Achievement("","Spectrum","Have more categories than colors",1,()->(int)(DataManager.getCategories().length*100.0/(StatsTabController.colors.length+1))),
                 new Achievement("","Inspector","Edit the .config file",2,()->{

@@ -302,7 +302,7 @@ public class SearchTabController implements Initializable {
         });
         searchQuickEntry.setOnAction(e->{
                   try{
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("QuickEntry.fxml"));
+                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/retrospector/fxml/QuickEntry.fxml"));
                     Parent root1 = (Parent) fxmlLoader.load();
                     QuickEntryController qec = fxmlLoader.getController();
                     qec.setup(currentTab);

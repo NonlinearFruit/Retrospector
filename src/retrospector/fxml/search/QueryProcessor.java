@@ -65,17 +65,21 @@ public class QueryProcessor {
         this.allMedia = media;
     }
     
+    private static String cleanSearchable(String searchable) {
+        return searchable.toLowerCase();
+    }
+    
     private static List<String> toSearchable(Media media) {
         List<String> searchables = new ArrayList<>();
         searchables.addAll(Arrays.asList(
-                media.getTitle().toLowerCase(),
-                media.getCreator().toLowerCase(),
-                media.getSeasonId().toLowerCase(),
-                media.getEpisodeId().toLowerCase(),
-                media.getCategory().toLowerCase()
+                cleanSearchable(media.getTitle()),
+                cleanSearchable(media.getCreator()),
+                cleanSearchable(media.getSeasonId()),
+                cleanSearchable(media.getEpisodeId()),
+                cleanSearchable(media.getCategory())
         ));
         for (Factoid fact : media.getFactoids()) {
-            searchables.add(fact.getContent().toLowerCase());
+            searchables.add(cleanSearchable(fact.getContent()));
         }
         return searchables;
     }
@@ -101,7 +105,7 @@ public class QueryProcessor {
                 boolean hasCmd = optn.length()>0 && optn.startsWith(""+Logic.CMD);
                 if ( !hasNegator && 
                         !hasCmd  &&
-                        searchables.stream().anyMatch(s -> s.contains(optn)) )
+                        searchables.stream().anyMatch(s -> s.contains(cleanSearchable(optn))) )
                     passOR = true;
                 else if ( hasNegator && !searchables.stream().anyMatch(s -> s.contains(optn.substring(1))) )
                     passOR = true;
@@ -149,8 +153,8 @@ public class QueryProcessor {
                 valueFound = "";
         }
         
-        valueFound = valueFound.toLowerCase();
-        valueLookedFor = valueLookedFor.toLowerCase();
+        valueFound = cleanSearchable(valueFound);
+        valueLookedFor = cleanSearchable(valueLookedFor);
         
         // Compare with the operator
         boolean pass = false;

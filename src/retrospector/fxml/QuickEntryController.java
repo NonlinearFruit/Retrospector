@@ -180,7 +180,12 @@ public class QuickEntryController implements Initializable {
     }
     
     private void causeRefresh(){
-        currentTab.set(currentTab.get());
+        TAB old = currentTab.get();
+        TAB neo = TAB.ACHIEVEMENT;
+        if (neo.equals(old))
+            neo = TAB.SEARCH;
+        currentTab.set(neo);
+        currentTab.set(old);
     }
     
     private void clear(){
