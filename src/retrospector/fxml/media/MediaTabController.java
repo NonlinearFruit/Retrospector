@@ -8,7 +8,7 @@ package retrospector.fxml.media;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.Optional;
+import java.time.temporal.ChronoUnit;
 import java.util.ResourceBundle;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
@@ -33,6 +33,7 @@ import retrospector.model.Review;
 import java.util.function.Consumer;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.TableRow;
+import javafx.scene.control.Tooltip;
 import retrospector.fxml.CoreController;
 import retrospector.model.Factoid;
 
@@ -409,7 +410,22 @@ public class MediaTabController implements Initializable {
             setReview(neo);
         });
         mediaReviewTable.setRowFactory(tv -> {
-            TableRow<Review> row = new TableRow<>();
+            // Display 'X Days Ago'
+            TableRow<Review> row = new TableRow<Review>(){
+                private Tooltip tooltip = new Tooltip();
+                @Override
+                public void updateItem(Review review, boolean empty) {
+                    super.updateItem(review, empty);
+                    if (review == null) {
+                        setTooltip(null);
+                    } else {
+                        long age = ChronoUnit.DAYS.between(review.getDate(), LocalDate.now());
+                        tooltip.setText(age+" days ago");
+                        setTooltip(tooltip);
+                    }
+                }
+            };
+            // Quickly switch to editing a review
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && (!row.isEmpty())){
                     setTab(TAB.REVIEW);
