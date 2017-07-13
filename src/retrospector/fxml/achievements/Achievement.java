@@ -5,19 +5,37 @@
  */
 package retrospector.fxml.achievements;
 
-import java.util.function.Supplier;
-import retrospector.util.JohnnyCache;
-
 /**
  *
  * @author nonfrt
  */
 public class Achievement {
+    
+    public static final Integer MAX_PROGRESS = 100;
+    
+    public static Integer scaleToFit(Integer current, Integer goal) {
+        return (int)(current*1.0/goal*MAX_PROGRESS);
+    }
+    
+    private static String clean(String x) {
+        return x.toLowerCase();
+    }
+    
+    public static boolean isMatch(String x, String y) {
+        return clean(x).equals(clean(y));
+    }
+    
+    public static boolean isContained(String container, String containee) {
+        return clean(container).contains(clean(containee));
+    }
+    
     private String symbol;
     private String title;
     private String description;
-    private JohnnyCache<Integer> unlocked;
+    private String hint;
+    private Integer progress;
     private Integer tier;
+    private boolean showable;
 
     public Achievement(String symbol) {
         this(symbol,"");
@@ -32,17 +50,19 @@ public class Achievement {
     }
     
     public Achievement(String symbol, String title, String description, Integer tier) {
-        this(symbol, title, description, tier, ()->0);
+        this(symbol, title, description, tier, 0);
     }
     
-    public Achievement(String symbol, String title, String description, Integer tier, Supplier<Integer> unlocked) {
+    public Achievement(String symbol, String title, String description, Integer tier, Integer progress) {
         this.symbol = symbol;
         this.title = title;
         this.description = description;
         this.tier = tier;
-        this.unlocked = new JohnnyCache(unlocked);
+        this.progress = progress;
+        this.showable = true;
+        this.hint = "?";
     }
-    
+
     public String getSymbol() {
         return symbol;
     }
@@ -67,16 +87,20 @@ public class Achievement {
         this.description = description;
     }
 
-    public Boolean isUnlocked() {
-        return getProgress()>=100;
-    }
-    
-    public Integer getProgress() {
-        return unlocked.getValue();
+    public String getHint() {
+        return hint;
     }
 
-    public void setUnlocked(Supplier<Integer> unlocked) {
-        this.unlocked = new JohnnyCache(unlocked);
+    public void setHint(String hint) {
+        this.hint = hint;
+    }
+
+    public Integer getProgress() {
+        return progress;
+    }
+
+    public void setProgress(Integer unlockProgress) {
+        this.progress = unlockProgress;
     }
 
     public Integer getTier() {
@@ -86,5 +110,16 @@ public class Achievement {
     public void setTier(Integer tier) {
         this.tier = tier;
     }
+
+    public boolean isShowable() {
+        return showable;
+    }
+
+    public void setShowable(boolean showable) {
+        this.showable = showable;
+    }
     
+    public boolean isUnlocked() {
+        return getProgress()>=MAX_PROGRESS;
+    }
 }

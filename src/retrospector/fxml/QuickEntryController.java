@@ -5,13 +5,10 @@
  */
 package retrospector.fxml;
 
-import java.awt.print.PrinterJob;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
-import java.util.function.Consumer;
-import java.util.function.Function;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;

@@ -65,15 +65,15 @@ public class AchievementTabController implements Initializable {
         int locked = 0;
         
         // Achievement Pane
-        for (Achievement achievement : AchievementFactory.getAchievements()) {
-            list.add(new AchievementManager(achievement).getDisplay());
+        for (AchievementFX achievementFx : AchievementFactory.getAchievements()) {
+            list.add(achievementFx.getDisplay());
             
-            if( !achievement.isUnlocked() ) {
+            if( !achievementFx.getAchievement().isUnlocked() ) {
                 locked++;
                 continue;
             }
             
-            switch(achievement.getTier()){
+            switch(achievementFx.getAchievement().getTier()){
                 case 3: third++;break;
                 case 2: second++;break;
                 case 1: first++;break;
@@ -86,13 +86,13 @@ public class AchievementTabController implements Initializable {
         
         // Header Display
         header.getChildren().add(new Text(first+" "));
-        header.getChildren().add(AchievementManager.trophyize(headerImage, 1, headerSize));
+        header.getChildren().add(AchievementFX.trophyize(headerImage, 1, headerSize));
         header.getChildren().add(new Text("\t"+second+" "));
-        header.getChildren().add(AchievementManager.trophyize(headerImage, 2, headerSize));
+        header.getChildren().add(AchievementFX.trophyize(headerImage, 2, headerSize));
         header.getChildren().add(new Text("\t"+third+" "));
-        header.getChildren().add(AchievementManager.trophyize(headerImage, 3, headerSize));
+        header.getChildren().add(AchievementFX.trophyize(headerImage, 3, headerSize));
         header.getChildren().add(new Text("\t"+locked+" "));
-        header.getChildren().add(AchievementManager.trophyize(AchievementManager.lockedImage, 0, headerSize));
+        header.getChildren().add(AchievementFX.trophyize(AchievementFX.lockedImage, 0, headerSize));
     }
     
     public void initAchievementTab() {
