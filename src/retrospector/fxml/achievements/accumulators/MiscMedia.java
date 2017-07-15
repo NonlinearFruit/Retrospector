@@ -18,27 +18,36 @@ import retrospector.model.Media;
 public class MiscMedia extends Accumulator<Media> {
     
     private Achievement starwars;
+    private Achievement nerd;
     
     private boolean starwarsFound;
+    private boolean nerdFound;
     
     public MiscMedia() {
         starwars = new Achievement("","Star Wars","Star Wars in a title",3);
         starwars.setShowable(false);
+        nerd = new Achievement("","Nerd","Media with 10 facts");
+        nerd.setShowable(false);
         
         starwarsFound = false;
+        nerdFound = false;
     }
 
     @Override
     public void accumulate(Media item) {
         if (Achievement.isContained(item.getTitle(), "Star Wars"))
             starwarsFound = true;
+        if (item.getFactoids().size() >= 10)
+            nerdFound = true;
+            
     }
 
     @Override
     public List<AchievementFX> getShowableAchievements() {
         starwars.setProgress(starwarsFound?100:0);
+        nerd.setProgress(nerdFound? 100:0);
         
-        return super.getShowableAchievements(starwars);
+        return super.getShowableAchievements(starwars, nerd);
     }
     
 }

@@ -29,7 +29,7 @@ public class RockPaperScissors extends Accumulator<Media> {
         rock.setShowable(false);
         rock.setHint(hint);
         
-        paper = new Achievement("","Paper","Paper (or Origami) in a title",3);
+        paper = new Achievement("","Paper","Paper (or Book) in a title",3);
         paper.setShowable(false);
         paper.setHint(hint);
         
@@ -53,7 +53,7 @@ public class RockPaperScissors extends Accumulator<Media> {
         if (Achievement.isContained(title, "Rock") || Achievement.isContained(title, "Earth"))
             rock.setProgress(Achievement.MAX_PROGRESS);
         
-        if (Achievement.isContained(title, "Paper") || Achievement.isContained(title, "Origami"))
+        if (Achievement.isContained(title, "Paper") || Achievement.isContained(title, "Book"))
             paper.setProgress(Achievement.MAX_PROGRESS);
         
         if (Achievement.isContained(title, "Scissor") || Achievement.isContained(title, "Blade"))

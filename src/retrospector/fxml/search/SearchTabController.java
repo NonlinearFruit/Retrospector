@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.application.Application;
@@ -112,6 +113,7 @@ public class SearchTabController implements Initializable {
         int index = searchTable.getSelectionModel().getFocusedIndex();
         searchTableData.clear();
         searchTableData.addAll(DataManager.getMedia());
+        Collections.reverse(searchTableData); // Place newest stuff first
         searchTable.refresh();
         if(searchTable.getItems().contains(getMedia()))
             searchTable.getSelectionModel().select(getMedia());
@@ -237,6 +239,7 @@ public class SearchTabController implements Initializable {
         
         // Table data setup
         searchTableData = DataManager.getMedia();
+        Collections.reverse(searchTableData); // Place newest stuff first
         FilteredList<Media> mediaFiltered = new FilteredList(searchTableData,x->true);
         SortedList<Media> mediaSortable = new SortedList<>(mediaFiltered);
         searchTable.setItems(mediaSortable);

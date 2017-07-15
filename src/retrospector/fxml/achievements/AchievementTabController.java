@@ -54,6 +54,8 @@ public class AchievementTabController implements Initializable {
     }
     
     public void update() {
+        System.out.println("Start Achievements");
+        long time = System.currentTimeMillis();
         achievementPane.getChildren().clear();
         header.getChildren().clear();
         List<Node> list = new ArrayList<>();
@@ -93,6 +95,7 @@ public class AchievementTabController implements Initializable {
         header.getChildren().add(AchievementFX.trophyize(headerImage, 3, headerSize));
         header.getChildren().add(new Text("\t"+locked+" "));
         header.getChildren().add(AchievementFX.trophyize(AchievementFX.lockedImage, 0, headerSize));
+        System.out.println("\t"+(System.currentTimeMillis()-time)+"ms to complete");
     }
     
     public void initAchievementTab() {

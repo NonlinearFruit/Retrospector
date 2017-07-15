@@ -19,7 +19,9 @@ import retrospector.fxml.achievements.accumulators.FactoidCounts;
 import retrospector.fxml.achievements.accumulators.FileSystem;
 import retrospector.fxml.achievements.accumulators.Github;
 import retrospector.fxml.achievements.accumulators.LongReview;
+import retrospector.fxml.achievements.accumulators.MediaPerDay;
 import retrospector.fxml.achievements.accumulators.MiscMedia;
+import retrospector.fxml.achievements.accumulators.MiscSeries;
 import retrospector.fxml.achievements.accumulators.MultipleReviews;
 import retrospector.fxml.achievements.accumulators.Ratings;
 import retrospector.fxml.achievements.accumulators.ReviewsPerDay;
@@ -34,37 +36,30 @@ import retrospector.model.Review;
  * @author nonfrt
  */
 public class AchievementFactory {
-    
-    /* Unimplemented:
-        Binge
-        Spree
-        Marathon
-        Paranoia
-        A True Masterpiece
-        Inconsistency
-    */
-    private static List<Accumulator<Object>> otherAccumulators = Arrays.asList(
-            new Github(),
-            new FileSystem()
-    );
-    private static List<Accumulator<Media>> mediaAccumulators = Arrays.asList(
-            new MiscMedia(),
-            new RockPaperScissors(),
-            new MediaCounts(),
-            new MultipleReviews()
-    );
-    private static List<Accumulator<Review>> reviewAccumulators = Arrays.asList(
-            new Ratings(),
-            new EarliestReview(),
-            new ReviewsPerDay(),
-            new LongReview(),
-            new UserCounts()
-    );
-    private static List<Accumulator<Factoid>> factoidAccumulators = Arrays.asList(
-            new FactoidCounts()
-    );
 
     public static List<AchievementFX> getAchievements() {
+        List<Accumulator<Object>> otherAccumulators = Arrays.asList(
+                new Github(),
+                new FileSystem()
+        );
+        List<Accumulator<Media>> mediaAccumulators = Arrays.asList(
+                new MiscSeries(),
+                new MediaPerDay(),
+                new MiscMedia(),
+                new RockPaperScissors(),
+                new MediaCounts(),
+                new MultipleReviews()
+        );
+        List<Accumulator<Review>> reviewAccumulators = Arrays.asList(
+                new Ratings(),
+                new EarliestReview(),
+                new ReviewsPerDay(),
+                new LongReview(),
+                new UserCounts()
+        );
+        List<Accumulator<Factoid>> factoidAccumulators = Arrays.asList(
+                new FactoidCounts()
+        );
         for (Media media : DataManager.getMedia()) {
             for (Accumulator<Media> accumulator : mediaAccumulators) {
                 accumulator.accumulate(media);

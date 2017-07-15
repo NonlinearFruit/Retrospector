@@ -23,33 +23,37 @@ public class Github extends Accumulator{
     
     private Achievement stargazer;
     
+    // Vars
+    private boolean hasStarred;
+    
     public Github() {
         stargazer = new Achievement("","Star Gazer","Star Retrospector",1);
         stargazer.setHint("Show some love");
+        
+        hasStarred = false;
     }
 
     @Override
     public void accumulate(Object item) {
         Integer progress = 0;
         try{
-            progress = SpeedRacer.go(()->{
-                int result = 0;
+            SpeedRacer.go(()->{
                 try (Scanner scanner = new Scanner(new URL("https://api.github.com/repos/NonlinearFruit/Retrospector/stargazers").openStream())) {
                     String responseBody = scanner.useDelimiter("\\A").next();
-                    result = Arrays.asList(responseBody.split("\n")).stream().anyMatch(s->s.contains("login")&&s.contains(DataManager.getGithubUser())&&!DataManager.getGithubUser().isEmpty())?100:0;
+                    hasStarred = Arrays.asList(responseBody.split("\n")).stream().anyMatch(s->s.contains("login")&&s.contains(DataManager.getGithubUser())&&!DataManager.getGithubUser().isEmpty());
                 } catch(Exception ex) {
                     System.err.println(ex.getMessage());
                 }
-                return result;
+                return null;
             });
         } catch(SlowAsMolassesInJanuaryException ex) {
-            progress = 0;
+            System.err.println("api.github.com timed out");
         }
-        stargazer.setProgress(progress);
     }
 
     @Override
     public List getShowableAchievements() {
+        stargazer.setProgress(hasStarred? 100:0);
         return super.getShowableAchievements(stargazer);
     }
     
