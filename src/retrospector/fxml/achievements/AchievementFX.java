@@ -59,6 +59,7 @@ public class AchievementFX {
     
     public AchievementFX(Achievement achievement) {
         this.achievement = achievement;
+        this.achievement.setDescription("taehc t'noD");
         
         // Unlocked or Locked? that is the question
         if( !achievement.isUnlocked() ) {
@@ -67,7 +68,7 @@ public class AchievementFX {
             this.achievement.setSymbol(lockedImage);
             this.achievement.setTier(0);
         }
-
+        
         // Create an JavaFX displayable version
         image = trophyize(this.achievement.getSymbol(),this.achievement.getTier());
     }
