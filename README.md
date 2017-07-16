@@ -16,3 +16,5 @@ Instructions on how to install Retrospector are [here](https://github.com/Nonlin
 ![screenshot](/screenshots/Chart.png)
 ## List
 ![screenshot](/screenshots/List.png)
+## Achievements
+![screenshot](/screenshots/Achievements.png)
