@@ -22,6 +22,7 @@ import retrospector.fxml.achievements.accumulators.LongReview;
 import retrospector.fxml.achievements.accumulators.MediaPerDay;
 import retrospector.fxml.achievements.accumulators.MiscMedia;
 import retrospector.fxml.achievements.accumulators.MiscSeries;
+import retrospector.fxml.achievements.accumulators.MiscTotals;
 import retrospector.fxml.achievements.accumulators.MultipleReviews;
 import retrospector.fxml.achievements.accumulators.Ratings;
 import retrospector.fxml.achievements.accumulators.ReviewsPerDay;
@@ -48,7 +49,8 @@ public class AchievementFactory {
                 new MiscMedia(),
                 new RockPaperScissors(),
                 new MediaCounts(),
-                new MultipleReviews()
+                new MultipleReviews(),
+                new MiscTotals()
         );
         List<Accumulator<Review>> reviewAccumulators = Arrays.asList(
                 new Ratings(),
@@ -60,6 +62,7 @@ public class AchievementFactory {
         List<Accumulator<Factoid>> factoidAccumulators = Arrays.asList(
                 new FactoidCounts()
         );
+        
         for (Media media : DataManager.getMedia()) {
             for (Accumulator<Media> accumulator : mediaAccumulators) {
                 accumulator.accumulate(media);
