@@ -113,7 +113,13 @@
                <children>
                   <HBox alignment="CENTER" VBox.vgrow="SOMETIMES">
                      <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Factoids" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Factoids">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets right="5.0" />
+                           </HBox.margin></Text>
                         <Button fx:id="mediaNewFactoid" mnemonicParsing="false" text="New" />
                         <Button fx:id="mediaEditFactoid" mnemonicParsing="false" text="Edit" />
                         <Button fx:id="mediaDeleteFactoid" mnemonicParsing="false" text="Delete" />
@@ -138,7 +144,13 @@
                <children>
                   <HBox alignment="CENTER" VBox.vgrow="SOMETIMES">
                      <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Reviews" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Reviews">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets right="5.0" />
+                           </HBox.margin></Text>
                         <Button fx:id="mediaNewReview" mnemonicParsing="false" text="New" />
                         <Button fx:id="mediaEditReview" mnemonicParsing="false" text="Edit" />
                         <Button fx:id="mediaDeleteReview" mnemonicParsing="false" text="Delete" />

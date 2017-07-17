@@ -29,6 +29,7 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.text.Text;
 import retrospector.fxml.CoreController.TAB;
 import retrospector.model.DataManager;
 import retrospector.model.Media;
@@ -207,7 +208,7 @@ public class ListsTabController implements Initializable {
     private void initListTab(){
         // Include
         for (String category : DataManager.getCategories()) {
-            Stroolean c = new Stroolean(category);
+            Stroolean c = new Stroolean(category,true);
             c.booleanProperty().addListener((observe,old,neo)->updateListTab());
             strooleans.add(c);
             listIncludeList.getItems().add(c);
@@ -351,6 +352,7 @@ public class ListsTabController implements Initializable {
         
         // Table
         listTable.setItems(listTableData);
+        listTable.setPlaceholder(new Text("Adjust the settings above to view a Top Ten list"));
         
         // Link to Properties
         listTitleColumn.setCellValueFactory(new PropertyValueFactory<>("Title"));

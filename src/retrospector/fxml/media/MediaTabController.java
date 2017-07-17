@@ -344,6 +344,7 @@ public class MediaTabController implements Initializable {
         });
         
         // Factoid Stuff
+        mediaFactoidTable.setPlaceholder(new Text("^ Click 'New' to add a Factoid"));
         mediaTitleFactoid.setItems(FXCollections.observableArrayList(DataManager.getFactiodTypes()));
         mediaTitleFactoid.setDisable(true);
         mediaContentFactoid.setDisable(true);
@@ -406,6 +407,7 @@ public class MediaTabController implements Initializable {
         });
         
         // Review Stuff
+        mediaReviewTable.setPlaceholder(new Text("^ Click 'New' to create a Review"));
         mediaReviewTable.getSelectionModel().selectedItemProperty().addListener((observe, old, neo)->{
             setReview(neo);
         });

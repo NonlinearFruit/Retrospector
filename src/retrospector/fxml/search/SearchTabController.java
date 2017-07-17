@@ -238,6 +238,7 @@ public class SearchTabController implements Initializable {
         });
         
         // Table data setup
+        searchTable.setPlaceholder(new Text("Create your first Media by clicking the 'New' button!"));
         searchTableData = DataManager.getMedia();
         Collections.reverse(searchTableData); // Place newest stuff first
         FilteredList<Media> mediaFiltered = new FilteredList(searchTableData,x->true);

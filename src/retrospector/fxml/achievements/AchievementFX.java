@@ -59,13 +59,13 @@ public class AchievementFX {
     
     public AchievementFX(Achievement achievement) {
         this.achievement = achievement;
-//        this.achievement.setDescription("taehc t'noD"); // For screenshots
+        this.achievement.setDescription("taehc t'noD"); // For screenshots
         
         // Unlocked or Locked? that is the question
         if( !achievement.isUnlocked() ) {
-//            this.achievement.setTitle("");
-//            this.achievement.setDescription("");
-//            this.achievement.setSymbol(lockedImage);
+            this.achievement.setTitle("");
+            this.achievement.setDescription("");
+            this.achievement.setSymbol(lockedImage);
             this.achievement.setTier(0);
         }
         
