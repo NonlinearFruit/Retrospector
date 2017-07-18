@@ -41,7 +41,7 @@ public class FactoidCounts extends Accumulator<Factoid>{
     private Integer totalFacts;
     
     public FactoidCounts() {
-        String hint = "?";
+        String hint = "The weakest link";
         researcher = new Achievement("","Researcher","1,000 facts for each factoid",1);
         researcher.setHint(hint);
         scientist = new Achievement("","Scientist","100 facts for each factoid",2);
@@ -49,6 +49,7 @@ public class FactoidCounts extends Accumulator<Factoid>{
         objective = new Achievement("","Objective","10 facts for each factoid",3);
         objective.setHint(hint);
         
+        hint = "One factoid to rule them all";
         enigmatologist = new Achievement("","Enigmatologist","Factoid with 10,000 facts",1);
         enigmatologist.setHint(hint);
         riddler = new Achievement("","Riddler","Factoid with 1,000 facts",2);
@@ -56,6 +57,7 @@ public class FactoidCounts extends Accumulator<Factoid>{
         puzzler = new Achievement("","Puzzler","Factoid with 100 facts",3);
         puzzler.setHint(hint);
         
+        hint = "The pursuit of knowledge";
         expert = new Achievement("","Trivia Expert","Collect 10,000 factoids",1);
         expert.setHint(hint);
         pro = new Achievement("","Trivia Pro","Collect 1,000 factoids",2);
@@ -63,6 +65,7 @@ public class FactoidCounts extends Accumulator<Factoid>{
         whiz = new Achievement("","Trivia Whiz","Collect 100 factoids",3);
         whiz.setHint(hint);
         
+        hint = "The more, the merrier";
         trivial = new Achievement("","Trivial Pursuit","Have 5 factoid types",3);
         trivial.setHint(hint);
         

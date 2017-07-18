@@ -73,6 +73,7 @@ public class MediaCounts extends Accumulator<Media>{
         
         spectrum = new Achievement("","Spectrum","Have more categories than colors",1);
         spectrum.setShowable(false);
+        hint = "Scattergories";
         diversify = new Achievement("","Diversify","Have 5 categories",3);
         diversify.setHint(hint);
         

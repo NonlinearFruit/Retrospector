@@ -45,7 +45,7 @@ public class Github extends Accumulator{
                     System.err.println(ex.getMessage());
                 }
                 return null;
-            });
+            }, 1000);
         } catch(SlowAsMolassesInJanuaryException ex) {
             System.err.println("api.github.com timed out");
         }

@@ -35,6 +35,7 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -304,6 +305,7 @@ public class StatsTabController implements Initializable {
                         .map(c -> {
                                 int count = categories.getOrDefault(c, 0);
                                 PieChart.Data data = new PieChart.Data(c + " - " + count, count);
+//                                Tooltip.install(data.getNode(), new Tooltip(String.format("%.0f%%",count*100.0/info.getMedia())));
                                 return data;
                             }
                         )
@@ -322,6 +324,9 @@ public class StatsTabController implements Initializable {
             int i = Arrays.asList(DataManager.getCategories()).indexOf(category);
             symbol.setStyle("-fx-fill: " + colors[ (i>0?i:0) % colors.length]);
             label.setGraphic(symbol);
+            int count = categories.getOrDefault(category, 0);
+            System.out.println(count*100.0/info.getMedia());
+            label.setText(category+": "+String.format("%.0f%%",count*100.0/info.getMedia()));
         }
         
         // Chart # Reviews / Day
