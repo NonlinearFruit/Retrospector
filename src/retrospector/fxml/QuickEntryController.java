@@ -207,7 +207,7 @@ public class QuickEntryController implements Initializable {
         m.setEpisodeId(episode.getText());
         // Rating
         if(!rating.getText().equals("")){
-            Review r = new Review(BigDecimal.valueOf(Integer.parseInt(rating.getText())));
+            Review r = new Review(Integer.parseInt(rating.getText()));
             int yy = Integer.parseInt(date.getText());
             if(yy>(LocalDate.now().getYear()%100)+1)
                 r.setDate(LocalDate.of(1900+yy,1,1));

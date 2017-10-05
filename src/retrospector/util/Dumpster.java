@@ -27,7 +27,7 @@ public class Dumpster {
     
     public static Review getRandomReview(){
         Review r = new Review();
-        r.setRating(BigDecimal.valueOf(random.nextInt(10)+1));
+        r.setRating(random.nextInt(10)+1);
         r.setUser(users[random.nextInt(users.length)]);
         r.setDate(LocalDate.of(random.nextInt(LocalDate.now().getYear()-earliestYear)+earliestYear,random.nextInt(12)+1,random.nextInt(28)+1));
         return r;

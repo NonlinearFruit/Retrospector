@@ -7,6 +7,7 @@ package retrospector.fxml.search;
 
 import java.math.BigDecimal;
 import java.net.URL;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -107,6 +108,7 @@ public class SearchTabController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         initSearchTab();
+//        printMedia(); // Used to get fake data for android
     }   
     
     private void updateSearchTab(){
@@ -338,5 +340,26 @@ public class SearchTabController implements Initializable {
         
         // Init stuff
         updateStats();
+    }
+    
+    private void printMedia() {
+        for (Media media : DataManager.getMedia()) {
+            if (media.getReviews().size()>1 && media.getAverageRating()>=8) {
+                System.out.println("m = new Media(\""+media.getTitle()+"\",\""+media.getCreator()+"\",\""+media.getCategory()+"\");");
+                System.out.println("m.setId("+media.getId()+");");
+                System.out.println("m.setSeason(\""+media.getSeasonId()+"\");");
+                System.out.println("m.setEpisode(\""+media.getEpisodeId()+"\");");
+                for (Review review : media.getReviews()) {
+                    System.out.println("r = new Review("+review.getRating()+", new Date("+
+                            review.getDate().atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli()+
+                            "L),\""+review.getUser()+"\");");
+                    System.out.println("r.setId("+review.getId()+");");
+                    System.out.println("r.setMediaId("+review.getMediaId()+");");
+                    System.out.println("r.setReview(\""+review.getReview().replaceAll("\n", "\\\\n").replaceAll("\"", "'")+"\");");
+                    System.out.println("m.getReviews().add(r);\n");
+                }
+                System.out.println("media.add(m);");
+            }
+        }
     }
 }

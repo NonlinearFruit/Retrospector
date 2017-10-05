@@ -482,7 +482,7 @@ public class StatsTabController implements Initializable {
                     SimpleIntegerProperty count = new SimpleIntegerProperty(0);
                     for (Review r : m.getReviews())
                         if (strooleans.stream().anyMatch(x->x.getString().equalsIgnoreCase(r.getUser()) && x.isBoolean())) {
-                            rating.set(rating.get()+r.getRating().intValueExact());
+                            rating.set(rating.get()+r.getRating());
                             count.set(count.get()+1);
                             info.accumulate(r);
                         }

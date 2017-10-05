@@ -44,7 +44,7 @@ public class MiscSeries extends Accumulator<Media>{
         String creator = item.getCreator();
         List<Integer> ratings = item.getReviews().stream()
                 .filter(r->r.getUser().equals(DataManager.getDefaultUser()))
-                .map(r->r.getRating().intValueExact())
+                .map(r->r.getRating())
                 .collect(Collectors.toList());
         
         if (!map.containsKey(title))

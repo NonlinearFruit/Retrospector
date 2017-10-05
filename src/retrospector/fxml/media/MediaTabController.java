@@ -192,8 +192,8 @@ public class MediaTabController implements Initializable {
         mediaCreator.setText(getMedia().getCreator());
         mediaSeason.setText(getMedia().getSeasonId());
         mediaEpisode.setText(getMedia().getEpisodeId());
-        BigDecimal rating = getMedia().getAverageRating();
-        mediaStars.setRating(rating.divide(BigDecimal.valueOf(2)).doubleValue());
+        Double rating = getMedia().getAverageRating();
+        mediaStars.setRating(rating/2.0);
         mediaRating.setText(CoreController.ratingFormat.format(rating));
         
         mediaCategory.setValue(getMedia().getCategory());

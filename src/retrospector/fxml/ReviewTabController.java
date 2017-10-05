@@ -132,7 +132,7 @@ public class ReviewTabController implements Initializable {
         
         reviewSave.setOnAction(e->{
             getReview().setDate(reviewDate.getValue());
-            getReview().setRating(BigDecimal.valueOf(reviewRater.getValue()).round(new MathContext(2, RoundingMode.HALF_UP)));
+            getReview().setRating((int)reviewRater.getValue());
             getReview().setUser(reviewUser.getText());
             getReview().setReview(reviewDescription.getText());
             DataManager.updateDB(getReview());

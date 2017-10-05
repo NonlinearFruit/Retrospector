@@ -16,7 +16,7 @@ public class Review {
     private LocalDate date;
     private String user;
     private String review;
-    private BigDecimal rating;
+    private Integer rating;
     private Integer mediaId;
     private Integer id;
 
@@ -37,22 +37,22 @@ public class Review {
     }
 
     public Review(){
-        this(BigDecimal.valueOf(DataManager.getDefaultRating()));
+        this(DataManager.getDefaultRating());
     }
     
-    public Review(BigDecimal rating){
+    public Review(Integer rating){
         this(rating, LocalDate.now());
     }
     
-    public Review(BigDecimal rating, LocalDate date){
+    public Review(Integer rating, LocalDate date){
         this(rating,date,DataManager.getDefaultUser());
     }
     
-    public Review(BigDecimal rating, LocalDate date, String user){
+    public Review(Integer rating, LocalDate date, String user){
         this(rating,date,user,"");
     }
     
-    public Review(BigDecimal rating, LocalDate date, String user, String review){
+    public Review(Integer rating, LocalDate date, String user, String review){
         setRating(rating);
         setDate(date);
         setUser(user);
@@ -83,11 +83,11 @@ public class Review {
         this.review = review;
     }
 
-    public BigDecimal getRating() {
+    public Integer getRating() {
         return rating;
     }
 
-    public void setRating(BigDecimal rating) {
+    public void setRating(Integer rating) {
         this.rating = rating;
     }
     

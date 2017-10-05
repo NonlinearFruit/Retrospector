@@ -104,7 +104,7 @@ public class DataManager {
                                 review.setUser(rs2.getString("reviewer"));
                                 review.setDate(rs2.getDate("date").toLocalDate());
                                 review.setReview(rs2.getString("review"));
-                                review.setRating(rs2.getBigDecimal("rate"));
+                                review.setRating(rs2.getInt("rate"));
 
                                 medium.getReviews().add(review);
                             } catch(SQLException e){System.err.println("Get review failed. (getMedia)");}
@@ -147,7 +147,7 @@ public class DataManager {
                     review.setUser(rs.getString("reviewer"));
                     review.setDate(rs.getDate("date").toLocalDate());
                     review.setReview(rs.getString("review"));
-                    review.setRating(rs.getBigDecimal("rate"));
+                    review.setRating(rs.getInt("rate"));
 
                     reviews.add(review);
                 } catch (SQLException e) {System.err.println("Get review failed. (getReviews)");}
@@ -353,7 +353,7 @@ public class DataManager {
             pstmt.setString(2, review.getUser());
             pstmt.setDate(3, Date.valueOf(review.getDate()));
             pstmt.setString(4, review.getReview());
-            pstmt.setInt(5, review.getRating().intValueExact()); // If ratings ever get decimal again fix this!
+            pstmt.setInt(5, review.getRating()); // If ratings ever get decimal again fix this!
             int updated = pstmt.executeUpdate();
             
             ResultSet rs = pstmt.getGeneratedKeys();
@@ -439,7 +439,7 @@ public class DataManager {
             pstmt.setString(2, review.getUser());
             pstmt.setDate(3, Date.valueOf(review.getDate()));
             pstmt.setString(4, review.getReview());
-            pstmt.setInt(5, review.getRating().intValueExact()); // If ratings ever get decimal again fix this!
+            pstmt.setInt(5, review.getRating()); // If ratings ever get decimal again fix this!
             pstmt.setInt(6, review.getId()); 
             pstmt.executeUpdate();
             
@@ -557,7 +557,7 @@ public class DataManager {
                             review.setUser(rs2.getString("reviewer"));
                             review.setDate(rs2.getDate("date").toLocalDate());
                             review.setReview(rs2.getString("review"));
-                            review.setRating(rs2.getBigDecimal("rate"));
+                            review.setRating(rs2.getInt("rate"));
 
                             medium.getReviews().add(review);
                         } catch(SQLException e){System.err.println("Get review failed. (getMedia)");}
@@ -601,7 +601,7 @@ public class DataManager {
                 review.setUser(rs.getString("reviewer"));
                 review.setDate(rs.getDate("date").toLocalDate());
                 review.setReview(rs.getString("review"));
-                review.setRating(rs.getBigDecimal("rate"));
+                review.setRating(rs.getInt("rate"));
 
             } catch (SQLException e) {System.err.println("Set review failed. (getReviews)");}
         } catch (SQLException e) {System.err.println("Get review from db failed. (getReviews)");}

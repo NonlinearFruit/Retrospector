@@ -152,15 +152,15 @@ public class Media {
      * Takes the average of all the ratings.
      * @return 
      */
-    public BigDecimal getAverageRating() {
+    public Double getAverageRating() {
         if(reviews.size()==0)
-            return BigDecimal.ZERO;
-        BigDecimal mean = BigDecimal.ZERO;
+            return 0.0;
+        Double mean = 0.0;
         for (Review review : reviews) {
             if(review.getRating()!=null)
-                mean = mean.add(review.getRating());
+                mean += review.getRating();
         }
-        mean = mean.divide(BigDecimal.valueOf(reviews.size()),new MathContext(2, RoundingMode.HALF_UP));
+        mean =  mean/reviews.size();
         return mean;
     }
     
@@ -169,13 +169,13 @@ public class Media {
      * is found, then it returns a 0.
      * @return 
      */
-    public BigDecimal getCurrentRating(){
+    public Integer getCurrentRating(){
         return
             getReviews().stream()
                 .filter(r->DataManager.getDefaultUser().equals(r.getUser()))
                 .sorted( (x,y) -> -1*Long.signum(x.getDate().toEpochDay()-y.getDate().toEpochDay()) )
                 .findFirst()
-                .orElse(new Review(BigDecimal.ZERO))
+                .orElse(new Review(0))
                 .getRating();
     }
     
@@ -184,13 +184,13 @@ public class Media {
      * found, then it returns 0.
      * @return 
      */
-    public BigDecimal getOriginalRating(){
+    public Integer getOriginalRating(){
         return
             getReviews().stream()
                 .filter(r->DataManager.getDefaultUser().equals(r.getUser()))
                 .sorted( (x,y) -> Long.signum(x.getDate().toEpochDay()-y.getDate().toEpochDay()) )
                 .findFirst()
-                .orElse(new Review(BigDecimal.ZERO))
+                .orElse(new Review(0))
                 .getRating();
     }
     
