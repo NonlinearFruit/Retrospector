@@ -40,6 +40,7 @@
                   <MenuItem fx:id="searchStandardEntry" mnemonicParsing="false" text="Standard Entry" />
                   <MenuItem fx:id="searchBackup" mnemonicParsing="false" text="Backup" />
                   <MenuItem fx:id="searchCheatsheet" mnemonicParsing="false" text="Cheatsheet" />
+                  <MenuItem fx:id="searchServer" mnemonicParsing="false" text="Server" />
                </items>
             </SplitMenuButton>
             <Button fx:id="searchEditMedia" mnemonicParsing="false" text="Edit" />

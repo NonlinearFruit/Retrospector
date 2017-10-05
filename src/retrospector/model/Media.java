@@ -63,8 +63,8 @@ public class Media {
         setType(type);
         setReviews(reviews);
         setFactoids(factoids);
-        setSeasonId("");
-        setEpisodeId("");
+        setSeason("");
+        setEpisode("");
         setDescription("");
     }
 
@@ -132,19 +132,19 @@ public class Media {
         this.type = type;
     }
 
-    public String getSeasonId() {
+    public String getSeason() {
         return seasonId;
     }
 
-    public void setSeasonId(String seasonId) {
+    public void setSeason(String seasonId) {
         this.seasonId = seasonId;
     }
 
-    public String getEpisodeId() {
+    public String getEpisode() {
         return episodeId;
     }
 
-    public void setEpisodeId(String episodeId) {
+    public void setEpisode(String episodeId) {
         this.episodeId = episodeId;
     }
     
@@ -197,8 +197,8 @@ public class Media {
     @Override
     public String toString() {
         String title = getTitle()==null||getTitle().equals("")? "??": getTitle();
-        String season = getSeasonId()==null||getSeasonId().equals("")? "": " "+getSeasonId();
-        String episode = getEpisodeId()==null||getEpisodeId().equals("")? "": ": "+getEpisodeId();
+        String season = getSeason()==null||getSeason().equals("")? "": " "+getSeason();
+        String episode = getEpisode()==null||getEpisode().equals("")? "": ": "+getEpisode();
         String creator = getCreator()==null||getCreator().equals("")? "??": getCreator();
         return title+season+episode+" by "+creator;
     }
@@ -207,8 +207,8 @@ public class Media {
         setId(media.getId());
         setTitle(media.getTitle());
         setCreator(media.getCreator());
-        setSeasonId(media.getSeasonId());
-        setEpisodeId(media.getEpisodeId());
+        setSeason(media.getSeason());
+        setEpisode(media.getEpisode());
         setDescription(media.getDescription());
         setCategory(media.getCategory());
         setType(media.getType());

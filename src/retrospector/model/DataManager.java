@@ -89,8 +89,8 @@ public class DataManager {
                     medium.setId(rs.getInt("id"));
                     medium.setTitle(rs.getString("title"));
                     medium.setCreator(rs.getString("creator"));
-                    medium.setSeasonId(rs.getString("season"));
-                    medium.setEpisodeId(rs.getString("episode"));
+                    medium.setSeason(rs.getString("season"));
+                    medium.setEpisode(rs.getString("episode"));
                     medium.setDescription(rs.getString("description"));
                     medium.setCategory(rs.getString("category"));
                     medium.setType(Type.valueOf(rs.getString("type")));
@@ -308,8 +308,8 @@ public class DataManager {
                     Statement.RETURN_GENERATED_KEYS);
             pstmt.setString(1, media.getTitle());
             pstmt.setString(2, media.getCreator());
-            pstmt.setString(3, media.getSeasonId());
-            pstmt.setString(4, media.getEpisodeId());
+            pstmt.setString(3, media.getSeason());
+            pstmt.setString(4, media.getEpisode());
             pstmt.setString(5, media.getDescription());
             pstmt.setString(6, media.getCategory());
             pstmt.setString(7, media.getType().toString());
@@ -410,8 +410,8 @@ public class DataManager {
             pstmt = getConnection().prepareStatement("update media set title=?,creator=?,season=?,episode=?,description=?,category=?,type=? where id=?");
             pstmt.setString(1, media.getTitle());
             pstmt.setString(2, media.getCreator());
-            pstmt.setString(3, media.getSeasonId());
-            pstmt.setString(4, media.getEpisodeId());
+            pstmt.setString(3, media.getSeason());
+            pstmt.setString(4, media.getEpisode());
             pstmt.setString(5, media.getDescription());
             pstmt.setString(6, media.getCategory());                  
             pstmt.setString(7, media.getType().toString());                  
@@ -542,8 +542,8 @@ public class DataManager {
                 medium.setId(rs.getInt("id"));
                 medium.setTitle(rs.getString("title"));
                 medium.setCreator(rs.getString("creator"));
-                medium.setSeasonId(rs.getString("season"));
-                medium.setEpisodeId(rs.getString("episode"));
+                medium.setSeason(rs.getString("season"));
+                medium.setEpisode(rs.getString("episode"));
                 medium.setDescription(rs.getString("description"));
                 medium.setCategory(rs.getString("category"));
                 medium.setType(Type.valueOf(rs.getString("type")));

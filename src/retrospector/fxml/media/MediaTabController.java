@@ -190,8 +190,8 @@ public class MediaTabController implements Initializable {
         setMedia(DataManager.getMedia(getMedia().getId()));
         mediaTitle.setText(getMedia().getTitle());
         mediaCreator.setText(getMedia().getCreator());
-        mediaSeason.setText(getMedia().getSeasonId());
-        mediaEpisode.setText(getMedia().getEpisodeId());
+        mediaSeason.setText(getMedia().getSeason());
+        mediaEpisode.setText(getMedia().getEpisode());
         Double rating = getMedia().getAverageRating();
         mediaStars.setRating(rating/2.0);
         mediaRating.setText(CoreController.ratingFormat.format(rating));
@@ -262,8 +262,8 @@ public class MediaTabController implements Initializable {
             System.out.println("Media ID: "+m.getId());
             m.setTitle(mediaTitle.getText());
             m.setCreator(mediaCreator.getText());
-            m.setSeasonId(mediaSeason.getText());
-            m.setEpisodeId(mediaEpisode.getText());
+            m.setSeason(mediaSeason.getText());
+            m.setEpisode(mediaEpisode.getText());
             m.setCategory(mediaCategory.getValue());
             m.setType(mediaType.getValue());
             m.setDescription(mediaDescription.getText());
@@ -319,7 +319,7 @@ public class MediaTabController implements Initializable {
                     getMedia().getType()
             );
             media.setDescription(getMedia().getDescription());
-            media.setSeasonId(getMedia().getSeasonId());
+            media.setSeason(getMedia().getSeason());
             int id = DataManager.createDB(media);
             for (Factoid factoid : getMedia().getFactoids()) {
                 Factoid fact = new Factoid(factoid.getTitle(),factoid.getContent());

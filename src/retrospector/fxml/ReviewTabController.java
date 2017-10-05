@@ -111,8 +111,8 @@ public class ReviewTabController implements Initializable {
     private void updateReviewTab(){
         reviewTitle.setText(getMedia().getTitle());
         reviewCreator.setText(getMedia().getCreator());
-        reviewSeason.setText(getMedia().getSeasonId());
-        reviewEpisode.setText(getMedia().getEpisodeId());
+        reviewSeason.setText(getMedia().getSeason());
+        reviewEpisode.setText(getMedia().getEpisode());
         reviewRater.setValue(getReview().getRating().doubleValue());
         reviewDescription.setText(getReview().getReview());
         reviewUser.setText(getReview().getUser());

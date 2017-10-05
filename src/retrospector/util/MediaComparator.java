@@ -49,12 +49,12 @@ public class MediaComparator implements Comparator<Media>{
             return result;
         
         // Season
-        result = o1.getSeasonId().compareTo(o2.getSeasonId());
+        result = o1.getSeason().compareTo(o2.getSeason());
         if(result!=0)
             return result;
         
         // Episode
-        result = o1.getEpisodeId().compareTo(o2.getEpisodeId());
+        result = o1.getEpisode().compareTo(o2.getEpisode());
         if(result!=0)
             return result;
         

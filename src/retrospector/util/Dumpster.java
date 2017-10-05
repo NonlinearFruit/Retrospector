@@ -39,9 +39,9 @@ public class Dumpster {
         m.setTitle(uuid[0]);
         m.setCreator(uuid[1]);
         if(random.nextBoolean()){
-            m.setEpisodeId(uuid[2]);
+            m.setEpisode(uuid[2]);
             if(random.nextBoolean()){
-                m.setSeasonId(uuid[3]);
+                m.setSeason(uuid[3]);
                 m.setType(Media.Type.SERIES);
             }
             m.setType(Media.Type.MINISERIES);

@@ -5,6 +5,7 @@
  */
 package retrospector.fxml.search;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.time.ZoneOffset;
@@ -13,7 +14,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
-import javafx.application.Application;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ObservableValue;
@@ -36,7 +36,9 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Callback;
 import retrospector.fxml.CoreController.TAB;
 import retrospector.fxml.QuickEntryController;
@@ -101,6 +103,8 @@ public class SearchTabController implements Initializable {
     private ObservableList<Media> searchTableData;
     private ObjectProperty<Media> currentMedia;
     private ObjectProperty<TAB> currentTab;
+    @FXML
+    private MenuItem searchServer;
 
     /**
      * Initializes the controller class.
@@ -199,8 +203,8 @@ public class SearchTabController implements Initializable {
         searchables.addAll(Arrays.asList(
                 media.getTitle().toLowerCase(),
                 media.getCreator().toLowerCase(),
-                media.getSeasonId().toLowerCase(),
-                media.getEpisodeId().toLowerCase(),
+                media.getSeason().toLowerCase(),
+                media.getEpisode().toLowerCase(),
                 media.getCategory().toLowerCase()
         ));
         for (Factoid fact : media.getFactoids()) {
@@ -251,8 +255,8 @@ public class SearchTabController implements Initializable {
         // Link to data properties
         searchTitleColumn.setCellValueFactory(new PropertyValueFactory<>("Title"));
         searchCreatorColumn.setCellValueFactory(new PropertyValueFactory<>("Creator"));
-        searchSeasonColumn.setCellValueFactory(new PropertyValueFactory<>("SeasonId"));
-        searchEpisodeColumn.setCellValueFactory(new PropertyValueFactory<>("EpisodeId"));
+        searchSeasonColumn.setCellValueFactory(new PropertyValueFactory<>("Season"));
+        searchEpisodeColumn.setCellValueFactory(new PropertyValueFactory<>("Episode"));
         searchCategoryColumn.setCellValueFactory(new PropertyValueFactory<>("Category"));
         
         // Values for special columns
@@ -328,6 +332,20 @@ public class SearchTabController implements Initializable {
         searchCheatsheet.setOnAction(e->{
                   new Cheatsheet().start(new Stage());
         });
+        searchServer.setOnAction(e->{
+            try {
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/retrospector/fxml/server/ServerTab.fxml"));
+                Parent root1 = (Parent) fxmlLoader.load();
+                Stage stage = new Stage();
+//                stage.initModality(Modality.APPLICATION_MODAL);
+//                stage.initStyle(StageStyle.UNDECORATED);
+                stage.setTitle("Android Syncing Server");
+                stage.setScene(new Scene(root1));
+                stage.show();
+            } catch(IOException ioe) {
+                ioe.printStackTrace();
+            }
+        });
         searchEditMedia.setOnAction(e->{
             setTab(TAB.MEDIA);
         });
@@ -347,8 +365,8 @@ public class SearchTabController implements Initializable {
             if (media.getReviews().size()>1 && media.getAverageRating()>=8) {
                 System.out.println("m = new Media(\""+media.getTitle()+"\",\""+media.getCreator()+"\",\""+media.getCategory()+"\");");
                 System.out.println("m.setId("+media.getId()+");");
-                System.out.println("m.setSeason(\""+media.getSeasonId()+"\");");
-                System.out.println("m.setEpisode(\""+media.getEpisodeId()+"\");");
+                System.out.println("m.setSeason(\""+media.getSeason()+"\");");
+                System.out.println("m.setEpisode(\""+media.getEpisode()+"\");");
                 for (Review review : media.getReviews()) {
                     System.out.println("r = new Review("+review.getRating()+", new Date("+
                             review.getDate().atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli()+

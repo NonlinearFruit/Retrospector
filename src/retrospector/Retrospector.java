@@ -31,6 +31,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import retrospector.fxml.CoreController;
+import retrospector.fxml.server.XmlService;
 import retrospector.model.DataManager;
 
 /**
@@ -269,5 +270,10 @@ public class Retrospector extends Application {
     public interface InitCompletionHandler {
 
         void complete();
+    }
+    
+    @Override
+    public void stop() {
+        XmlService.killServer();
     }
 }

@@ -65,15 +65,15 @@ public class UtilityCloset {
         
         String titleOne = one.getTitle();
         String creatorOne = one.getCreator();
-        String seasonOne = one.getSeasonId();
-        String episodeOne = one.getEpisodeId();
+        String seasonOne = one.getSeason();
+        String episodeOne = one.getEpisode();
         String categoryOne = one.getCategory();
         Type typeOne = one.getType();
         
         String titleTwo = two.getTitle();
         String creatorTwo = two.getCreator();
-        String seasonTwo = two.getSeasonId();
-        String episodeTwo = two.getEpisodeId();
+        String seasonTwo = two.getSeason();
+        String episodeTwo = two.getEpisode();
         String categoryTwo = two.getCategory();
         Type typeTwo = two.getType();
         

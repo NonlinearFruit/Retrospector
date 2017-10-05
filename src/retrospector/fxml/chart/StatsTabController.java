@@ -460,8 +460,8 @@ public class StatsTabController implements Initializable {
             List<Factoid> factoids = new ArrayList<>(m.getFactoids());
             factoids.add(new Factoid("Title",m.getTitle()));
             factoids.add(new Factoid("Creator",m.getCreator()));
-            factoids.add(new Factoid("Season",m.getSeasonId()));
-            factoids.add(new Factoid("Episode",m.getEpisodeId()));
+            factoids.add(new Factoid("Season",m.getSeason()));
+            factoids.add(new Factoid("Episode",m.getEpisode()));
             factoids.add(new Factoid("Category",m.getCategory()));
             if (category.equals(m.getCategory()) || category.equals(universalCategory)){
                 boolean user = false;

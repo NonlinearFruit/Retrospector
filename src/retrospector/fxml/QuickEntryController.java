@@ -165,7 +165,7 @@ public class QuickEntryController implements Initializable {
             title.setText(m.getTitle());
             creator.setText(m.getCreator());
             category.setValue(m.getCategory());
-            season.setText(m.getSeasonId());
+            season.setText(m.getSeason());
             episode.requestFocus();
         });
         discard.setOnAction(e->{
@@ -203,8 +203,8 @@ public class QuickEntryController implements Initializable {
         m.setTitle(title.getText());
         m.setCreator(creator.getText());
         m.setCategory(category.getValue());
-        m.setSeasonId(season.getText());
-        m.setEpisodeId(episode.getText());
+        m.setSeason(season.getText());
+        m.setEpisode(episode.getText());
         // Rating
         if(!rating.getText().equals("")){
             Review r = new Review(Integer.parseInt(rating.getText()));
@@ -216,9 +216,9 @@ public class QuickEntryController implements Initializable {
             m.getReviews().add(r);
         }
         // Type
-        if(m.getSeasonId().equals("") && m.getEpisodeId().equals(""))
+        if(m.getSeason().equals("") && m.getEpisode().equals(""))
             m.setType(Media.Type.SINGLE);
-        else if(m.getSeasonId().equals(""))
+        else if(m.getSeason().equals(""))
             m.setType(Media.Type.MINISERIES);
         else
             m.setType(Media.Type.SERIES);

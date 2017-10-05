@@ -179,9 +179,9 @@ public class ListsTabController implements Initializable {
                         if(title)
                             m.setTitle(media.getTitle());
                         if(season)
-                            m.setSeasonId(media.getSeasonId());
+                            m.setSeason(media.getSeason());
                         if(episode)
-                            m.setEpisodeId(media.getEpisodeId());
+                            m.setEpisode(media.getEpisode());
                         m.setCategory(media.getCategory());
                         for (Review review : media.getReviews()) {
                             if(review.getUser().equals(user)){
@@ -357,8 +357,8 @@ public class ListsTabController implements Initializable {
         // Link to Properties
         listTitleColumn.setCellValueFactory(new PropertyValueFactory<>("Title"));
         listCreatorColumn.setCellValueFactory(new PropertyValueFactory<>("Creator"));
-        listSeasonColumn.setCellValueFactory(new PropertyValueFactory<>("SeasonId"));
-        listEpisodeColumn.setCellValueFactory(new PropertyValueFactory<>("EpisodeId"));
+        listSeasonColumn.setCellValueFactory(new PropertyValueFactory<>("Season"));
+        listEpisodeColumn.setCellValueFactory(new PropertyValueFactory<>("Episode"));
         listCategoryColumn.setCellValueFactory(new PropertyValueFactory<>("Category"));
         
         // Special Table Cells

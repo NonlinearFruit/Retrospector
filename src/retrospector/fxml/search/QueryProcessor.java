@@ -74,8 +74,8 @@ public class QueryProcessor {
         searchables.addAll(Arrays.asList(
                 cleanSearchable(media.getTitle()),
                 cleanSearchable(media.getCreator()),
-                cleanSearchable(media.getSeasonId()),
-                cleanSearchable(media.getEpisodeId()),
+                cleanSearchable(media.getSeason()),
+                cleanSearchable(media.getEpisode()),
                 cleanSearchable(media.getCategory())
         ));
         for (Factoid fact : media.getFactoids()) {
@@ -141,10 +141,10 @@ public class QueryProcessor {
                 valueFound = media.getCreator();
                 break;
             case SEASON: 
-                valueFound = media.getSeasonId();
+                valueFound = media.getSeason();
                 break;
             case EPISODE: 
-                valueFound = media.getEpisodeId();
+                valueFound = media.getEpisode();
                 break;
             case CATEGORY: 
                 valueFound = media.getCategory();

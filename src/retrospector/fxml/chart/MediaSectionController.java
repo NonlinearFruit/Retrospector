@@ -107,8 +107,8 @@ public class MediaSectionController implements Initializable {
         mediaColumnCategory.setComparator(new NaturalOrderComparator());
         mediaColumnTitle.setCellValueFactory(new PropertyValueFactory<>("Title"));
         mediaColumnCreator.setCellValueFactory(new PropertyValueFactory<>("Creator"));
-        mediaColumnSeason.setCellValueFactory(new PropertyValueFactory<>("SeasonId"));
-        mediaColumnEpisode.setCellValueFactory(new PropertyValueFactory<>("EpisodeId"));
+        mediaColumnSeason.setCellValueFactory(new PropertyValueFactory<>("Season"));
+        mediaColumnEpisode.setCellValueFactory(new PropertyValueFactory<>("Episode"));
         mediaColumnCategory.setCellValueFactory(new PropertyValueFactory<>("Category"));
         chartRotY.setLabel("Reviews");
         chartRotY.setAutoRanging(false);
@@ -154,8 +154,8 @@ public class MediaSectionController implements Initializable {
         mediaTableFilter.setPredicate(m->
                 ( ( checkTitle.isSelected() && currentMedia.getTitle().equals(((Media)m).getTitle()) ) || !checkTitle.isSelected() ) &&
                 ( ( checkCreator.isSelected() && currentMedia.getCreator().equals(((Media)m).getCreator()) ) || !checkCreator.isSelected() ) &&
-                ( ( checkSeason.isSelected() && currentMedia.getSeasonId().equals(((Media)m).getSeasonId()) ) || !checkSeason.isSelected() ) &&
-                ( ( checkEpisode.isSelected() && currentMedia.getEpisodeId().equals(((Media)m).getEpisodeId()) ) || !checkEpisode.isSelected() ) &&
+                ( ( checkSeason.isSelected() && currentMedia.getSeason().equals(((Media)m).getSeason()) ) || !checkSeason.isSelected() ) &&
+                ( ( checkEpisode.isSelected() && currentMedia.getEpisode().equals(((Media)m).getEpisode()) ) || !checkEpisode.isSelected() ) &&
                 ( ( checkCategory.isSelected() && currentMedia.getCategory().equals(((Media)m).getCategory()) ) || !checkCategory.isSelected() )
         );
 
