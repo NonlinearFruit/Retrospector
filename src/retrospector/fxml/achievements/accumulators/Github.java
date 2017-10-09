@@ -22,20 +22,24 @@ import retrospector.util.SpeedRacer;
 public class Github extends Accumulator{
     
     private Achievement stargazer;
+    private Achievement stargazerAndroid;
     
     // Vars
     private boolean hasStarred;
+    private boolean hasStarredAndroid;
     
     public Github() {
         stargazer = new Achievement("","Star Gazer","Star Retrospector",1);
         stargazer.setHint("Show some love");
+        stargazerAndroid = new Achievement("","Droid Dreamer","Star the App",1);
+        stargazerAndroid.setHint("Show some love");
         
         hasStarred = false;
+        hasStarredAndroid = false;
     }
 
     @Override
     public void accumulate(Object item) {
-        Integer progress = 0;
         try{
             SpeedRacer.go(()->{
                 try (Scanner scanner = new Scanner(new URL("https://api.github.com/repos/NonlinearFruit/Retrospector/stargazers").openStream())) {
@@ -49,12 +53,26 @@ public class Github extends Accumulator{
         } catch(SlowAsMolassesInJanuaryException ex) {
             System.err.println("api.github.com timed out");
         }
+        try{
+            SpeedRacer.go(()->{
+                try (Scanner scanner = new Scanner(new URL("https://api.github.com/repos/NonlinearFruit/Retrospector-Android/stargazers").openStream())) {
+                    String responseBody = scanner.useDelimiter("\\A").next();
+                    hasStarredAndroid = Arrays.asList(responseBody.split("\n")).stream().anyMatch(s->s.contains("login")&&s.contains(DataManager.getGithubUser())&&!DataManager.getGithubUser().isEmpty());
+                } catch(Exception ex) {
+                    System.err.println(ex.getMessage());
+                }
+                return null;
+            }, 1000);
+        } catch(SlowAsMolassesInJanuaryException ex) {
+            System.err.println("api.github.com timed out");
+        }
     }
 
     @Override
     public List getShowableAchievements() {
         stargazer.setProgress(hasStarred? 100:0);
-        return super.getShowableAchievements(stargazer);
+        stargazerAndroid.setProgress(hasStarredAndroid? 100:0);
+        return super.getShowableAchievements(stargazer,stargazerAndroid);
     }
     
 }
