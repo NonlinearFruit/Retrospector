@@ -28,6 +28,7 @@ import static retrospector.fxml.CoreController.ratingFormat;
 import retrospector.model.DataManager;
 import retrospector.model.Media;
 import retrospector.model.Review;
+import retrospector.util.ControlFxTextFieldModifier;
 
 /**
  * FXML Controller class
@@ -129,6 +130,8 @@ public class ReviewTabController implements Initializable {
         reviewRating.textProperty().bind(
                 Bindings.createStringBinding(()->ratingFormat.format(reviewRater.valueProperty().getValue()), reviewRater.valueProperty())
         );
+        
+        ControlFxTextFieldModifier.autocompleteMe(reviewUser, DataManager.getUsers());
         
         reviewSave.setOnAction(e->{
             getReview().setDate(reviewDate.getValue());

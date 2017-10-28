@@ -200,6 +200,10 @@ public class DataManager {
         return factoids;
     }
     
+    /**
+     * Create a list of all unique users in the db so far
+     * @return 
+     */
     public static ObservableList<String> getUsers(){
         Statement stmt;
         ResultSet rs = null;
@@ -215,6 +219,112 @@ public class DataManager {
             }
         } catch (SQLException e) {System.err.println("Get reviewer list failed. (getUsers)");}
         return users;
+    }
+    
+    /**
+     * Create a list of all unique titles in the db so far
+     * @return 
+     */
+    public static ObservableList<String> getTitles(){
+        Statement stmt;
+        ResultSet rs = null;
+
+        ObservableList<String> titles = FXCollections.observableArrayList();
+        try {
+            stmt = getConnection().createStatement();       
+            rs = stmt.executeQuery("select distinct title from media");
+            while (rs.next()) {
+                try {
+                    titles.add(rs.getString(1));
+                } catch (SQLException e) {System.err.println("Get title failed. (getTitles)");}
+            }
+        } catch (SQLException e) {System.err.println("Get title list failed. (getTitles)");}
+        return titles;
+    }
+    
+    /**
+     * Create a list of all unique creator in the db so far
+     * @return 
+     */
+    public static ObservableList<String> getCreators(){
+        Statement stmt;
+        ResultSet rs = null;
+
+        ObservableList<String> creators = FXCollections.observableArrayList();
+        try {
+            stmt = getConnection().createStatement();       
+            rs = stmt.executeQuery("select distinct creator from media");
+            while (rs.next()) {
+                try {
+                    creators.add(rs.getString(1));
+                } catch (SQLException e) {System.err.println("Get creator failed. (getCreators)");}
+            }
+        } catch (SQLException e) {System.err.println("Get creator list failed. (getCreators)");}
+        return creators;
+    }
+    
+    /**
+     * Create a list of all unique season in the db so far
+     * @return 
+     */
+    public static ObservableList<String> getSeasons(){
+        Statement stmt;
+        ResultSet rs = null;
+
+        ObservableList<String> seasons = FXCollections.observableArrayList();
+        try {
+            stmt = getConnection().createStatement();       
+            rs = stmt.executeQuery("select distinct season from media");
+            while (rs.next()) {
+                try {
+                    seasons.add(rs.getString(1));
+                } catch (SQLException e) {System.err.println("Get season failed. (getSeasons)");}
+            }
+        } catch (SQLException e) {System.err.println("Get season list failed. (getSeasons)");}
+        return seasons;
+    }
+    
+    /**
+     * Create a list of all unique episode in the db so far
+     * @return 
+     */
+    public static ObservableList<String> getEpisodes(){
+        Statement stmt;
+        ResultSet rs = null;
+
+        ObservableList<String> episodes = FXCollections.observableArrayList();
+        try {
+            stmt = getConnection().createStatement();       
+            rs = stmt.executeQuery("select distinct title from media");
+            while (rs.next()) {
+                try {
+                    episodes.add(rs.getString(1));
+                } catch (SQLException e) {System.err.println("Get episode failed. (getEpisodes)");}
+            }
+        } catch (SQLException e) {System.err.println("Get episode list failed. (getEpisodes)");}
+        return episodes;
+    }
+    
+        
+    /**
+     * Create a list of all unique episode in the db so far
+     * @return 
+     */
+    public static ObservableList<String> getFactsByFactoid(String factoid){
+        Statement stmt;
+        ResultSet rs = null;
+
+        ObservableList<String> facts = FXCollections.observableArrayList();
+        try {
+            stmt = getConnection().createStatement();       
+            rs = stmt.executeQuery("select distinct content from factoid where title = "+factoid);
+            while (rs.next()) {
+                try {
+                    facts.add(rs.getString(1));
+                } catch (SQLException e) {System.err.println("Get fact failed. (getFactsByFactoid)");}
+            }
+        } catch (SQLException e) {System.err.println("Get fact list failed. (getFactsByFactoid)");}
+        return facts;
     }
     
     /**
@@ -253,15 +363,15 @@ public class DataManager {
         + "constraint primary_key_factoid primary key (id),"
         + "constraint foreign_key_factoid foreign key (mediaID) references media (id) on delete cascade)";
         
-        String createAchievement = ""
-        + "create table if not exists achievement ("
-        + "id integer not null generated always as identity (start with 1, increment by 1),   "
-        + "title varchar(1000000),"
-        + "description varchar(1000000),"
-        + "achieved boolean not null,   "
-        + "unlockFunction varchar(1000000),"
-        + "symbol varchar(1000000),"
-        + "constraint primary_key_factoid primary key (id)";
+//        String createAchievement = ""
+//        + "create table if not exists achievement ("
+//        + "id integer not null generated always as identity (start with 1, increment by 1),   "
+//        + "title varchar(1000000),"
+//        + "description varchar(1000000),"
+//        + "achieved boolean not null,   "
+//        + "unlockFunction varchar(1000000),"
+//        + "symbol varchar(1000000),"
+//        + "constraint primary_key_factoid primary key (id)";
         
         try {
             connString += "/Retrospector";

@@ -122,8 +122,9 @@ public class Retrospector extends Application {
     
     public static final String SPLASH_IMAGE
             = "/retrospector/res/splash.png";
-//            = "http://2.bp.blogspot.com/-T7nDAefPC9s/U5SCipg1zmI/AAAAAAAAOdY/OGQS7cd5QPI/s1600/splash+verde+amarelo.png";
-
+    public static final String LOGO_IMAGE
+            = "res/logo-128.png";
+    
     private Pane splashLayout;
     private ProgressBar loadProgress;
     private Label progressText;
@@ -219,7 +220,6 @@ public class Retrospector extends Application {
 
     private void showMainStage(Parent root) {
         mainStage = new Stage(StageStyle.DECORATED);
-        mainStage.setTitle("Retrospector");
 
         Scene scene = new Scene(root, 1300, 800);
         mainStage.setScene(scene);
@@ -228,7 +228,7 @@ public class Retrospector extends Application {
 //        mainStage.getIcons().add(new Image(Retrospector.class.getResourceAsStream( "res/star-half-full-22.png" ))); 
 //        mainStage.getIcons().add(new Image(Retrospector.class.getResourceAsStream( "res/star-half-full-24.png" ))); 
 //        mainStage.getIcons().add(new Image(Retrospector.class.getResourceAsStream( "res/star-half-full-32.png" ))); 
-        mainStage.getIcons().add(new Image(Retrospector.class.getResourceAsStream( "res/star-half-full-48.png" ))); 
+        mainStage.getIcons().add(new Image(Retrospector.class.getResourceAsStream( LOGO_IMAGE ))); 
 //        mainStage.getIcons().add(new Image(Retrospector.class.getResourceAsStream( "res/star-half-full-64.png" ))); 
 //        mainStage.getIcons().add(new Image(Retrospector.class.getResourceAsStream( "res/star-half-full-128.png" ))); 
 //        mainStage.getIcons().add(new Image(Retrospector.class.getResourceAsStream( "res/star-half-full-256.png" ))); 

@@ -24,6 +24,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
@@ -35,7 +36,8 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.Slider;
+import javafx.scene.control.Spinner;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -43,6 +45,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
+import org.controlsfx.control.PopOver;
 import retrospector.fxml.CoreController.TAB;
 import retrospector.model.DataManager;
 import retrospector.model.Factoid;
@@ -65,7 +68,6 @@ public class StatsTabController implements Initializable {
     private ObservableList<Media> allMedia = FXCollections.observableArrayList();
     public static final String[] colors = new String[]{"red","orange","yellowgreen","seagreen","lightseagreen","skyblue","royalblue","grey","mediumpurple","palevioletred","firebrick"};
     
-    private LineChart<Number, Number> chartRatingOverTime;
     @FXML
     private PieChart chartMediaPerCategory;
     @FXML
@@ -214,6 +216,17 @@ public class StatsTabController implements Initializable {
         chartRpdX.setLabel("Day");
         chartRpdY.setLabel("Reviews");
         // Category
+        setupCategory();
+        // Factoid
+        factoidSelector.setItems(FXCollections.observableArrayList(DataManager.getFactiodTypes()));
+        factoidSelector.setValue(DataManager.getFactiodTypes()[0]);
+        factoidSelector.valueProperty().addListener((observe,old,neo)->updateFactoid());
+        categorySelector.valueProperty().addListener((observe,old,neo)->updateFactoid());
+        chartNumOfFacts.setLegendVisible(false);
+        chartAverageFactRating.setLegendVisible(false);
+    }
+    
+    public void setupCategory() {
         ObservableList<String> categories = FXCollections.observableArrayList(DataManager.getCategories());
         categories.add(0,universalCategory);
         categorySelector.setItems(categories);
@@ -224,13 +237,24 @@ public class StatsTabController implements Initializable {
         chartRprY.setLabel("Reviews");
         chartRpyX.setLabel("Month");
         chartRpyY.setLabel("Reviews");
-        // Factoid
-        factoidSelector.setItems(FXCollections.observableArrayList(DataManager.getFactiodTypes()));
-        factoidSelector.setValue(DataManager.getFactiodTypes()[0]);
-        factoidSelector.valueProperty().addListener((observe,old,neo)->updateFactoid());
-        categorySelector.valueProperty().addListener((observe,old,neo)->updateFactoid());
-        chartNumOfFacts.setLegendVisible(false);
-        chartAverageFactRating.setLegendVisible(false);
+        
+        // Pop ups
+        chartReviewsPerYear.setOnMouseClicked(e->{
+            if (e.getClickCount() == 2) {
+                ObservableList lst = FXCollections.observableArrayList("Days","Weeks","Months","Years");
+                Spinner spn = new Spinner(lst);
+                Slider sldr = new Slider(5.0,50.0,12.0);
+                sldr.setSnapToTicks(true);
+                sldr.setMajorTickUnit(10);
+                sldr.setMinorTickCount(2);
+                sldr.setShowTickMarks(true);
+                sldr.setShowTickLabels(true);
+                VBox box = new VBox(sldr,spn);
+                box.setAlignment(Pos.TOP_CENTER);
+                PopOver popup = new PopOver(box);
+                popup.show(chartReviewsPerYear);
+            }
+        });
     }
     
     public void setup(ObjectProperty<TAB> aTab, ObjectProperty<Media> aMedia){

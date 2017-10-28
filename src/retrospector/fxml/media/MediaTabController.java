@@ -36,6 +36,7 @@ import javafx.scene.control.TableRow;
 import javafx.scene.control.Tooltip;
 import retrospector.fxml.CoreController;
 import retrospector.model.Factoid;
+import retrospector.util.ControlFxTextFieldModifier;
 
 /**
  * FXML Controller class
@@ -230,9 +231,13 @@ public class MediaTabController implements Initializable {
         
         // Media Stuff
         mediaTitle.textProperty().addListener((observe,old,neo)->mediaSave.setDisable(false));
+        ControlFxTextFieldModifier.autocompleteMe(mediaTitle, DataManager.getTitles());
         mediaCreator.textProperty().addListener((observe,old,neo)->mediaSave.setDisable(false));
+        ControlFxTextFieldModifier.autocompleteMe(mediaCreator, DataManager.getCreators());
         mediaSeason.textProperty().addListener((observe,old,neo)->mediaSave.setDisable(false));
+        ControlFxTextFieldModifier.autocompleteMe(mediaSeason, DataManager.getSeasons());
         mediaEpisode.textProperty().addListener((observe,old,neo)->mediaSave.setDisable(false));
+        ControlFxTextFieldModifier.autocompleteMe(mediaEpisode, DataManager.getEpisodes());
         mediaDescription.textProperty().addListener((observe,old,neo)->mediaSave.setDisable(false));
         mediaCategory.getSelectionModel().selectedItemProperty().addListener((observe,old,neo)->mediaSave.setDisable(false));
         mediaType.setItems(FXCollections.observableArrayList(Media.Type.values()));
