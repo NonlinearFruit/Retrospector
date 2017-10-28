@@ -13,11 +13,16 @@ import java.text.DecimalFormat;
 import java.util.ResourceBundle;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.MenuBar;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 import retrospector.fxml.achievements.AchievementTabController;
 import retrospector.model.*;
 
@@ -30,6 +35,14 @@ public class CoreController implements Initializable {
 
     @FXML
     private Tab achievementTab;
+    @FXML
+    private MenuBar menuBar;
+    @FXML
+    private Button closeButton;
+    @FXML
+    private Button minButton;
+    @FXML
+    private Button maxButton;
 
     public static enum TAB{ SEARCH, MEDIA, REVIEW, CHART, LIST, ACHIEVEMENT} 
     public static final DecimalFormat ratingFormat =  new DecimalFormat("#.#");
@@ -94,6 +107,8 @@ public class CoreController implements Initializable {
         achieveController.setup(currentTab); 
     }
     
+    private double xOffset = 0;
+    private double yOffset = 0;
     /**
      * Initializes the controller class.
      */
@@ -103,6 +118,31 @@ public class CoreController implements Initializable {
         // This is just for test, try not to put it in a really release
 //        if(DataManager.getMedia().size()==0)
 //            Dumpster.createMedia(1000);
+
+        // Create the menu bar
+        menuBar.setOnMousePressed(e-> {
+                xOffset = e.getSceneX();
+                yOffset = e.getSceneY();
+        });
+        menuBar.setOnMouseDragged(e-> {
+            Stage stage = (Stage) menuBar.getScene().getWindow();
+            stage.setX(e.getScreenX() - xOffset);
+            stage.setY(e.getScreenY() - yOffset);
+        });
+        closeButton.setOnAction(e->{
+            Stage stage = (Stage) closeButton.getScene().getWindow();
+            stage.hide();
+        });
+        minButton.setOnAction(e->{
+            Stage stage = (Stage) closeButton.getScene().getWindow();
+            stage.setIconified(true);
+        });
+        maxButton.setOnAction(e->{
+            Stage stage = (Stage) closeButton.getScene().getWindow();
+            stage.setMaximized(!stage.isMaximized());
+        });
+        
+        // Tabs
         searchTab.selectedProperty().addListener((observe,old,neo)->{
             if(neo)
                 setTab(TAB.SEARCH);

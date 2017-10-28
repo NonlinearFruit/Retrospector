@@ -1,15 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 
-<TabPane fx:id="anchorCenter" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1300.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="retrospector.fxml.CoreController">
-  <tabs>
-    <Tab fx:id="searchTab" text="Search" />
-      <Tab fx:id="mediaTab" text="Media" />
-    <Tab fx:id="reviewTab" text="Review" />
-      <Tab fx:id="chartTab" text="Chart" />
-      <Tab fx:id="listTab" text="List" />
-      <Tab fx:id="achievementTab" text="Achievements" />
-  </tabs>
-</TabPane>
+
+<BorderPane prefHeight="800.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="retrospector.fxml.CoreController">
+   <center>
+      <TabPane fx:id="anchorCenter" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab fx:id="searchTab" text="Search" />
+            <Tab fx:id="mediaTab" text="Media" />
+          <Tab fx:id="reviewTab" text="Review" />
+            <Tab fx:id="chartTab" text="Chart" />
+            <Tab fx:id="listTab" text="List" />
+            <Tab fx:id="achievementTab" text="Achievements" />
+        </tabs>
+      </TabPane>
+   </center>
+   <top>
+      <HBox BorderPane.alignment="CENTER">
+         <children>
+            <MenuBar fx:id="menuBar" HBox.hgrow="ALWAYS">
+              <menus>
+                <Menu mnemonicParsing="false" text="File">
+                  <items>
+                        <MenuItem mnemonicParsing="false" text="New Media" />
+                        <MenuItem mnemonicParsing="false" text="Quick Entry..." />
+                        <MenuItem mnemonicParsing="false" text="Preferences..." />
+                        <MenuItem mnemonicParsing="false" text="Server..." />
+                    <MenuItem mnemonicParsing="false" text="Backup" />
+                        <MenuItem mnemonicParsing="false" text="Close" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Cheatsheet" />
+                        <MenuItem mnemonicParsing="false" text="About" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+            <Button fx:id="closeButton" mnemonicParsing="false" text="X" />
+            <Button fx:id="minButton" mnemonicParsing="false" text="_" />
+            <Button fx:id="maxButton" mnemonicParsing="false" text="^" />
+         </children>
+      </HBox>
+   </top>
+</BorderPane>

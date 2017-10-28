@@ -39,80 +39,7 @@ import retrospector.model.DataManager;
  * @author nonfrt
  */
 public class Retrospector extends Application {
-/*    
-    @Override
-    public void start(Stage primaryStage) throws Exception{
-        
-        Long start;
-        Long end;
-//        start = System.currentTimeMillis();
-//        primaryStage.setScene(new Scene(getSplashScreen(),1300,800));
-//        primaryStage.show();
-//        System.out.println("SPLASH STAGE:"+(System.currentTimeMillis()-start));
-        
-        start = System.currentTimeMillis();
-        DataManager.startDB();
-        System.out.println("DATABASE:    "+(System.currentTimeMillis()-start));
-        
-        start = System.currentTimeMillis();
-        FXMLLoader ldr = new FXMLLoader(getClass().getResource("/retrospector/fxml/Core.fxml"));
-            Parent root = ldr.load();
-            CoreController core = ldr.getController();
-        System.out.println("CORE:        "+(System.currentTimeMillis()-start));
-        
-        start = System.currentTimeMillis();
-        FXMLLoader statldr = new FXMLLoader(getClass().getResource("/retrospector/fxml/chart/StatsTab.fxml"));
-            statldr.load();
-            core.setStatsController(statldr);
-        System.out.println("STATS:       "+(System.currentTimeMillis()-start));
-        
-        start = System.currentTimeMillis();
-        FXMLLoader searchldr = new FXMLLoader(getClass().getResource("/retrospector/fxml/SearchTab.fxml"));
-            searchldr.load();
-            core.setSearchController(searchldr);
-        System.out.println("SEARCH:      "+(System.currentTimeMillis()-start));
-        
-        start = System.currentTimeMillis();
-        FXMLLoader medialdr = new FXMLLoader(getClass().getResource("/retrospector/fxml/MediaTab.fxml"));
-            medialdr.load();
-            core.setMediaController(medialdr);
-        System.out.println("MEDIA:       "+(System.currentTimeMillis()-start));
-        
-        start = System.currentTimeMillis();
-        FXMLLoader reviewldr = new FXMLLoader(getClass().getResource("/retrospector/fxml/ReviewTab.fxml"));
-            reviewldr.load();
-            core.setReviewController(reviewldr);
-        System.out.println("REVIEW:      "+(System.currentTimeMillis()-start));
-        
-        start = System.currentTimeMillis();
-        FXMLLoader listldr = new FXMLLoader(getClass().getResource("/retrospector/fxml/ListsTab.fxml"));
-            listldr.load();
-            core.setListController(listldr);
-        System.out.println("LIST:        "+(System.currentTimeMillis()-start));
-        
-        start = System.currentTimeMillis();
-        FXMLLoader achieveldr = new FXMLLoader(getClass().getResource("/retrospector/fxml/achievements/AchievementTab.fxml"));
-            achieveldr.load();
-            core.setAchieveController(achieveldr);
-        System.out.println("ACHIEVEMENTS:"+(System.currentTimeMillis()-start));
-        
-        start = System.currentTimeMillis();
-        Scene scene = new Scene(root, 1300, 800);
-//        primaryStage.getScene().setRoot(root);
-        primaryStage.setScene(scene);
-        primaryStage.setTitle("Retrospector");
-        primaryStage.getIcons().add(new Image("file:/retrospector/res/star-half-full-16.png"));
-        primaryStage.getIcons().add(new Image("file:/retrospector/res/star-half-full-22.png"));
-        primaryStage.getIcons().add(new Image("file:/retrospector/res/star-half-full-24.png"));
-        primaryStage.getIcons().add(new Image("file:/retrospector/res/star-half-full-32.png"));
-        primaryStage.getIcons().add(new Image("file:/retrospector/res/star-half-full-48.png"));
-        primaryStage.getIcons().add(new Image("file:/retrospector/res/star-half-full-64.png"));
-        primaryStage.getIcons().add(new Image("file:/retrospector/res/star-half-full-128.png"));
-        primaryStage.getIcons().add(new Image("file:/retrospector/res/star-half-full-256.png"));
-        primaryStage.show();
-        System.out.println("PRIMARY STAGE:"+(System.currentTimeMillis()-start));
-    }
-*/
+
     /**
      * @param args the command line arguments
      */
@@ -219,7 +146,7 @@ public class Retrospector extends Application {
     }
 
     private void showMainStage(Parent root) {
-        mainStage = new Stage(StageStyle.DECORATED);
+        mainStage = new Stage(StageStyle.UNDECORATED);
 
         Scene scene = new Scene(root, 1300, 800);
         mainStage.setScene(scene);
