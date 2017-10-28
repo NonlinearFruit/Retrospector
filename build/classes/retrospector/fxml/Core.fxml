@@ -33,13 +33,9 @@
                         <MenuItem mnemonicParsing="false" text="New Media" />
                         <MenuItem mnemonicParsing="false" text="Quick Entry..." />
                         <MenuItem mnemonicParsing="false" text="Preferences..." />
+                        <MenuItem mnemonicParsing="false" text="Server..." />
                     <MenuItem mnemonicParsing="false" text="Backup" />
                         <MenuItem mnemonicParsing="false" text="Close" />
-                  </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Edit">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="Delete" />
                   </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Help">

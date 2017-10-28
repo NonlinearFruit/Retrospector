@@ -5,10 +5,10 @@
  */
 package retrospector.fxml.media;
 
-import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
@@ -186,6 +186,20 @@ public class MediaTabController implements Initializable {
         return currentFactoid.get();
     }
     
+    private void updateFactoid() {
+        Media media = DataManager.getMedia(getMedia().getId());
+        updateFactoid(media.getFactoids());
+    }
+    
+    private void updateFactoid(List<Factoid> factoids) {
+        setFactoid(null);
+        mediaFactoidTable.setItems(FXCollections.observableArrayList(factoids));
+        mediaFactoidTable.refresh();
+        if (mediaFactoidTable.getItems().size() > 0) {
+            mediaFactoidTable.getSelectionModel().select(0);
+        }
+    }
+    
     private void updateMediaTab(){
         // Media Stuff
         setMedia(DataManager.getMedia(getMedia().getId()));
@@ -203,11 +217,7 @@ public class MediaTabController implements Initializable {
         mediaSave.setDisable(true);
         
         // Factoid Stuff
-        setFactoid(null);
-        mediaFactoidTable.setItems(FXCollections.observableArrayList(getMedia().getFactoids()));
-        mediaFactoidTable.refresh();
-        if(mediaFactoidTable.getItems().size()>0)
-            mediaFactoidTable.getSelectionModel().select(0);
+        updateFactoid(getMedia().getFactoids());
         
         // Review Stuff
         mediaReviewTable.setItems(FXCollections.observableArrayList(getMedia().getReviews()));
@@ -408,7 +418,7 @@ public class MediaTabController implements Initializable {
                 DataManager.updateDB(factoid);
             else
                 DataManager.createDB(factoid);
-            updateMediaTab();
+            updateFactoid();
         });
         
         // Review Stuff

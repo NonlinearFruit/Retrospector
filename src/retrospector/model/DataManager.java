@@ -305,28 +305,6 @@ public class DataManager {
         return episodes;
     }
     
-        
-    /**
-     * Create a list of all unique episode in the db so far
-     * @return 
-     */
-    public static ObservableList<String> getFactsByFactoid(String factoid){
-        Statement stmt;
-        ResultSet rs = null;
-
-        ObservableList<String> facts = FXCollections.observableArrayList();
-        try {
-            stmt = getConnection().createStatement();       
-            rs = stmt.executeQuery("select distinct content from factoid where title = "+factoid);
-            while (rs.next()) {
-                try {
-                    facts.add(rs.getString(1));
-                } catch (SQLException e) {System.err.println("Get fact failed. (getFactsByFactoid)");}
-            }
-        } catch (SQLException e) {System.err.println("Get fact list failed. (getFactsByFactoid)");}
-        return facts;
-    }
-    
     /**
      * Start the DB. Also creates the DB if it is not found
      */
