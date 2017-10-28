@@ -34,6 +34,7 @@ import retrospector.fxml.CoreController.TAB;
 import retrospector.model.DataManager;
 import retrospector.model.Media;
 import retrospector.model.Review;
+import retrospector.util.ControlFxTextFieldModifier;
 import retrospector.util.MediaComparator;
 import retrospector.util.NaturalOrderComparator;
 import retrospector.util.Stroolean;
@@ -349,6 +350,7 @@ public class ListsTabController implements Initializable {
         // User
         listUser.setText(DataManager.getDefaultUser());
         listUser.setOnAction(e->updateListTab());
+        ControlFxTextFieldModifier.autocompleteMe(listUser, DataManager.getUsers());
         
         // Table
         listTable.setItems(listTableData);

@@ -349,7 +349,6 @@ public class StatsTabController implements Initializable {
             symbol.setStyle("-fx-fill: " + colors[ (i>0?i:0) % colors.length]);
             label.setGraphic(symbol);
             int count = categories.getOrDefault(category, 0);
-            System.out.println(count*100.0/info.getMedia());
             label.setText(category+": "+String.format("%.0f%%",count*100.0/info.getMedia()));
         }
         
