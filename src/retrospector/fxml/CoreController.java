@@ -5,6 +5,7 @@
  */
 package retrospector.fxml;
 
+import java.io.IOException;
 import retrospector.fxml.media.MediaTabController;
 import retrospector.fxml.search.SearchTabController;
 import retrospector.fxml.chart.StatsTabController;
@@ -13,17 +14,19 @@ import java.text.DecimalFormat;
 import java.util.ResourceBundle;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.event.EventHandler;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import retrospector.fxml.achievements.AchievementTabController;
+import retrospector.fxml.search.Cheatsheet;
 import retrospector.model.*;
 
 /**
@@ -130,8 +133,7 @@ public class CoreController implements Initializable {
             stage.setY(e.getScreenY() - yOffset);
         });
         closeButton.setOnAction(e->{
-            Stage stage = (Stage) closeButton.getScene().getWindow();
-            stage.hide();
+            exit();
         });
         minButton.setOnAction(e->{
             Stage stage = (Stage) closeButton.getScene().getWindow();
@@ -232,8 +234,58 @@ public class CoreController implements Initializable {
 //        chartTab.setDisable(true);
     }
     
-    private void setTab(TAB aTab){
+    public void standardEntry(ActionEvent e) {
+        Media neo = new Media();
+        neo.setId(DataManager.createDB(neo));
+        setMedia(neo);
+        setTab(TAB.MEDIA);
+    }
+    
+    public void quickEntry(ActionEvent e) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/retrospector/fxml/QuickEntry.fxml"));
+            Parent root1 = (Parent) fxmlLoader.load();
+            QuickEntryController qec = fxmlLoader.getController();
+            qec.setup(currentTab);
+            Stage stage = new Stage();
+            stage.setTitle("Quick Entry");
+            stage.setScene(new Scene(root1));
+            stage.show();
+        } catch (Exception ex) {
+            System.out.println("Quick Entry Failed: "+ex.getMessage());
+        }
+    }
+    
+    public void server(ActionEvent e) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/retrospector/fxml/server/ServerTab.fxml"));
+            Parent root1 = (Parent) fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.setTitle("Android Syncing Server");
+            stage.setScene(new Scene(root1));
+            stage.show();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+    }
+    
+    public void backup(ActionEvent e) { DataManager.makeBackup(); }
+    
+    public void cheatsheet(ActionEvent e) { new Cheatsheet().start(new Stage()); }
+    
+    public void exit() { exit(null); }
+    
+    public void exit(ActionEvent e) {
+        Stage stage = (Stage) closeButton.getScene().getWindow();
+        stage.hide();
+    }
+    
+    public void setTab(TAB aTab){
         currentTab.set(aTab);
+    }
+    
+    public void setMedia(Media m){
+        currentMedia.set(m);
     }
     
     protected void nextPreviousMedia(Integer i){

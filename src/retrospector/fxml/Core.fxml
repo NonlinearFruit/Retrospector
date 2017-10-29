@@ -6,9 +6,9 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
-
 
 <BorderPane prefHeight="800.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="retrospector.fxml.CoreController">
    <center>
@@ -26,29 +26,37 @@
    <top>
       <HBox BorderPane.alignment="CENTER">
          <children>
-            <MenuBar fx:id="menuBar" HBox.hgrow="ALWAYS">
+            <MenuBar fx:id="menuBar" prefHeight="30.0" HBox.hgrow="ALWAYS">
               <menus>
                 <Menu mnemonicParsing="false" text="File">
                   <items>
-                        <MenuItem mnemonicParsing="false" text="New Media" />
-                        <MenuItem mnemonicParsing="false" text="Quick Entry..." />
-                        <MenuItem mnemonicParsing="false" text="Preferences..." />
-                        <MenuItem mnemonicParsing="false" text="Server..." />
-                    <MenuItem mnemonicParsing="false" text="Backup" />
-                        <MenuItem mnemonicParsing="false" text="Close" />
+                        <MenuItem mnemonicParsing="false" onAction="#standardEntry" text="New Media">
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="N" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
+                           </accelerator>
+                        </MenuItem>
+                        <MenuItem mnemonicParsing="false" onAction="#quickEntry" text="Quick Entry...">
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="N" control="UP" meta="UP" shift="DOWN" shortcut="DOWN" />
+                           </accelerator>
+                        </MenuItem>
+                        <MenuItem mnemonicParsing="false" text="Preferences..." visible="false" />
+                        <MenuItem mnemonicParsing="false" onAction="#server" text="Server..." />
+                    <MenuItem mnemonicParsing="false" onAction="#backup" text="Backup" />
+                        <MenuItem mnemonicParsing="false" onAction="#exit" text="Close" />
                   </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Help">
                   <items>
-                    <MenuItem mnemonicParsing="false" text="Cheatsheet" />
-                        <MenuItem mnemonicParsing="false" text="About" />
+                    <MenuItem mnemonicParsing="false" onAction="#cheatsheet" text="Cheatsheet" />
+                        <MenuItem mnemonicParsing="false" text="About" visible="false" />
                   </items>
                 </Menu>
               </menus>
             </MenuBar>
-            <Button fx:id="closeButton" mnemonicParsing="false" text="X" />
-            <Button fx:id="minButton" mnemonicParsing="false" text="_" />
-            <Button fx:id="maxButton" mnemonicParsing="false" text="^" />
+            <Button fx:id="minButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" styleClass="menu-button" stylesheets="@../res/RetrospectorStyles.css" text="_" />
+            <Button fx:id="maxButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" styleClass="menu-button" stylesheets="@../res/RetrospectorStyles.css" text="^" />
+            <Button id="menu-exit" fx:id="closeButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" styleClass="menu-button" stylesheets="@../res/RetrospectorStyles.css" text="X" />
          </children>
       </HBox>
    </top>

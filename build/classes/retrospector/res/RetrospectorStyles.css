@@ -1,0 +1,53 @@
+/* 
+    Created on : Oct 28, 2017, 4:47:26 PM
+    Author     : nonfrt
+*/
+
+#menu-exit {
+    -fx-background-color: #AA6D39;
+    -fx-text-fill: #ffffff;
+}
+
+.menu-button {
+    -fx-padding: 5 15 5 15;   
+    -fx-border-color: #e2e2e2;
+    -fx-border-width: 2;
+    -fx-background-radius: 10;
+    -fx-background-color: #808080;
+    -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-font-size: 11pt;
+    -fx-text-fill: #d8d8d8;
+    -fx-background-insets: 0 0 0 0, 0, 1, 2;
+}
+
+.menu-button:hover {
+    -fx-background-color: #3a3a3a;
+}
+
+.menu-button:pressed, .menu-button:default:hover:pressed {
+  -fx-background-color: white;
+  -fx-text-fill: #1d1d1d;
+}
+
+.menu-button:focused {
+    -fx-border-color: white, white;
+    -fx-border-width: 1, 1;
+    -fx-border-style: solid, segments(1, 1);
+    -fx-border-radius: 0, 0;
+    -fx-border-insets: 1 1 1 1, 0;
+}
+
+.menu-button:disabled, .button:default:disabled {
+    -fx-opacity: 0.4;
+    -fx-background-color: #1d1d1d;
+    -fx-text-fill: white;
+}
+
+.menu-button:default {
+    -fx-background-color: -fx-focus-color;
+    -fx-text-fill: #ffffff;
+}
+
+.menu-button:default:hover {
+    -fx-background-color: derive(-fx-focus-color,30%);
+}

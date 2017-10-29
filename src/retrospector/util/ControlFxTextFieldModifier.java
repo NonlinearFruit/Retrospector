@@ -30,7 +30,8 @@ public class ControlFxTextFieldModifier {
             
             List<String> results = strings.stream()
                     .filter((y)->
-                            y.toLowerCase().contains(x.getUserText().toLowerCase())
+                            y.toLowerCase().contains(x.getUserText().toLowerCase()) &&
+                            !y.equals(x.getUserText())
                     )
                     .collect(Collectors.toList());
             

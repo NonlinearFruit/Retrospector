@@ -31,6 +31,7 @@ import retrospector.model.DataManager;
 import retrospector.model.Media;
 import retrospector.model.Review;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.Tooltip;
@@ -377,6 +378,10 @@ public class MediaTabController implements Initializable {
             mediaEditFactoid.setDisable(tf);
             mediaDeleteFactoid.setDisable(tf);
         });
+//        ControlFxTextFieldModifier.autocompleteMe(mediaContentFactoid, DataManager.getFactoids().stream().distinct().map(f->f.getContent()).collect(Collectors.toList()));
+//        mediaTitleFactoid.onActionProperty().addListener(e -> {
+//            ControlFxTextFieldModifier.autocompleteMe(mediaContentFactoid, DataManager.getFactoidsByType(mediaTitleFactoid.getValue()).stream().map(f->f.getContent()).collect(Collectors.toList()));
+//        });
         mediaFactoidTable.getSelectionModel().selectedItemProperty().addListener((observe, old, neo)->{
             boolean tf = false;
             if (neo==null)
@@ -409,7 +414,7 @@ public class MediaTabController implements Initializable {
         mediaDeleteFactoid.setOnAction(e->{
             if(new Alert(Alert.AlertType.WARNING,"Are you sure you want to delete this?",ButtonType.NO,ButtonType.YES).showAndWait().get().equals(ButtonType.YES)){
                 DataManager.deleteDB(mediaFactoidTable.getSelectionModel().getSelectedItem());
-                updateMediaTab();
+                updateFactoid();
             }
         });
         mediaSaveFactoid.setOnAction(e->{
