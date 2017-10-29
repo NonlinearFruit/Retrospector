@@ -58,7 +58,7 @@ public class SearchTabController implements Initializable {
     @FXML
     private TableView<Media> searchTable;
     @FXML
-    private MenuButton searchNewMedia;
+    private Button searchNewMedia;
     @FXML
     private Button searchEditMedia;
     @FXML
@@ -307,42 +307,6 @@ public class SearchTabController implements Initializable {
             neo.setId(DataManager.createDB(neo));
             setMedia(neo);
             setTab(TAB.MEDIA);
-        });
-        searchQuickEntry.setOnAction(e->{
-                  try{
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/retrospector/fxml/QuickEntry.fxml"));
-                    Parent root1 = (Parent) fxmlLoader.load();
-                    QuickEntryController qec = fxmlLoader.getController();
-                    qec.setup(currentTab);
-                    Stage stage = new Stage();
-                    stage.setTitle("Quick Entry");
-                    stage.setScene(new Scene(root1));  
-                    stage.show();
-                  } catch(Exception ex) {}
-        });
-        searchStandardEntry.setOnAction(e->{
-            Media neo = new Media();
-            neo.setId(DataManager.createDB(neo));
-            setMedia(neo);
-            setTab(TAB.MEDIA);
-        });
-        searchBackup.setOnAction(e->DataManager.makeBackup());
-        searchCheatsheet.setOnAction(e->{
-                  new Cheatsheet().start(new Stage());
-        });
-        searchServer.setOnAction(e->{
-            try {
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/retrospector/fxml/server/ServerTab.fxml"));
-                Parent root1 = (Parent) fxmlLoader.load();
-                Stage stage = new Stage();
-//                stage.initModality(Modality.APPLICATION_MODAL);
-//                stage.initStyle(StageStyle.UNDECORATED);
-                stage.setTitle("Android Syncing Server");
-                stage.setScene(new Scene(root1));
-                stage.show();
-            } catch(IOException ioe) {
-                ioe.printStackTrace();
-            }
         });
         searchEditMedia.setOnAction(e->{
             setTab(TAB.MEDIA);
