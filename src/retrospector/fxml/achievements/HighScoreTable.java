@@ -19,7 +19,7 @@ import retrospector.model.DataManager;
  */
 public class HighScoreTable extends GridPane {
     
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM yyyy");
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM yy");
     
     public HighScoreTable(List<HighScore> scores) {
         super();

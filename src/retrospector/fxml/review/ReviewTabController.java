@@ -5,11 +5,9 @@
  */
 package retrospector.fxml.review;
 
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.fxml.FXML;
@@ -115,6 +113,7 @@ public class ReviewTabController implements Initializable {
         reviewSeason.setText(getMedia().getSeason());
         reviewEpisode.setText(getMedia().getEpisode());
         reviewRater.setValue(getReview().getRating().doubleValue());
+        Platform.runLater(()->reviewRater.requestFocus());
         reviewDescription.setText(getReview().getReview());
         reviewUser.setText(getReview().getUser());
         reviewDate.setValue(getReview().getDate());

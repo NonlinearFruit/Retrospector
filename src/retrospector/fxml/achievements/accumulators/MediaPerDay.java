@@ -13,6 +13,7 @@ import java.util.Map;
 import retrospector.fxml.achievements.Accumulator;
 import retrospector.fxml.achievements.Achievement;
 import retrospector.fxml.achievements.AchievementFX;
+import retrospector.model.DataManager;
 import retrospector.model.Media;
 import retrospector.model.Review;
 
@@ -77,23 +78,25 @@ public class MediaPerDay extends Accumulator<Media>{
             LocalDate date = review.getDate();
             Integer value;
             
-            if (!categoryMap.containsKey(date))
-                categoryMap.put(date, new HashMap<>());
-            value = categoryMap.get(date).getOrDefault(category, 0);
-            value++;
-            categoryMap.get(date).put(category, value);
+            if (user.equals(DataManager.getDefaultUser())) {
+                if (!categoryMap.containsKey(date))
+                    categoryMap.put(date, new HashMap<>());
+                value = categoryMap.get(date).getOrDefault(category, 0);
+                value++;
+                categoryMap.get(date).put(category, value);
+
+                if (!monthMap.containsKey(category))
+                    monthMap.put(category, new HashMap<>());
+                value = monthMap.get(category).getOrDefault(date.withDayOfMonth(1), 0);
+                value++;
+                monthMap.get(category).put(date.withDayOfMonth(1), value);
+            }
             
             if (!userMap.containsKey(date))
                 userMap.put(date, new HashMap<>());
             value = userMap.get(date).getOrDefault(user, 0);
             value++;
             userMap.get(date).put(user, value);
-            
-            if (!monthMap.containsKey(category))
-                monthMap.put(category, new HashMap<>());
-            value = monthMap.get(category).getOrDefault(date.withDayOfMonth(1), 0);
-            value++;
-            monthMap.get(category).put(date.withDayOfMonth(1), value);
         }
     }
 
