@@ -54,9 +54,9 @@
                 </Menu>
               </menus>
             </MenuBar>
-            <Button fx:id="minButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" styleClass="menu-button" stylesheets="@../res/RetrospectorStyles.css" text="_" />
-            <Button fx:id="maxButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" styleClass="menu-button" stylesheets="@../res/RetrospectorStyles.css" text="^" />
-            <Button id="menu-exit" fx:id="closeButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" styleClass="menu-button" stylesheets="@../res/RetrospectorStyles.css" text="X" />
+            <Button fx:id="minButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" styleClass="menu-button" stylesheets="@../../res/RetrospectorStyles.css" text="_" />
+            <Button fx:id="maxButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" styleClass="menu-button" stylesheets="@../../res/RetrospectorStyles.css" text="^" />
+            <Button id="menu-exit" fx:id="closeButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" styleClass="menu-button" stylesheets="@../../res/RetrospectorStyles.css" text="X" />
          </children>
       </HBox>
    </top>

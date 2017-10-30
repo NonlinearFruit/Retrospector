@@ -5,14 +5,18 @@
  */
 package retrospector.model;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import javax.swing.text.DateFormatter;
 
 /**
  *
  * @author nonfrt
  */
 public class Review {
+    
+    public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+    
     private LocalDate date;
     private String user;
     private String review;
@@ -111,7 +115,7 @@ public class Review {
         
         String rating = getRating()==null? "??": getRating().toString();
         String user = getUser()==null || getUser().equals("")? "??": getUser();
-        String date = getDate()==null? "??": getDate().toString();
+        String date = getDate()==null? "??": FORMATTER.format(getDate());
         
         return rating+" by "+user+" on "+date;
     }

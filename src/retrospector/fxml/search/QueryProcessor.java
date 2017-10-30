@@ -5,6 +5,8 @@
  */
 package retrospector.fxml.search;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -12,6 +14,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import retrospector.model.Factoid;
 import retrospector.model.Media;
+import retrospector.model.Review;
 
 /**
  *
@@ -119,6 +122,12 @@ public class QueryProcessor {
         return passAND;
     }
     
+    /**
+     * Takes a command and decides whether or not the media matches it
+     * @param cmd ex `A~movie
+     * @param media
+     * @return 
+     */
     private static boolean isMatchForCmd(String cmd, Media media) {
         // Get rid of CMD op
         if( cmd.startsWith(""+Logic.CMD))
@@ -127,6 +136,7 @@ public class QueryProcessor {
         if( cmd.length() < 3)
             return true;
         
+        // Break it into pieces
         char command = cmd.charAt(0);
         char operator = cmd.charAt(1);
         String valueLookedFor = cmd.substring(2,cmd.length());
@@ -149,6 +159,12 @@ public class QueryProcessor {
             case CATEGORY: 
                 valueFound = media.getCategory();
                 break;
+            case DATE:
+            case RATING:
+            case USER:
+                return areReviewsMatch(command,operator,valueLookedFor,media.getReviews());
+            case FACTIOD:
+                return areFactoidsMatch(command,operator,valueLookedFor, media.getFactoids());
             default:
                 valueFound = "";
         }
@@ -170,6 +186,107 @@ public class QueryProcessor {
         }
         
         return pass;
+    }
+    
+    private static boolean areReviewsMatch(char command, char operator, String valueLookedFor, List<Review> reviews) {
+        boolean pass = false;
+        for (Review review : reviews) {
+            if (isReviewMatch(command, operator, valueLookedFor, review))
+                pass = true;
+        }
+        
+        return pass;
+    }
+    
+    /**
+     * Takes a review and decides whether or not it matches the command.
+     * @param cmd ex `U~Ben
+     * @param reviews
+     * @return 
+     */
+    private static Boolean isReviewMatch(char command, char operator, String valueLookedFor, Review review) {
+        
+        // Find the value
+        valueLookedFor = cleanSearchable(valueLookedFor);
+        boolean pass;
+        switch(Command.fromChar(command)) {
+            case DATE:
+                // Compare with the operator
+                LocalDate date;
+                try{ date = LocalDate.parse(valueLookedFor, Review.FORMATTER); }
+                catch(DateTimeParseException ex) {System.out.println("Bad date: "+valueLookedFor); return false;}
+                pass = false;
+                switch (Operator.fromChar(operator)) {
+                    case EQUAL:
+                        pass = review.getDate().isEqual(date);
+                        break;
+                    case GREATER_THAN:
+                        pass = review.getDate().isAfter(date);
+                        break;
+                    case LESS_THAN:
+                        pass = review.getDate().isBefore(date);
+                        break;
+                }
+
+                return pass;
+                
+            case RATING:
+                // Compare with the operator
+                Integer rating = Integer.parseInt(valueLookedFor);
+                pass = false;
+                switch (Operator.fromChar(operator)) {
+                    case EQUAL:
+                        pass = review.getRating() == rating;
+                        break;
+                    case GREATER_THAN:
+                        pass = review.getRating() > rating;
+                        break;
+                    case LESS_THAN:
+                        pass = review.getRating() < rating;
+                        break;
+                }
+
+                return pass;
+                
+            case USER:
+                // Compare with the operator
+                String user = cleanSearchable(review.getUser());
+                pass = false;
+                switch (Operator.fromChar(operator)) {
+                    case CONTAINS:
+                        pass = user.contains(valueLookedFor);
+                        break;
+                    case EQUAL:
+                        pass = user.equals(valueLookedFor);
+                        break;
+                }
+
+                return pass;
+        }
+        
+        return false;
+    }
+    
+    private static boolean areFactoidsMatch(char command, char operator, String valueLookedFor, List<Factoid> factoids) {
+        boolean pass = false;
+        for (Factoid factoid : factoids) {
+            if (isFactoidMatch(command, operator, valueLookedFor, factoid))
+                pass = true;
+        }
+        
+        return pass;
+    }
+    
+    /**
+     * Takes a factoid and decides whether or not it matches the command.
+     * @param cmd ex `F~Ben
+     * @param reviews
+     * @return 
+     */
+    private static Boolean isFactoidMatch(char command, char operator, String valueLookedFor, Factoid factoid) {
+        
+        
+        return false;
     }
     
     public List<Media> getMatches() {

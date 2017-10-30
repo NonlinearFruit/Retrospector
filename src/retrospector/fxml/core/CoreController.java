@@ -31,6 +31,7 @@ import retrospector.fxml.review.ReviewTabController;
 import retrospector.fxml.achievements.AchievementTabController;
 import retrospector.fxml.cheatsheet.Cheatsheet;
 import retrospector.model.*;
+import retrospector.util.Toast;
 
 /**
  * FXML Controller class
@@ -272,7 +273,10 @@ public class CoreController implements Initializable {
         }
     }
     
-    public void backup(ActionEvent e) { DataManager.makeBackup(); }
+    public void backup(ActionEvent e) { 
+        DataManager.makeBackup(); 
+        Toast.makeText((Stage) closeButton.getScene().getWindow(), "Backup Complete!", 3000, 500, 500);
+    }
     
     public void cheatsheet(ActionEvent e) { new Cheatsheet().start(new Stage()); }
     
