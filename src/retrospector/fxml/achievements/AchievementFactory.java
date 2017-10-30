@@ -37,15 +37,19 @@ import retrospector.model.Review;
  * @author nonfrt
  */
 public class AchievementFactory {
+    
+    private static MediaPerDay mediaPerDay;
 
     public static List<AchievementFX> getAchievements() {
+        mediaPerDay = new MediaPerDay();
+        
         List<Accumulator<Object>> otherAccumulators = Arrays.asList(
                 new Github(),
                 new FileSystem()
         );
         List<Accumulator<Media>> mediaAccumulators = Arrays.asList(
                 new MiscSeries(),
-                new MediaPerDay(),
+                mediaPerDay,
                 new MiscMedia(),
                 new RockPaperScissors(),
                 new MediaCounts(),
@@ -87,6 +91,30 @@ public class AchievementFactory {
         achievements.addAll(reviewAccumulators.stream().flatMap(a->a.getShowableAchievements().stream()).collect(Collectors.toList()));
         achievements.addAll(factoidAccumulators.stream().flatMap(a->a.getShowableAchievements().stream()).collect(Collectors.toList()));
         return achievements;
+    }
+    
+    public static HighScore getHighScore(String category) {
+        if (mediaPerDay == null)
+            return new HighScore(category);
+        
+        Map<LocalDate,Integer> reviewsPerMonth = mediaPerDay.monthMap.get(category);
+        
+        LocalDate maxMonth = null;
+        Integer maxScore = 0;
+        for (LocalDate month : reviewsPerMonth.keySet()) {
+            if (reviewsPerMonth.get(month) > maxScore) {
+                maxScore = reviewsPerMonth.get(month);
+                maxMonth = month;
+            }
+        }
+        
+        HighScore score;
+        if (maxMonth != null)
+            score = new HighScore(category,maxMonth,maxScore);
+        else
+            score = new HighScore(category);
+        
+        return score;
     }
     
     public static Integer getLongestConsecutiveDays(Integer reviewThreshold, Map<LocalDate,Integer> map) {

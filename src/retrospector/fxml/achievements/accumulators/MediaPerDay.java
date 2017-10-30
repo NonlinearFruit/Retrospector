@@ -36,11 +36,11 @@ public class MediaPerDay extends Accumulator<Media>{
     private Achievement lowScoreBronze;
     
     // Day -> Category -> # Reviews
-    Map<LocalDate,Map<String,Integer>> categoryMap;
+    private Map<LocalDate,Map<String,Integer>> categoryMap;
     // Day -> User -> # Reviews
-    Map<LocalDate,Map<String,Integer>> userMap;
+    private Map<LocalDate,Map<String,Integer>> userMap;
     // Category -> Month -> # Reviews
-    Map<String, Map<LocalDate,Integer>> monthMap;
+    public Map<String, Map<LocalDate,Integer>> monthMap;
     
     public MediaPerDay() {
         categoryMap = new HashMap<>();
@@ -54,19 +54,19 @@ public class MediaPerDay extends Accumulator<Media>{
         marathon = new Achievement("", "Marathon", "5 users review 5 media in a day", 1);
         marathon.setShowable(false);
         
-        topScoreGold = new Achievement("", "High Score", "High score over 250", 1);
-        topScoreGold.setHint("");
-        topScoreSilver = new Achievement("", "High Score", "High score over 100", 2);
-        topScoreSilver.setHint("");
-        topScoreBronze = new Achievement("", "High Score", "High score over 50", 3);
-        topScoreBronze.setHint("");
+        topScoreGold = new Achievement("", "Hardcore Gamer", "High score over 250", 1);
+        topScoreGold.setHint("Top the charts");
+        topScoreSilver = new Achievement("", "Die-Hard Fan", "High score over 100", 2);
+        topScoreSilver.setHint("Top the charts");
+        topScoreBronze = new Achievement("", "Peerless", "High score over 50", 3);
+        topScoreBronze.setHint("Top the charts");
         
-        lowScoreGold = new Achievement("", "Low Score", "All high scores over 100", 1);
-        lowScoreGold.setHint("");
-        lowScoreSilver = new Achievement("", "Low Score", "All high scores over 50", 2);
-        lowScoreSilver.setHint("");
-        lowScoreBronze = new Achievement("", "Low Score", "All high scores over 10", 3);
-        lowScoreBronze.setHint("");
+        lowScoreGold = new Achievement("", "Valedictorian", "All high scores over 100", 1);
+        lowScoreGold.setHint("Don't accept 2nd place");
+        lowScoreSilver = new Achievement("", "Salutatorian", "All high scores over 50", 2);
+        lowScoreSilver.setHint("Don't accept 2nd place");
+        lowScoreBronze = new Achievement("", "Top Marks", "All high scores over 10", 3);
+        lowScoreBronze.setHint("Don't accept 2nd place");
     }
     
     @Override

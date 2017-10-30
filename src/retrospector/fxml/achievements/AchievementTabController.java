@@ -20,6 +20,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import retrospector.fxml.CoreController;
+import retrospector.model.DataManager;
 
 /**
  * FXML Controller class
@@ -40,6 +41,8 @@ public class AchievementTabController implements Initializable {
     ObjectProperty<CoreController.TAB> currentTab;
     @FXML
     private Button btnRefresh;
+    @FXML
+    private HBox highscoreBox;
 
     /**
      * Initializes the controller class.
@@ -96,6 +99,13 @@ public class AchievementTabController implements Initializable {
         header.getChildren().add(new Text("\t"+locked+" "));
         header.getChildren().add(AchievementFX.trophyize(AchievementFX.lockedImage, 0, headerSize));
         System.out.println("\t"+(System.currentTimeMillis()-time)+"ms to complete");
+        
+        // Highscore Display
+        List<HighScore> scores = new ArrayList<>();
+        for (String category : DataManager.getCategories()) {
+            scores.add(AchievementFactory.getHighScore(category));
+        }
+        highscoreBox.getChildren().add(new HighScoreTable(scores));
     }
     
     public void initAchievementTab() {
@@ -104,6 +114,6 @@ public class AchievementTabController implements Initializable {
 //        update();
         btnRefresh.setOnAction(e->{
             update();
-                });
+        });
     }
 }
