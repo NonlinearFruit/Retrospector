@@ -239,22 +239,22 @@ public class StatsTabController implements Initializable {
         chartRpyY.setLabel("Reviews");
         
         // Pop ups
-        chartReviewsPerYear.setOnMouseClicked(e->{
-            if (e.getClickCount() == 2) {
-                ObservableList lst = FXCollections.observableArrayList("Days","Weeks","Months","Years");
-                Spinner spn = new Spinner(lst);
-                Slider sldr = new Slider(5.0,50.0,12.0);
-                sldr.setSnapToTicks(true);
-                sldr.setMajorTickUnit(10);
-                sldr.setMinorTickCount(2);
-                sldr.setShowTickMarks(true);
-                sldr.setShowTickLabels(true);
-                VBox box = new VBox(sldr,spn);
-                box.setAlignment(Pos.TOP_CENTER);
-                PopOver popup = new PopOver(box);
-                popup.show(chartReviewsPerYear);
-            }
-        });
+//        chartReviewsPerYear.setOnMouseClicked(e->{
+//            if (e.getClickCount() == 2) {
+//                ObservableList lst = FXCollections.observableArrayList("Days","Weeks","Months","Years");
+//                Spinner spn = new Spinner(lst);
+//                Slider sldr = new Slider(5.0,50.0,12.0);
+//                sldr.setSnapToTicks(true);
+//                sldr.setMajorTickUnit(10);
+//                sldr.setMinorTickCount(2);
+//                sldr.setShowTickMarks(true);
+//                sldr.setShowTickLabels(true);
+//                VBox box = new VBox(sldr,spn);
+//                box.setAlignment(Pos.TOP_CENTER);
+//                PopOver popup = new PopOver(box);
+//                popup.show(chartReviewsPerYear);
+//            }
+//        });
     }
     
     public void setup(ObjectProperty<TAB> aTab, ObjectProperty<Media> aMedia){

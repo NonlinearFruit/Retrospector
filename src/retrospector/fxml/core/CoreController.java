@@ -30,6 +30,7 @@ import retrospector.fxml.quickentry.QuickEntryController;
 import retrospector.fxml.review.ReviewTabController;
 import retrospector.fxml.achievements.AchievementTabController;
 import retrospector.fxml.cheatsheet.Cheatsheet;
+import retrospector.fxml.preferences.PreferencesController;
 import retrospector.model.*;
 import retrospector.util.Toast;
 
@@ -257,6 +258,20 @@ public class CoreController implements Initializable {
             stage.show();
         } catch (Exception ex) {
             System.out.println("Quick Entry Failed: "+ex.getMessage());
+        }
+    }
+    
+    public void preferences(ActionEvent e) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/retrospector/fxml/preferences/Preferences.fxml"));
+            Parent root1 = (Parent) fxmlLoader.load();
+            PreferencesController qec = fxmlLoader.getController();
+            Stage stage = new Stage();
+            stage.setTitle("Preferences");
+            stage.setScene(new Scene(root1));
+            stage.show();
+        } catch (Exception ex) {
+            System.out.println("Preferences Failed: "+ex.getMessage());
         }
     }
     

@@ -23,6 +23,14 @@ import javafx.util.Duration;
  */
 public final class Toast
 {
+    private static int delay = 3000;
+    private static int fadeIn = 500;
+    private static int fadeOut = 500;
+    
+    public static void makeText(Stage ownerStage, String toastMsg) {
+        makeText(ownerStage, toastMsg, delay, fadeIn, fadeOut);
+    }
+    
     public static void makeText(Stage ownerStage, String toastMsg, int toastDelay, int fadeInDelay, int fadeOutDelay)
     {
         Stage toastStage=new Stage();

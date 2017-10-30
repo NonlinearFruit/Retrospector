@@ -126,7 +126,7 @@ public class PropertyManager {
         prop.setProperty(Configuration.prop.GITHUB_USER.name(), config.getGithubUser());
         prop.setProperty(Configuration.prop.MAX_RATING.name(), config.getMaxRating().toString());
         prop.setProperty(Configuration.prop.DEFAULT_RATING.name(), config.getDefaultRating().toString());
-        prop.setProperty(Configuration.prop.VIEW_PAST_DAYS.name(), config.getDefaultRating().toString());
+        prop.setProperty(Configuration.prop.VIEW_PAST_DAYS.name(), config.getViewPastDays().toString());
         prop.setProperty(Configuration.prop.CATEGORIES.name(), String.join(",",config.getCategories()));
         prop.setProperty(Configuration.prop.FACTOIDS.name(), String.join(",",config.getFactoids()));
         File directory = new File(retroFolder);
@@ -167,7 +167,7 @@ public class PropertyManager {
         return loadProperties();
     }
     
-    public static void saveProperties(Properties prop, FileOutputStream output) throws IOException {
+    private static void saveProperties(Properties prop, FileOutputStream output) throws IOException {
         try {
             prop.store(output, null);
         } finally {
@@ -177,7 +177,7 @@ public class PropertyManager {
         }
     }
 
-    public static Properties loadProperties(FileInputStream input) throws IOException {
+    private static Properties loadProperties(FileInputStream input) throws IOException {
         Properties prop = new Properties();
 
         try {

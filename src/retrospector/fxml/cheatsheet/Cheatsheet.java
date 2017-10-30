@@ -5,7 +5,6 @@
  */
 package retrospector.fxml.cheatsheet;
 
-import retrospector.util.PumpkinEater;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.scene.Scene;
@@ -41,6 +40,9 @@ public class Cheatsheet extends Application {
                 new String[]{"`S","season","`S=1","season equals '1'"},
                 new String[]{"`E","episode","`E~13","episode contains '13'"},
                 new String[]{"`A","category","`A~Book","category contains 'book'"},
+                new String[]{"`U","user","`U~Adam","reviewed by a user 'Adam'"},
+                new String[]{"`D","date","`D>10-21-17","reviewed after 21 Oct 2017"},
+                new String[]{"`#","rating","`#>7","rated high than a 7"},
                 new String[]{"Example","-->","batman|superman:`A=Movie:!vs","contains 'batman' or 'superman',<br>category equals 'movie' and<br>contains no 'vs'"},
                 new String[]{"Example","-->","sherlock:doyle:baskervilles","contains 'sherlock',<br>contains 'doyle' and<br>contains 'baskervilles'"}
         ).getHtml();
