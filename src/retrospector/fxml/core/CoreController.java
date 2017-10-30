@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package retrospector.fxml;
+package retrospector.fxml.core;
 
 import java.io.IOException;
 import retrospector.fxml.media.MediaTabController;
@@ -25,8 +25,11 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
+import retrospector.fxml.list.ListsTabController;
+import retrospector.fxml.quickentry.QuickEntryController;
+import retrospector.fxml.review.ReviewTabController;
 import retrospector.fxml.achievements.AchievementTabController;
-import retrospector.fxml.search.Cheatsheet;
+import retrospector.fxml.cheatsheet.Cheatsheet;
 import retrospector.model.*;
 
 /**
@@ -243,7 +246,7 @@ public class CoreController implements Initializable {
     
     public void quickEntry(ActionEvent e) {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/retrospector/fxml/QuickEntry.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/retrospector/fxml/quickentry/QuickEntry.fxml"));
             Parent root1 = (Parent) fxmlLoader.load();
             QuickEntryController qec = fxmlLoader.getController();
             qec.setup(currentTab);
@@ -261,7 +264,7 @@ public class CoreController implements Initializable {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/retrospector/fxml/server/ServerTab.fxml"));
             Parent root1 = (Parent) fxmlLoader.load();
             Stage stage = new Stage();
-            stage.setTitle("Android Syncing Server");
+            stage.setTitle("Server");
             stage.setScene(new Scene(root1));
             stage.show();
         } catch (IOException ioe) {

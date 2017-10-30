@@ -11,12 +11,12 @@ import java.io.PrintWriter;
 import java.net.URISyntaxException;
 import java.util.Scanner;
 import retrospector.Retrospector;
-import retrospector.fxml.ListsTabController.Chartagories;
-import static retrospector.fxml.ListsTabController.Chartagories.CATEGORY;
-import static retrospector.fxml.ListsTabController.Chartagories.CREATOR;
-import static retrospector.fxml.ListsTabController.Chartagories.CURRENT_MEDIA;
-import static retrospector.fxml.ListsTabController.Chartagories.SEASON;
-import static retrospector.fxml.ListsTabController.Chartagories.TITLE;
+import retrospector.fxml.list.ListsTabController.Chartagories;
+import static retrospector.fxml.list.ListsTabController.Chartagories.CATEGORY;
+import static retrospector.fxml.list.ListsTabController.Chartagories.CREATOR;
+import static retrospector.fxml.list.ListsTabController.Chartagories.CURRENT_MEDIA;
+import static retrospector.fxml.list.ListsTabController.Chartagories.SEASON;
+import static retrospector.fxml.list.ListsTabController.Chartagories.TITLE;
 import retrospector.model.Media;
 import retrospector.model.Media.Type;
 

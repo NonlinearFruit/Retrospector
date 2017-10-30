@@ -46,7 +46,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
 import org.controlsfx.control.PopOver;
-import retrospector.fxml.CoreController.TAB;
+import retrospector.fxml.core.CoreController.TAB;
 import retrospector.model.DataManager;
 import retrospector.model.Factoid;
 import retrospector.model.Media;

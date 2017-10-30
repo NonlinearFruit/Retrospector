@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package retrospector.fxml.search;
+package retrospector.fxml.cheatsheet;
 
 import retrospector.util.PumpkinEater;
 import javafx.application.Application;

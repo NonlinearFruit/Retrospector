@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package retrospector.fxml;
+package retrospector.fxml.review;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -23,8 +23,8 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import org.controlsfx.control.Rating;
-import retrospector.fxml.CoreController.TAB;
-import static retrospector.fxml.CoreController.ratingFormat;
+import retrospector.fxml.core.CoreController.TAB;
+import static retrospector.fxml.core.CoreController.ratingFormat;
 import retrospector.model.DataManager;
 import retrospector.model.Media;
 import retrospector.model.Review;
@@ -82,14 +82,14 @@ public class ReviewTabController implements Initializable {
         return currentMedia.get();
     }
     
-    protected void setup(ObjectProperty<TAB> t, ObjectProperty<Media> m, ObjectProperty<Review> r){
+    public void setup(ObjectProperty<TAB> t, ObjectProperty<Media> m, ObjectProperty<Review> r){
         currentTab = t;
         currentMedia = m;
         currentReview = r;
     }
             
     
-    protected void update(){
+    public void update(){
         updateReviewTab();
     }
     

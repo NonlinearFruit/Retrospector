@@ -26,7 +26,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import org.controlsfx.control.Rating;
-import retrospector.fxml.CoreController.TAB;
+import retrospector.fxml.core.CoreController.TAB;
 import retrospector.model.DataManager;
 import retrospector.model.Media;
 import retrospector.model.Review;
@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.Tooltip;
-import retrospector.fxml.CoreController;
+import retrospector.fxml.core.CoreController;
 import retrospector.model.Factoid;
 import retrospector.util.ControlFxTextFieldModifier;
 

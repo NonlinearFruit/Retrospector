@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package retrospector.fxml;
+package retrospector.fxml.list;
 
 import java.math.BigDecimal;
 import java.net.URL;
@@ -30,7 +30,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
-import retrospector.fxml.CoreController.TAB;
+import retrospector.fxml.core.CoreController.TAB;
 import retrospector.model.DataManager;
 import retrospector.model.Media;
 import retrospector.model.Review;
@@ -115,11 +115,11 @@ public class ListsTabController implements Initializable {
         initListTab();
     }
     
-    protected void setup(ObjectProperty<TAB> t){
+    public void setup(ObjectProperty<TAB> t){
         currentTab = t;
     }
     
-    protected void update(){
+    public void update(){
         updateListTab();
     }
     

@@ -9,9 +9,9 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="retrospector.fxml.server.ServerTabController">
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="retrospector.fxml.server.ServerTabController">
    <children>
-      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Android Syncing Server">
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Server">
          <font>
             <Font name="System Bold" size="19.0" />
          </font>
@@ -33,7 +33,7 @@
             <Pane HBox.hgrow="ALWAYS" />
          </children>
       </HBox>
-      <TextArea fx:id="statusArea" editable="false" prefHeight="200.0" prefWidth="200.0" wrapText="true" />
+      <TextArea fx:id="statusArea" editable="false" prefHeight="100.0" prefWidth="200.0" wrapText="true" />
    </children>
    <padding>
       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

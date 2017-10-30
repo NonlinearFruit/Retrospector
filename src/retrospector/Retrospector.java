@@ -30,7 +30,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
-import retrospector.fxml.CoreController;
+import retrospector.fxml.core.CoreController;
 import retrospector.fxml.server.XmlService;
 import retrospector.model.DataManager;
 
@@ -90,7 +90,7 @@ public class Retrospector extends Application {
                 updateProgress(1,8);
                 
                 updateMessage("Loading Core . . .");
-                FXMLLoader ldr = new FXMLLoader(getClass().getResource("/retrospector/fxml/Core.fxml"));
+                FXMLLoader ldr = new FXMLLoader(getClass().getResource("/retrospector/fxml/core/Core.fxml"));
                     Parent root = ldr.load();
                     CoreController core = ldr.getController();
                 updateProgress(2,8);
@@ -108,7 +108,7 @@ public class Retrospector extends Application {
                 updateProgress(4,8);
                 
                 updateMessage("Loading Review . . .");
-                FXMLLoader reviewldr = new FXMLLoader(getClass().getResource("/retrospector/fxml/ReviewTab.fxml"));
+                FXMLLoader reviewldr = new FXMLLoader(getClass().getResource("/retrospector/fxml/review/ReviewTab.fxml"));
                     reviewldr.load();
                     core.setReviewController(reviewldr);
                 updateProgress(5,8);
@@ -120,7 +120,7 @@ public class Retrospector extends Application {
                 updateProgress(6,8);
                 
                 updateMessage("Loading List . . .");
-                FXMLLoader listldr = new FXMLLoader(getClass().getResource("/retrospector/fxml/ListsTab.fxml"));
+                FXMLLoader listldr = new FXMLLoader(getClass().getResource("/retrospector/fxml/list/ListsTab.fxml"));
                     listldr.load();
                     core.setListController(listldr);
                 updateProgress(7,8);

@@ -19,7 +19,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import retrospector.fxml.CoreController;
+import retrospector.fxml.core.CoreController;
 import retrospector.model.DataManager;
 
 /**
