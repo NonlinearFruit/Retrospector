@@ -105,6 +105,7 @@ public class AchievementTabController implements Initializable {
         for (String category : DataManager.getCategories()) {
             scores.add(AchievementFactory.getHighScore(category));
         }
+        highscoreBox.getChildren().clear();
         highscoreBox.getChildren().add(new HighScoreTable(scores));
     }
     

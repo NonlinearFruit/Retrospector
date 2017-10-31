@@ -49,7 +49,7 @@
                 <Menu mnemonicParsing="false" text="Help">
                   <items>
                     <MenuItem mnemonicParsing="false" onAction="#cheatsheet" text="Cheatsheet" />
-                        <MenuItem mnemonicParsing="false" text="About" visible="false" />
+                        <MenuItem mnemonicParsing="false" onAction="#about" text="About" />
                   </items>
                 </Menu>
               </menus>

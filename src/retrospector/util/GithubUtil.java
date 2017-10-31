@@ -56,11 +56,14 @@ public class GithubUtil {
     
     public static String getLastestVersion() {
         String results = getFromUrl(getLatestUrl());
-        String tags = "\"tag_name\": \"";
+        System.out.println(results+"\n\n\n");
+        String tags = "\"tag_name\":\"";
         int index = results.indexOf(tags);
-        results = results.substring(index);
+        results = results.substring(index+tags.length());
+        System.out.println(results+"\n\n\n");
         index = results.indexOf("\"");
         results = results.substring(0, index);
+        System.out.println(results+"\n\n\n");
         return results;
     }
     

@@ -288,6 +288,19 @@ public class CoreController implements Initializable {
         }
     }
     
+    public void about(ActionEvent e) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/retrospector/fxml/about/About.fxml"));
+            Parent root1 = (Parent) fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.setTitle("About");
+            stage.setScene(new Scene(root1));
+            stage.show();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+    }
+    
     public void backup(ActionEvent e) { 
         DataManager.makeBackup(); 
         Toast.makeText((Stage) closeButton.getScene().getWindow(), "Backup Complete!", 3000, 500, 500);
