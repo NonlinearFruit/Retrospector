@@ -40,6 +40,11 @@
                               <KeyCodeCombination alt="UP" code="N" control="UP" meta="UP" shift="DOWN" shortcut="DOWN" />
                            </accelerator>
                         </MenuItem>
+                        <MenuItem mnemonicParsing="false" onAction="#scrape" text="Scraper...">
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="I" control="UP" meta="UP" shift="DOWN" shortcut="DOWN" />
+                           </accelerator>
+                        </MenuItem>
                         <MenuItem mnemonicParsing="false" onAction="#preferences" text="Preferences..." />
                         <MenuItem mnemonicParsing="false" onAction="#server" text="Server..." />
                     <MenuItem mnemonicParsing="false" onAction="#backup" text="Backup" />

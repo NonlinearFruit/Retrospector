@@ -12,6 +12,7 @@ import retrospector.fxml.chart.StatsTabController;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
@@ -31,6 +32,7 @@ import retrospector.fxml.review.ReviewTabController;
 import retrospector.fxml.achievements.AchievementTabController;
 import retrospector.fxml.cheatsheet.Cheatsheet;
 import retrospector.fxml.preferences.PreferencesController;
+import retrospector.fxml.scraper.ScraperController;
 import retrospector.model.*;
 import retrospector.util.Toast;
 
@@ -301,6 +303,27 @@ public class CoreController implements Initializable {
         }
     }
     
+    public void scrape(ActionEvent e) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/retrospector/fxml/scraper/Scraper.fxml"));
+            Parent root1 = (Parent) fxmlLoader.load();
+            ScraperController scrc = fxmlLoader.getController();
+            scrc.setup(media -> { 
+                int id = DataManager.createDB(media); 
+                media.setId(id);
+                setMedia( media ); 
+                setTab( TAB.MEDIA ); 
+            });
+            Stage stage = new Stage();
+            stage.setTitle("Scraper");
+            stage.setScene(new Scene(root1));
+            stage.show();
+        } catch (Exception ex) {
+            System.out.println("Scraper Failed: "+ex.getMessage());
+            ex.printStackTrace();
+        }
+    }
+    
     public void backup(ActionEvent e) { 
         DataManager.makeBackup(); 
         Toast.makeText((Stage) closeButton.getScene().getWindow(), "Backup Complete!", 3000, 500, 500);
@@ -311,8 +334,9 @@ public class CoreController implements Initializable {
     public void exit() { exit(null); }
     
     public void exit(ActionEvent e) {
-        Stage stage = (Stage) closeButton.getScene().getWindow();
-        stage.hide();
+        Platform.exit();
+//        Stage stage = (Stage) closeButton.getScene().getWindow();
+//        stage.hide();
     }
     
     public void setTab(TAB aTab){
