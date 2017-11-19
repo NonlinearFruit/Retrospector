@@ -5,6 +5,7 @@
  */
 package retrospector;
 
+import insidefx.undecorator.UndecoratorScene;
 import java.io.IOException;
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
@@ -24,6 +25,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Screen;
@@ -146,19 +148,14 @@ public class Retrospector extends Application {
     }
 
     private void showMainStage(Parent root) {
-        mainStage = new Stage(StageStyle.UNDECORATED);
-
-        Scene scene = new Scene(root, 1300, 800);
-        mainStage.setScene(scene);
+        mainStage = new Stage();
+//        mainStage = new Stage(StageStyle.UNDECORATED);
+//        Scene scene = new Scene(root, 1300, 800);
+        UndecoratorScene.setClassicDecoration();
+        UndecoratorScene undecoratorScene = new UndecoratorScene(mainStage, (Region) root);
+        mainStage.setScene(undecoratorScene);
         mainStage.setTitle("Retrospector");
-//        mainStage.getIcons().add(new Image(Retrospector.class.getResourceAsStream( "res/star-half-full-16.png" ))); 
-//        mainStage.getIcons().add(new Image(Retrospector.class.getResourceAsStream( "res/star-half-full-22.png" ))); 
-//        mainStage.getIcons().add(new Image(Retrospector.class.getResourceAsStream( "res/star-half-full-24.png" ))); 
-//        mainStage.getIcons().add(new Image(Retrospector.class.getResourceAsStream( "res/star-half-full-32.png" ))); 
         mainStage.getIcons().add(new Image(Retrospector.class.getResourceAsStream( LOGO_IMAGE ))); 
-//        mainStage.getIcons().add(new Image(Retrospector.class.getResourceAsStream( "res/star-half-full-64.png" ))); 
-//        mainStage.getIcons().add(new Image(Retrospector.class.getResourceAsStream( "res/star-half-full-128.png" ))); 
-//        mainStage.getIcons().add(new Image(Retrospector.class.getResourceAsStream( "res/star-half-full-256.png" ))); 
         mainStage.show();
     }
 

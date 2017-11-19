@@ -5,6 +5,7 @@
  */
 package retrospector.fxml.core;
 
+import insidefx.undecorator.UndecoratorScene;
 import java.io.IOException;
 import retrospector.fxml.media.MediaTabController;
 import retrospector.fxml.search.SearchTabController;
@@ -24,6 +25,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import retrospector.fxml.list.ListsTabController;
 import retrospector.fxml.quickentry.QuickEntryController;
@@ -45,12 +47,9 @@ public class CoreController implements Initializable {
     private Tab achievementTab;
     @FXML
     private MenuBar menuBar;
-    @FXML
-    private Button closeButton;
-    @FXML
-    private Button minButton;
-    @FXML
-    private Button maxButton;
+//    private Button closeButton;
+//    private Button minButton;
+//    private Button maxButton;
 
     public static enum TAB{ SEARCH, MEDIA, REVIEW, CHART, LIST, ACHIEVEMENT} 
     public static final DecimalFormat ratingFormat =  new DecimalFormat("#.#");
@@ -137,17 +136,17 @@ public class CoreController implements Initializable {
             stage.setX(e.getScreenX() - xOffset);
             stage.setY(e.getScreenY() - yOffset);
         });
-        closeButton.setOnAction(e->{
-            exit();
-        });
-        minButton.setOnAction(e->{
-            Stage stage = (Stage) closeButton.getScene().getWindow();
-            stage.setIconified(true);
-        });
-        maxButton.setOnAction(e->{
-            Stage stage = (Stage) closeButton.getScene().getWindow();
-            stage.setMaximized(!stage.isMaximized());
-        });
+//        closeButton.setOnAction(e->{
+//            exit();
+//        });
+//        minButton.setOnAction(e->{
+//            Stage stage = (Stage) closeButton.getScene().getWindow();
+//            stage.setIconified(true);
+//        });
+//        maxButton.setOnAction(e->{
+//            Stage stage = (Stage) closeButton.getScene().getWindow();
+//            stage.setMaximized(!stage.isMaximized());
+//        });
         
         // Tabs
         searchTab.selectedProperty().addListener((observe,old,neo)->{
@@ -239,6 +238,7 @@ public class CoreController implements Initializable {
 //        chartTab.setDisable(true);
     }
     
+    @FXML
     public void standardEntry(ActionEvent e) {
         Media neo = new Media();
         neo.setId(DataManager.createDB(neo));
@@ -246,72 +246,91 @@ public class CoreController implements Initializable {
         setTab(TAB.MEDIA);
     }
     
+    @FXML
     public void quickEntry(ActionEvent e) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/retrospector/fxml/quickentry/QuickEntry.fxml"));
-            Parent root1 = (Parent) fxmlLoader.load();
+            Parent root = (Parent) fxmlLoader.load();
+            Stage stage = new Stage();
+            UndecoratorScene.setClassicDecoration();
+            UndecoratorScene undecoratorScene = new UndecoratorScene(stage, (Region) root);
+            stage.setScene(undecoratorScene);
+            stage.setScene(undecoratorScene);
             QuickEntryController qec = fxmlLoader.getController();
             qec.setup(currentTab);
-            Stage stage = new Stage();
             stage.setTitle("Quick Entry");
-            stage.setScene(new Scene(root1));
             stage.show();
         } catch (Exception ex) {
             System.out.println("Quick Entry Failed: "+ex.getMessage());
         }
     }
     
+    @FXML
     public void preferences(ActionEvent e) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/retrospector/fxml/preferences/Preferences.fxml"));
-            Parent root1 = (Parent) fxmlLoader.load();
-            PreferencesController qec = fxmlLoader.getController();
+            Parent root = (Parent) fxmlLoader.load();
             Stage stage = new Stage();
+            UndecoratorScene.setClassicDecoration();
+            UndecoratorScene undecoratorScene = new UndecoratorScene(stage, (Region) root);
+            stage.setScene(undecoratorScene);
+            stage.setScene(undecoratorScene);
+            PreferencesController qec = fxmlLoader.getController();
             stage.setTitle("Preferences");
-            stage.setScene(new Scene(root1));
             stage.show();
         } catch (Exception ex) {
             System.out.println("Preferences Failed: "+ex.getMessage());
         }
     }
     
+    @FXML
     public void server(ActionEvent e) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/retrospector/fxml/server/ServerTab.fxml"));
-            Parent root1 = (Parent) fxmlLoader.load();
+            Parent root = (Parent) fxmlLoader.load();
             Stage stage = new Stage();
+            UndecoratorScene.setClassicDecoration();
+            UndecoratorScene undecoratorScene = new UndecoratorScene(stage, (Region) root);
+            stage.setScene(undecoratorScene);
+            stage.setScene(undecoratorScene);
             stage.setTitle("Server");
-            stage.setScene(new Scene(root1));
             stage.show();
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
     }
     
+    @FXML
     public void about(ActionEvent e) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/retrospector/fxml/about/About.fxml"));
-            Parent root1 = (Parent) fxmlLoader.load();
+            Parent root = (Parent) fxmlLoader.load();
             Stage stage = new Stage();
+            UndecoratorScene.setClassicDecoration();
+            UndecoratorScene undecoratorScene = new UndecoratorScene(stage, (Region) root);
+            stage.setScene(undecoratorScene);
+            stage.setScene(undecoratorScene);
             stage.setTitle("About");
-            stage.setScene(new Scene(root1));
             stage.show();
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
     }
     
+    @FXML
     public void backup(ActionEvent e) { 
         DataManager.makeBackup(); 
-        Toast.makeText((Stage) closeButton.getScene().getWindow(), "Backup Complete!", 3000, 500, 500);
+        Toast.makeText((Stage) menuBar.getScene().getWindow(), "Backup Complete!", 3000, 500, 500);
     }
     
+    @FXML
     public void cheatsheet(ActionEvent e) { new Cheatsheet().start(new Stage()); }
     
+    @FXML
     public void exit() { exit(null); }
     
     public void exit(ActionEvent e) {
-        Stage stage = (Stage) closeButton.getScene().getWindow();
+        Stage stage = (Stage) menuBar.getScene().getWindow();
         stage.hide();
     }
     
