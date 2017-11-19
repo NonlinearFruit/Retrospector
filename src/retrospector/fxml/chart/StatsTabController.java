@@ -197,10 +197,7 @@ public class StatsTabController implements Initializable {
         chartNumOfFacts.getData().add(new XYChart.Series(FXCollections.observableArrayList(new XYChart.Data("",0))));
         // Overall
         for (String user : DataManager.getUsers()) {
-            Stroolean c = new Stroolean(user,true);
-            c.booleanProperty().addListener((observe,old,neo)->update());
-            strooleans.add(c);
-            overallUserList.getItems().add(c);
+            addUserToOverallUserList(user);
         }
         overallUserList.setCellFactory(CheckBoxListCell.forListView(Stroolean::booleanProperty));
         overallUserList.setOnMouseClicked(e->{
@@ -280,7 +277,24 @@ public class StatsTabController implements Initializable {
         Platform.runLater(()->updateFactoid());
     }
     
+    public void addUserToOverallUserList(String user) {
+        Stroolean c = new Stroolean(user,true);
+        c.booleanProperty().addListener((observe,old,neo)->update());
+        strooleans.add(c);
+        overallUserList.getItems().add(c);
+    }
+    
     private void updateOverall(){
+        
+        // Update User List
+        for (String user : DataManager.getUsers()) {
+            Boolean found = false;
+            for (Stroolean stroolean : strooleans)
+                if (stroolean.getString().equals(user))
+                    found = true;
+            if (!found)
+                addUserToOverallUserList(user);
+        }
         
         // Constants
         int last__days = DataManager.getPastDays();
