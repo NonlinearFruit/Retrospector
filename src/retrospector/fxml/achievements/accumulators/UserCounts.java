@@ -5,6 +5,8 @@
  */
 package retrospector.fxml.achievements.accumulators;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -73,7 +75,10 @@ public class UserCounts extends Accumulator<Review>{
 
     @Override
     public List<AchievementFX> getShowableAchievements() {
-        Integer progress = Collections.max(userReviews.values());
+        Collection<Integer> userValues = new ArrayList<>(userReviews.values());
+        if ( userValues.size() == 0 )
+            userValues.add(0);
+        Integer progress = Collections.max(userValues);
         Integer numUsers = userReviews.keySet().size();
         
         bff.setProgress(Achievement.scaleToFit(progress, 1000));

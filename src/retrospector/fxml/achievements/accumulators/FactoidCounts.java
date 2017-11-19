@@ -5,6 +5,8 @@
  */
 package retrospector.fxml.achievements.accumulators;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -83,8 +85,11 @@ public class FactoidCounts extends Accumulator<Factoid>{
 
     @Override
     public List<AchievementFX> getShowableAchievements() {
-        Integer largest = Collections.max(factoidCounts.values());
-        Integer smallest = Collections.min(factoidCounts.values());
+        Collection<Integer> factoidValues = new ArrayList<>(factoidCounts.values());
+        if ( factoidValues.size() == 0 )
+            factoidValues.add(0);
+        Integer largest = Collections.max(factoidValues);
+        Integer smallest = Collections.min(factoidValues);
         Integer numFactoids = factoidCounts.keySet().size();
         
         trivial.setProgress(Achievement.scaleToFit(numFactoids, 5));
