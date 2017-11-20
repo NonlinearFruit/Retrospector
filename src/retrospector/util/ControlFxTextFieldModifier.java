@@ -26,6 +26,7 @@ public class ControlFxTextFieldModifier {
             
             List<String> results = strings.stream()
                     .filter((y)->
+                            y.length() > 4 &&
                             y.toLowerCase().contains(x.getUserText().toLowerCase()) &&
                             !y.equals(x.getUserText())
                     )
