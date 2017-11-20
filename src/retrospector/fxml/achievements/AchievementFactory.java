@@ -39,16 +39,18 @@ import retrospector.model.Review;
 public class AchievementFactory {
     
     private static MediaPerDay mediaPerDay;
+    private static MiscSeries miscSeries;
 
     public static List<AchievementFX> getAchievements() {
         mediaPerDay = new MediaPerDay();
+        miscSeries = new MiscSeries();
         
         List<Accumulator<Object>> otherAccumulators = Arrays.asList(
                 new Github(),
                 new FileSystem()
         );
         List<Accumulator<Media>> mediaAccumulators = Arrays.asList(
-                new MiscSeries(),
+                miscSeries,
                 mediaPerDay,
                 new MiscMedia(),
                 new RockPaperScissors(),
@@ -115,6 +117,31 @@ public class AchievementFactory {
             score = new HighScore(category);
         
         return score;
+    }
+    
+    public static TopMedia getTopMedia(String category) {
+        if (miscSeries == null)
+            return new TopMedia(category);
+        
+        // Category -> Title -> Count
+        Map<String,Map<String,Integer>> titleCountsPerCategory = miscSeries.mapCounts;
+        Map<String,Integer> titleCounts = titleCountsPerCategory.get(category);
+        
+        Integer maxCount = 0;
+        TopMedia best = null;
+        
+        for (String title : titleCounts.keySet()) {
+            int count = titleCounts.get(title);
+            if (count > maxCount) {
+                best = new TopMedia(category, title, count);
+                maxCount = count;
+            }
+        }
+        
+        if (best == null)
+            best = new TopMedia(category);
+        
+        return best;
     }
     
     public static Integer getLongestConsecutiveDays(Integer reviewThreshold, Map<LocalDate,Integer> map) {

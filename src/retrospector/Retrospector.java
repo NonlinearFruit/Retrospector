@@ -131,6 +131,8 @@ public class Retrospector extends Application {
                     core.setAchieveController(achieveldr);
                 updateProgress(8,8);
                 
+                updateMessage("Launching . . .");
+                
                 updateMessage("Done!");
 
                 return root;

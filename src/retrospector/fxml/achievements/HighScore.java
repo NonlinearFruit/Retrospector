@@ -50,4 +50,8 @@ public class HighScore {
         this.score = score;
     }
     
+    @Override
+    public String toString() {
+        return category+": "+score+" "+month.toString();
+    }
 }
