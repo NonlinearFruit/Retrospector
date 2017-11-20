@@ -21,7 +21,7 @@ import retrospector.util.GithubUtil;
  */
 public class AboutController implements Initializable {
 
-    public static final String VERSION = "v1.2.3";
+    public static final String VERSION = "v1.2.4";
     
     @FXML
     private Text txtVersion;
