@@ -5,9 +5,11 @@
  */
 package retrospector.fxml.cheatsheet;
 
+import insidefx.undecorator.UndecoratorScene;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.scene.Scene;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
@@ -49,11 +51,12 @@ public class Cheatsheet extends Application {
         
         web.getEngine().loadContent(webContent);
         StackPane root = new StackPane(web);
-        
-        Scene scene = new Scene(root, 800, 600);
-        
+        root.setPrefHeight(500);
+        root.setPrefWidth(800);
+        UndecoratorScene.setClassicDecoration();
+        UndecoratorScene undecoratorScene = new UndecoratorScene(primaryStage, (Region) root);
+        primaryStage.setScene(undecoratorScene);
         primaryStage.setTitle("Search Cheatsheet");
-        primaryStage.setScene(scene);
         primaryStage.show();
     }
 
