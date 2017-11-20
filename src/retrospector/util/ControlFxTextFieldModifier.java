@@ -20,12 +20,8 @@ public class ControlFxTextFieldModifier {
     private static final Integer maxAutocompleteResults = 5;
     
     public static void autocompleteMe(TextField textfield, List<String> strings) {
-//        TextFields.bindAutoCompletion(
-//            textfield,
-//            strings
-//        );
         TextFields.bindAutoCompletion(textfield, (x)->{
-            if (x.isCancelled())
+            if (x.isCancelled() || x.getUserText().length() < 4)
                 return new ArrayList<>();
             
             List<String> results = strings.stream()
