@@ -39,7 +39,8 @@
                   <MenuItem mnemonicParsing="false" onAction="#preferences" text="Preferences..." />
                   <MenuItem mnemonicParsing="false" onAction="#server" text="Server..." />
                   <MenuItem mnemonicParsing="false" onAction="#performanceTest" text="Performance Test ..." />
-              <MenuItem mnemonicParsing="false" onAction="#backup" text="Backup" />
+                  <MenuItem mnemonicParsing="false" onAction="#scrape" text="Scrape ..." />
+	          <MenuItem mnemonicParsing="false" onAction="#backup" text="Backup" />
                   <MenuItem mnemonicParsing="false" onAction="#exit" text="Close" />
             </items>
           </Menu>

@@ -26,8 +26,10 @@ public class MiscSeries extends Accumulator<Media>{
     private Achievement inconsistent;
     private Achievement masterpiece;
     
-    // Title -> Creator -> Ratings
-    private Map<String,Map<String,List<Integer>>> map;
+    // Category -> Title -> Ratings
+    private Map<String,Map<String,List<Integer>>> mapRatings;
+    // Category -> Title -> Count
+    public Map<String,Map<String,Integer>> mapCounts;
     
     public MiscSeries() {
         inconsistent = new Achievement("","Inconsistent","Title with a 1 and 10 rating",3);
@@ -35,34 +37,41 @@ public class MiscSeries extends Accumulator<Media>{
         masterpiece = new Achievement("","True Masterpiece","Title with ten 10 ratings",2);
         masterpiece.setShowable(false);
         
-        map = new HashMap<>();
+        mapRatings = new HashMap<>();
+        mapCounts = new HashMap<>();
     }
     
     @Override
     public void accumulate(Media item) {
         String title = item.getTitle();
-        String creator = item.getCreator();
+        String category = item.getCategory();
         List<Integer> ratings = item.getReviews().stream()
                 .filter(r->r.getUser().equals(DataManager.getDefaultUser()))
                 .map(r->r.getRating())
                 .collect(Collectors.toList());
         
-        if (!map.containsKey(title))
-            map.put(title,new HashMap<>());
+        if (!mapRatings.containsKey(category))
+            mapRatings.put(category,new HashMap<>());
         ratings.addAll(
-                map.get(title).getOrDefault(creator, new ArrayList<>())
+                mapRatings.get(category).getOrDefault(title, new ArrayList<>())
         );
-        map.get(title).put(creator,ratings);
+        mapRatings.get(category).put(title,ratings);
+        
+        if (!mapCounts.containsKey(category))
+            mapCounts.put(category,new HashMap<>());
+        Integer count = mapCounts.get(category).getOrDefault(title, 0);
+        count += 1;
+        mapCounts.get(category).put(title,count);
     }
 
     @Override
     public List<AchievementFX> getShowableAchievements() {
-        boolean found = map.values().stream()
+        boolean found = mapRatings.values().stream()
                 .filter(m->m.values().contains(1))
                 .anyMatch(m->m.values().contains(10));
         inconsistent.setProgress(found? 100:0);
         
-        found = map.values().stream()
+        found = mapRatings.values().stream()
                 .filter(m->Collections.frequency(m.values(), 10)>=10)
                 .count() > 0;
         masterpiece.setProgress(found? 100:0);

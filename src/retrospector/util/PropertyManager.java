@@ -17,8 +17,9 @@ import java.util.Properties;
  * @author nonfrt
  */
 public class PropertyManager {
-    public static final String retroFolder=System.getProperty("user.home")+"/Retrospector";
-    private static final String configPath=retroFolder+"/Retrospector.config";
+    public static final String retroFolder = System.getProperty("user.home")+"/Retrospector";
+    private static final String configPath = retroFolder+"/Retrospector.config";
+    public static final String pluginPath = retroFolder+"/Plugins";
     private static Configuration config = null;
 
     public static class Configuration{
