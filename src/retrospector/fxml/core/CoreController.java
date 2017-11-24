@@ -47,9 +47,7 @@ public class CoreController implements Initializable {
     private Tab achievementTab;
     @FXML
     private MenuBar menuBar;
-//    private Button closeButton;
-//    private Button minButton;
-//    private Button maxButton;
+
 
     public static enum TAB{ SEARCH, MEDIA, REVIEW, CHART, LIST, ACHIEVEMENT} 
     public static final DecimalFormat ratingFormat =  new DecimalFormat("#.#");
@@ -301,9 +299,43 @@ public class CoreController implements Initializable {
     }
     
     @FXML
+    private void performanceTest(ActionEvent event) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/retrospector/fxml/dumpster/PerformanceTester.fxml"));
+            Parent root = (Parent) fxmlLoader.load();
+            Stage stage = new Stage();
+            UndecoratorScene.setClassicDecoration();
+            UndecoratorScene undecoratorScene = new UndecoratorScene(stage, (Region) root);
+            stage.setScene(undecoratorScene);
+            stage.setScene(undecoratorScene);
+            stage.setTitle("Performance Test");
+            stage.show();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+    }
+
+    @FXML
     public void about(ActionEvent e) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/retrospector/fxml/about/About.fxml"));
+            Parent root = (Parent) fxmlLoader.load();
+            Stage stage = new Stage();
+            UndecoratorScene.setClassicDecoration();
+            UndecoratorScene undecoratorScene = new UndecoratorScene(stage, (Region) root);
+            stage.setScene(undecoratorScene);
+            stage.setScene(undecoratorScene);
+            stage.setTitle("About");
+            stage.show();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+    }
+    
+    @FXML
+    public void scrape(ActionEvent e) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/retrospector/fxml/scraper/Scraper.fxml"));
             Parent root = (Parent) fxmlLoader.load();
             Stage stage = new Stage();
             UndecoratorScene.setClassicDecoration();

@@ -13,8 +13,10 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Separator;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -98,15 +100,26 @@ public class AchievementTabController implements Initializable {
         header.getChildren().add(AchievementFX.trophyize(headerImage, 3, headerSize));
         header.getChildren().add(new Text("\t"+locked+" "));
         header.getChildren().add(AchievementFX.trophyize(AchievementFX.lockedImage, 0, headerSize));
-        System.out.println("\t"+(System.currentTimeMillis()-time)+"ms to complete");
         
+        
+        highscoreBox.getChildren().clear();
         // Highscore Display
         List<HighScore> scores = new ArrayList<>();
         for (String category : DataManager.getCategories()) {
             scores.add(AchievementFactory.getHighScore(category));
         }
-        highscoreBox.getChildren().clear();
         highscoreBox.getChildren().add(new HighScoreTable(scores));
+        
+        highscoreBox.getChildren().add(new Separator(Orientation.VERTICAL));
+        
+        // Top Media Display
+        List<TopMedia> bests = new ArrayList<>();
+        for (String category : DataManager.getCategories()) {
+            bests.add(AchievementFactory.getTopMedia(category));
+        }
+        highscoreBox.getChildren().add(new TopMediaTable(bests));
+        
+        System.out.println("\t"+(System.currentTimeMillis()-time)+"ms to complete");
     }
     
     public void initAchievementTab() {
