@@ -14,7 +14,6 @@
         <tabs>
           <Tab fx:id="searchTab" text="Search" />
             <Tab fx:id="mediaTab" text="Media" />
-          <Tab fx:id="reviewTab" text="Review" />
             <Tab fx:id="chartTab" text="Chart" />
             <Tab fx:id="listTab" text="List" />
             <Tab fx:id="achievementTab" text="Achievements" />

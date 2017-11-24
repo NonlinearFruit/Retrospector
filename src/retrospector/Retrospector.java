@@ -85,55 +85,46 @@ public class Retrospector extends Application {
         final Task<Parent> task = new Task<Parent>() {
             @Override
             protected Parent call() throws InterruptedException,IOException {
-                updateProgress(0,9);
+                updateProgress(0,7);
                 updateMessage("Loading Database . . .");
                 DataManager.startDB();
-                updateProgress(1,9);
+                updateProgress(1,7);
                 
                 updateMessage("Loading Core . . .");
                 FXMLLoader ldr = new FXMLLoader(getClass().getResource("/retrospector/fxml/core/Core.fxml"));
                     Parent root = ldr.load();
                     CoreController core = ldr.getController();
-                updateProgress(2,9);
+                updateProgress(2,7);
                 
                 updateMessage("Loading Search . . .");
                 FXMLLoader searchldr = new FXMLLoader(getClass().getResource("/retrospector/fxml/search/SearchTab.fxml"));
                     searchldr.load();
                     core.setSearchController(searchldr);
-                updateProgress(3,9);
+                updateProgress(3,7);
                 
                 updateMessage("Loading Media . . .");
                 FXMLLoader medialdr = new FXMLLoader(getClass().getResource("/retrospector/fxml/media/MediaTab.fxml"));
                     medialdr.load();
                     core.setMediaController(medialdr);
-                updateProgress(4,9);
-                
-                updateMessage("Loading Review . . .");
-                FXMLLoader reviewldr = new FXMLLoader(getClass().getResource("/retrospector/fxml/review/ReviewTab.fxml"));
-                    reviewldr.load();
-                    core.setReviewController(reviewldr);
-                updateProgress(5,9);
+                updateProgress(4,7);
                 
                 updateMessage("Loading Chart . . .");
                 FXMLLoader statldr = new FXMLLoader(getClass().getResource("/retrospector/fxml/chart/StatsTab.fxml"));
                     statldr.load();
                     core.setStatsController(statldr);
-                updateProgress(6,9);
+                updateProgress(5,7);
                 
                 updateMessage("Loading List . . .");
                 FXMLLoader listldr = new FXMLLoader(getClass().getResource("/retrospector/fxml/list/ListsTab.fxml"));
                     listldr.load();
                     core.setListController(listldr);
-                updateProgress(7,9);
+                updateProgress(6,7);
                 
                 updateMessage("Loading Achievements . . .");
                 FXMLLoader achieveldr = new FXMLLoader(getClass().getResource("/retrospector/fxml/achievements/AchievementTab.fxml"));
                     achieveldr.load();
                     core.setAchieveController(achieveldr);
-                updateProgress(8,9);
-                
-                updateMessage("Launching . . .");
-                updateProgress(9,9);
+                updateProgress(7,7);
 
                 return root;
             }

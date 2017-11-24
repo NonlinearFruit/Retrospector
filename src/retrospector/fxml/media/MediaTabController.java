@@ -5,9 +5,9 @@
  */
 package retrospector.fxml.media;
 
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.beans.property.ObjectProperty;
@@ -32,8 +32,10 @@ import retrospector.model.Media;
 import retrospector.model.Review;
 import java.util.function.Consumer;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.TableRow;
-import javafx.scene.control.Tooltip;
+import javafx.scene.layout.VBox;
 import retrospector.fxml.core.CoreController;
 import retrospector.model.Factoid;
 import retrospector.util.ControlFxTextFieldModifier;
@@ -66,25 +68,11 @@ public class MediaTabController implements Initializable {
     @FXML
     private TextArea mediaDescription;
     @FXML
-    private Button mediaNewReview;
-    @FXML
-    private Button mediaEditReview;
-    @FXML
-    private Button mediaDeleteReview;
-    @FXML
-    private TableView<Review> mediaReviewTable;
-    @FXML
     private Button mediaSave;
     @FXML
     private Button mediaDelete;
     @FXML
     private Button mediaCancel;
-    @FXML
-    private TableColumn<Review, Double> mediaRatingColumn;
-    @FXML
-    private TableColumn<Review, String> mediaUserColumn;
-    @FXML
-    private TableColumn<Review, LocalDate> mediaDateColumn;
     @FXML
     private Button mediaNewMedia;
     @FXML
@@ -119,14 +107,19 @@ public class MediaTabController implements Initializable {
     private TextField mediaContentFactoid;
     @FXML
     private Button mediaSaveFactoid;
+    @FXML
+    private VBox reviewBox;
     
+    private final ObjectProperty<Review> currentReview = new SimpleObjectProperty<>();
     private ObjectProperty<Media> currentMedia;
-    private ObjectProperty<Review> currentReview;
     private ObjectProperty<TAB> currentTab;
     private ObjectProperty<Factoid> currentFactoid;
     private Consumer<Integer> nextPreviousFunct;
+    
     private ReviewEditorController reviewEditorController;
+    private Parent reviewEditor;
     private ReviewListController reviewListController;
+    private Parent reviewList;
     private RollOver reviewSwapper;
 
     /**
@@ -141,11 +134,12 @@ public class MediaTabController implements Initializable {
         return currentMedia.get();
     }
     
-    public void setup(ObjectProperty<TAB> t, ObjectProperty<Media> m,ObjectProperty<Review> r, Consumer<Integer> np){
+    public void setup(ObjectProperty<TAB> t, ObjectProperty<Media> m, Consumer<Integer> np){
         currentTab = t;
         currentMedia = m;
-        currentReview = r;
         nextPreviousFunct = np;
+        reviewEditorController.setup(reviewSwapper::showFront, currentMedia, currentReview);
+        reviewListController.setup(reviewSwapper::showBack, currentMedia, currentReview);
     }
     
     public void update(){
@@ -223,10 +217,8 @@ public class MediaTabController implements Initializable {
         updateFactoid(getMedia().getFactoids());
         
         // Review Stuff
-        mediaReviewTable.setItems(FXCollections.observableArrayList(getMedia().getReviews()));
-        mediaReviewTable.refresh();
-        if(mediaReviewTable.getItems().size()>0)
-            mediaReviewTable.getSelectionModel().select(0);
+        reviewEditorController.update();
+        reviewListController.update();
     }
     
     private void initMediaTab(){
@@ -429,56 +421,21 @@ public class MediaTabController implements Initializable {
         });
         
         // Review Stuff
-        reviewEditorController.setup(currentTab, currentMedia, currentReview);
-        
-        mediaReviewTable.setPlaceholder(new Text("^ Click 'New' to create a Review"));
-        mediaReviewTable.getSelectionModel().selectedItemProperty().addListener((observe, old, neo)->{
-            setReview(neo);
-        });
-        mediaReviewTable.setRowFactory(tv -> {
-            // Display 'X Days Ago'
-            TableRow<Review> row = new TableRow<Review>(){
-                private Tooltip tooltip = new Tooltip();
-                @Override
-                public void updateItem(Review review, boolean empty) {
-                    super.updateItem(review, empty);
-                    if (review == null) {
-                        setTooltip(null);
-                    } else {
-                        long age = ChronoUnit.DAYS.between(review.getDate(), LocalDate.now());
-                        tooltip.setText(age+" days ago");
-                        setTooltip(tooltip);
-                    }
-                }
-            };
-            // Quickly switch to editing a review
-            row.setOnMouseClicked(event -> {
-                if (event.getClickCount() == 2 && (!row.isEmpty())){
-                    setTab(TAB.REVIEW);
-                }
-            });
-            return row;
-        });
-        mediaRatingColumn.setCellValueFactory(new PropertyValueFactory<>("Rating"));
-        mediaUserColumn.setCellValueFactory(new PropertyValueFactory<>("User"));
-        mediaDateColumn.setCellValueFactory(new PropertyValueFactory<>("Date"));
-        
-        mediaNewReview.setOnAction(e->{
-            Review review = new Review();
-            review.setMediaId(getMedia().getId());
-            review.setId(DataManager.createDB(review));
-            setReview(review);
-            setTab(TAB.REVIEW);
-        });
-        mediaEditReview.setOnAction(e->{
-            setTab(TAB.REVIEW);
-        });
-        mediaDeleteReview.setOnAction(e->{
-            if(new Alert(Alert.AlertType.WARNING,"Are you sure you want to delete this?",ButtonType.NO,ButtonType.YES).showAndWait().get().equals(ButtonType.YES)){
-                DataManager.deleteDB(getReview());
-                updateMediaTab();
-            }
-        });
+        try{
+            FXMLLoader rlLoader = new FXMLLoader(getClass().getResource("/retrospector/fxml/media/ReviewList.fxml"));
+            Parent reviewList = (Parent) rlLoader.load();
+            reviewListController = (ReviewListController) rlLoader.getController();
+            
+            FXMLLoader reLoader = new FXMLLoader(getClass().getResource("/retrospector/fxml/media/ReviewEditor.fxml"));
+            Parent reviewEditor = (Parent) reLoader.load();
+            reviewEditorController = (ReviewEditorController) reLoader.getController();
+            
+            reviewSwapper = new RollOver(reviewList,reviewEditor);
+            reviewBox.getChildren().add(reviewSwapper);
+            
+        } catch(IOException ioe) {
+            ioe.printStackTrace();
+        }
     }
     
     public void reviewEditor() {

@@ -47,11 +47,6 @@ public class CoreController implements Initializable {
     private Tab achievementTab;
     @FXML
     private MenuBar menuBar;
-
-
-    public static enum TAB{ SEARCH, MEDIA, REVIEW, CHART, LIST, ACHIEVEMENT} 
-    public static final DecimalFormat ratingFormat =  new DecimalFormat("#.#");
-    
     @FXML
     public TabPane anchorCenter;
     @FXML
@@ -59,20 +54,19 @@ public class CoreController implements Initializable {
     @FXML
     private Tab mediaTab;
     @FXML
-    private Tab reviewTab;
-    @FXML
     private Tab chartTab;
     @FXML
     private Tab listTab;
+
+    public static enum TAB{ SEARCH, MEDIA, CHART, LIST, ACHIEVEMENT} 
+    public static final DecimalFormat ratingFormat =  new DecimalFormat("#.#");
     
     private final ObjectProperty<Media> currentMedia = new SimpleObjectProperty<>();
-    private final ObjectProperty<Review> currentReview = new SimpleObjectProperty<>();
     private final ObjectProperty<TAB> currentTab = new SimpleObjectProperty<>();
 
     private StatsTabController statsController;
     private SearchTabController searchController;
     private MediaTabController mediaController;
-    private ReviewTabController reviewController;
     private ListsTabController listsController;
     private AchievementTabController achieveController;
     
@@ -85,13 +79,7 @@ public class CoreController implements Initializable {
     public void setMediaController(FXMLLoader ldr){ 
         mediaTab.setContent(ldr.getRoot());
         mediaController = ldr.getController();
-        mediaController.setup(currentTab,currentMedia,currentReview,this::nextPreviousMedia);
-    }
-    
-    public void setReviewController(FXMLLoader ldr){ 
-        reviewTab.setContent(ldr.getRoot());
-        reviewController = ldr.getController();
-        reviewController.setup(currentTab,currentMedia,currentReview); 
+        mediaController.setup(currentTab,currentMedia,this::nextPreviousMedia);
     }
     
     public void setListController(FXMLLoader ldr){ 
@@ -120,10 +108,6 @@ public class CoreController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
-        // This is just for test, try not to put it in a really release
-//        if(DataManager.getMedia().size()==0)
-//            Dumpster.createMedia(1000);
-
         // Create the menu bar
         menuBar.setOnMousePressed(e-> {
                 xOffset = e.getSceneX();
@@ -134,17 +118,6 @@ public class CoreController implements Initializable {
             stage.setX(e.getScreenX() - xOffset);
             stage.setY(e.getScreenY() - yOffset);
         });
-//        closeButton.setOnAction(e->{
-//            exit();
-//        });
-//        minButton.setOnAction(e->{
-//            Stage stage = (Stage) closeButton.getScene().getWindow();
-//            stage.setIconified(true);
-//        });
-//        maxButton.setOnAction(e->{
-//            Stage stage = (Stage) closeButton.getScene().getWindow();
-//            stage.setMaximized(!stage.isMaximized());
-//        });
         
         // Tabs
         searchTab.selectedProperty().addListener((observe,old,neo)->{
@@ -154,10 +127,6 @@ public class CoreController implements Initializable {
         mediaTab.selectedProperty().addListener((observe,old,neo)->{
             if(neo)
                 setTab(TAB.MEDIA);
-        });
-        reviewTab.selectedProperty().addListener((observe,old,neo)->{
-            if(neo)
-                setTab(TAB.REVIEW);
         });
         chartTab.selectedProperty().addListener((observe,old,neo)->{
             if(neo)
@@ -182,9 +151,6 @@ public class CoreController implements Initializable {
                 case MEDIA:
                     tab = mediaTab;
                     break;
-                case REVIEW:
-                    tab = reviewTab;
-                    break;
                 case CHART:
                     tab = chartTab;
                     break;
@@ -203,8 +169,6 @@ public class CoreController implements Initializable {
                 searchController.update();
             else if(neo.getText().equals("Media"))
                 mediaController.update();
-            else if(neo.getText().equals("Review"))
-                reviewController.update();
             else if(neo.getText().equals("Chart"))
                 statsController.update();
             else if(neo.getText().equals("List"))
@@ -216,24 +180,12 @@ public class CoreController implements Initializable {
         currentMedia.addListener((observe, old, neo)->{
             if(neo==null){
                 mediaTab.setDisable(true);
-                reviewTab.setDisable(true);
-//                chartTab.setDisable(true);
             } else {
                 mediaTab.setDisable(false);
-//                chartTab.setDisable(false);
             }
         });
         
-        currentReview.addListener((observe,old,neo)->{
-            if(neo==null){
-                reviewTab.setDisable(true);
-            } else {
-                reviewTab.setDisable(false);
-            }
-        });
         mediaTab.setDisable(true);
-        reviewTab.setDisable(true);
-//        chartTab.setDisable(true);
     }
     
     @FXML

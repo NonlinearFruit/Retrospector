@@ -37,14 +37,6 @@ import retrospector.util.ControlFxTextFieldModifier;
 public class ReviewEditorController implements Initializable {
 
     @FXML
-    private TextField reviewTitle;
-    @FXML
-    private TextField reviewCreator;
-    @FXML
-    private TextField reviewSeason;
-    @FXML
-    private TextField reviewEpisode;
-    @FXML
     private Rating reviewStars;
     @FXML
     private Text reviewRating;
@@ -67,60 +59,13 @@ public class ReviewEditorController implements Initializable {
     
     private ObjectProperty<Media> currentMedia;
     private ObjectProperty<Review> currentReview;
-    private ObjectProperty<TAB> currentTab;
+    private Runnable showReviewList;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        initReviewTab();
-    }    
-    
-    private Media getMedia(){
-        return currentMedia.get();
-    }
-    
-    public void setup(ObjectProperty<TAB> t, ObjectProperty<Media> m, ObjectProperty<Review> r){
-        currentTab = t;
-        currentMedia = m;
-        currentReview = r;
-    }
-            
-    
-    public void update(){
-        updateReviewTab();
-    }
-    
-    private void setMedia(Media m){
-        currentMedia.set(m);
-    }
-    
-    private void setReview(Review r){
-        currentReview.set(r);
-    }
-    
-    private Review getReview(){
-        return currentReview.get();
-    }
-    
-    private void setTab(TAB t){
-        currentTab.set(t);
-    }
-    
-    private void updateReviewTab(){
-        reviewTitle.setText(getMedia().getTitle());
-        reviewCreator.setText(getMedia().getCreator());
-        reviewSeason.setText(getMedia().getSeason());
-        reviewEpisode.setText(getMedia().getEpisode());
-        reviewRater.setValue(getReview().getRating().doubleValue());
-        Platform.runLater(()->reviewRater.requestFocus());
-        reviewDescription.setText(getReview().getReview());
-        reviewUser.setText(getReview().getUser());
-        reviewDate.setValue(getReview().getDate());
-    }
-    
-    private void initReviewTab(){
         reviewStars.setPartialRating(true);
         reviewStars.setDisable(true);
         reviewStars.setMax(DataManager.getMaxRating()/2);
@@ -140,17 +85,55 @@ public class ReviewEditorController implements Initializable {
             getReview().setReview(reviewDescription.getText());
             DataManager.updateDB(getReview());
             setReview(DataManager.getReview(getReview().getId()));
-            setTab(TAB.MEDIA);
+            showReviewList();
         });
         reviewDelete.setOnAction(e->{
             if(new Alert(Alert.AlertType.WARNING,"Are you sure you want to delete this?",ButtonType.NO,ButtonType.YES).showAndWait().get().equals(ButtonType.YES)){
                 DataManager.deleteDB(getReview());
-                setTab(TAB.MEDIA);
+                showReviewList();
             }
         });
         reviewCancel.setOnAction(e->{
-            setTab(TAB.MEDIA);
+            showReviewList();
         });
+    }    
+    
+    private Media getMedia(){
+        if (currentMedia == null)
+            return new Media();
+        return currentMedia.get();
     }
     
+    public void setup(Runnable showReviewList, ObjectProperty<Media> m, ObjectProperty<Review> r){
+        this.showReviewList = showReviewList;
+        currentMedia = m;
+        currentReview = r;
+    }
+    
+    private void showReviewList() {
+        showReviewList.run();
+    }
+    
+    private void setMedia(Media m){
+        currentMedia.set(m);
+    }
+    
+    private void setReview(Review r){
+        currentReview.set(r);
+    }
+    
+    private Review getReview(){
+        Review r = currentReview.get();
+        if (r == null)
+            return new Review();
+        return r;
+    }
+    
+    public void update(){
+        reviewRater.setValue(getReview().getRating().doubleValue());
+        Platform.runLater(()->reviewRater.requestFocus());
+        reviewDescription.setText(getReview().getReview());
+        reviewUser.setText(getReview().getUser());
+        reviewDate.setValue(getReview().getDate());
+    }
 }
