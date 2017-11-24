@@ -92,11 +92,8 @@ public class Retrospector extends Application {
                 
                 updateMessage("Loading Core . . .");
                 FXMLLoader ldr = new FXMLLoader(getClass().getResource("/retrospector/fxml/core/Core.fxml"));
-                System.out.println("loader");
                     Parent root = ldr.load();
-                System.out.println("parent");
                     CoreController core = ldr.getController();
-                System.out.println("controller");
                 updateProgress(2,9);
                 
                 updateMessage("Loading Search . . .");
