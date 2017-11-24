@@ -31,7 +31,6 @@ import retrospector.model.DataManager;
 import retrospector.model.Media;
 import retrospector.model.Review;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.Tooltip;
@@ -126,6 +125,9 @@ public class MediaTabController implements Initializable {
     private ObjectProperty<TAB> currentTab;
     private ObjectProperty<Factoid> currentFactoid;
     private Consumer<Integer> nextPreviousFunct;
+    private ReviewEditorController reviewEditorController;
+    private ReviewListController reviewListController;
+    private RollOver reviewSwapper;
 
     /**
      * Initializes the controller class.
@@ -427,6 +429,8 @@ public class MediaTabController implements Initializable {
         });
         
         // Review Stuff
+        reviewEditorController.setup(currentTab, currentMedia, currentReview);
+        
         mediaReviewTable.setPlaceholder(new Text("^ Click 'New' to create a Review"));
         mediaReviewTable.getSelectionModel().selectedItemProperty().addListener((observe, old, neo)->{
             setReview(neo);
@@ -475,5 +479,13 @@ public class MediaTabController implements Initializable {
                 updateMediaTab();
             }
         });
+    }
+    
+    public void reviewEditor() {
+        reviewEditorController.update();
+    }
+    
+    public void showReviewEditor(boolean tf) {
+        
     }
 }
