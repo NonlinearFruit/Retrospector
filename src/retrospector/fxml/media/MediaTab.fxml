@@ -3,6 +3,8 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SplitMenuButton?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
@@ -109,7 +111,7 @@
                   <TextArea fx:id="mediaDescription" maxWidth="600.0" prefHeight="200.0" prefWidth="200.0" wrapText="true" VBox.vgrow="ALWAYS" />
                </children>
             </VBox>
-            <VBox spacing="3.0">
+            <VBox prefWidth="300.0" spacing="3.0">
                <children>
                   <HBox alignment="CENTER" VBox.vgrow="SOMETIMES">
                      <children>
@@ -127,13 +129,13 @@
                   </HBox>
                   <TableView fx:id="mediaFactoidTable" VBox.vgrow="ALWAYS">
                      <columns>
-                        <TableColumn fx:id="mediaTitleColumn" prefWidth="66.0" text="Type" />
-                        <TableColumn fx:id="mediaContentColumn" prefWidth="142.0" text="Content" />
+                        <TableColumn fx:id="mediaTitleColumn" prefWidth="89.0" text="Type" />
+                        <TableColumn fx:id="mediaContentColumn" prefWidth="160.0" text="Content" />
                      </columns>
                   </TableView>
-                  <HBox>
+                  <HBox alignment="CENTER">
                      <children>
-                        <ChoiceBox fx:id="mediaTitleFactoid" prefWidth="150.0" />
+                        <ChoiceBox fx:id="mediaTitleFactoid" prefWidth="100.0" />
                         <TextField fx:id="mediaContentFactoid" prefColumnCount="10" promptText="Content" />
                         <Button fx:id="mediaSaveFactoid" mnemonicParsing="false" text="Save" />
                      </children>
@@ -156,6 +158,12 @@
             <Button fx:id="mediaSave" mnemonicParsing="false" text="Save" />
             <Button fx:id="mediaDelete" mnemonicParsing="false" text="Delete" />
             <Button fx:id="mediaCancel" mnemonicParsing="false" text="Cancel" />
+            <SplitMenuButton mnemonicParsing="false" onAction="#autofill" text="Autofill">
+              <items>
+                <MenuItem mnemonicParsing="false" text="Action 1" />
+                <MenuItem mnemonicParsing="false" text="Action 2" />
+              </items>
+            </SplitMenuButton>
             <Button fx:id="nextBtn" mnemonicParsing="false" text="&gt;&gt;">
                <HBox.margin>
                   <Insets left="20.0" />

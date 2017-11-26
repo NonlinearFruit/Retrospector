@@ -3,26 +3,34 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package retrospector.fxml.scraper;
+package retrospector.fxml.media;
 
+import java.io.File;
 import java.io.StringReader;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import retrospector.model.Media;
+import retrospector.util.PropertyManager;
 
 /**
  *
  * @author nonfrt
  */
 public abstract class JsDataScraper {
-    public abstract List<ScrapeResult> search(String query);
-    public abstract List<ScrapeResult> getGroup(ScrapeResult scrape);
-    public abstract Media getMedia(ScrapeResult scrape);
+    
+    private static ScriptEngineManager mgr = new ScriptEngineManager();
+    private static ScriptEngine engine = mgr.getEngineByName("JavaScript");
+
+    public abstract Media autocomplete(Media m);
     
     public static String getUrlContent(String url) {
         try (Scanner scanner = new Scanner(new URL(url).openStream())) {
@@ -45,5 +53,20 @@ public abstract class JsDataScraper {
             e.printStackTrace();  
         } 
         return null;
+    }
+    
+    public static String[] getJsFiles() {
+        File directory = new File( PropertyManager.pluginPath );
+        if (!directory.exists())
+            directory.mkdir();
+        
+        return Arrays.stream( directory.listFiles() )
+                .map( file -> file.getName() )
+                .toArray( String[] :: new );
+    }
+    
+    public static JsDataScraper getScraper(String file) throws ScriptException {
+        JsDataScraper scraper = (JsDataScraper) engine.eval("load('" + PropertyManager.pluginPath + "/" + file + "');");
+        return scraper;
     }
 }

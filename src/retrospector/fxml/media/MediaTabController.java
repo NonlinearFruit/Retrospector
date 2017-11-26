@@ -32,13 +32,17 @@ import retrospector.model.Media;
 import retrospector.model.Review;
 import java.util.function.Consumer;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.TableRow;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import javax.script.ScriptException;
 import retrospector.fxml.core.CoreController;
 import retrospector.model.Factoid;
 import retrospector.util.ControlFxTextFieldModifier;
+import retrospector.util.Toast;
 
 /**
  * FXML Controller class
@@ -130,20 +134,20 @@ public class MediaTabController implements Initializable {
         initMediaTab();
     }    
     
-    public Media getMedia(){
-        return currentMedia.get();
-    }
-    
     public void setup(ObjectProperty<TAB> t, ObjectProperty<Media> m, Consumer<Integer> np){
         currentTab = t;
         currentMedia = m;
         nextPreviousFunct = np;
-        reviewEditorController.setup(reviewSwapper::showFront, currentMedia, currentReview);
-        reviewListController.setup(reviewSwapper::showBack, currentMedia, currentReview);
+        reviewEditorController.setup(()->{reviewListController.update();reviewSwapper.showFront();}, currentMedia, currentReview);
+        reviewListController.setup(()->{reviewEditorController.update();reviewSwapper.showBack();}, currentMedia, currentReview);
     }
     
     public void update(){
         updateMediaTab();
+    }
+    
+    private void setTab(TAB t){
+        currentTab.set(t);
     }
     
     private Review getReview(){
@@ -154,12 +158,25 @@ public class MediaTabController implements Initializable {
         currentReview.set(r);
     }
 
+    public Media getMedia(){
+        return currentMedia.get();
+    }
+    
     private void setMedia(Media m){
         currentMedia.setValue(m);
     }
     
-    private void setTab(TAB t){
-        currentTab.set(t);
+    private Media pullMedia() {
+        Media m = new Media();
+        m.clone(getMedia());
+        m.setTitle(mediaTitle.getText());
+        m.setCreator(mediaCreator.getText());
+        m.setSeason(mediaSeason.getText());
+        m.setEpisode(mediaEpisode.getText());
+        m.setCategory(mediaCategory.getValue());
+        m.setType(mediaType.getValue());
+        m.setDescription(mediaDescription.getText());
+        return m;
     }
     
     private void setFactoid(Factoid factoid) {
@@ -217,7 +234,7 @@ public class MediaTabController implements Initializable {
         updateFactoid(getMedia().getFactoids());
         
         // Review Stuff
-        reviewEditorController.update();
+//        reviewEditorController.update();
         reviewListController.update();
     }
     
@@ -267,16 +284,7 @@ public class MediaTabController implements Initializable {
         
         // Buttons
         mediaSave.setOnAction(e->{
-            Media m = new Media();
-            m.clone(getMedia());
-            System.out.println("Media ID: "+m.getId());
-            m.setTitle(mediaTitle.getText());
-            m.setCreator(mediaCreator.getText());
-            m.setSeason(mediaSeason.getText());
-            m.setEpisode(mediaEpisode.getText());
-            m.setCategory(mediaCategory.getValue());
-            m.setType(mediaType.getValue());
-            m.setDescription(mediaDescription.getText());
+            Media m = pullMedia();
             DataManager.updateDB(m);
             setMedia(m);
             mediaSave.setDisable(true);
@@ -444,5 +452,20 @@ public class MediaTabController implements Initializable {
     
     public void showReviewEditor(boolean tf) {
         
+    }
+
+    @FXML
+    private void autofill(ActionEvent event) {
+        Media m = pullMedia();
+        String file = JsDataScraper.getJsFiles()[0];
+        try {
+            JsDataScraper scraper = JsDataScraper.getScraper(file); 
+            m = scraper.autocomplete(m);
+            DataManager.updateDB(m);
+            setMedia(m);
+            updateMediaTab();
+        } catch (ScriptException se) {
+            Toast.makeText((Stage) reviewBox.getScene().getWindow(), "Autofill failed", 3000, 500, 500);
+        }
     }
 }

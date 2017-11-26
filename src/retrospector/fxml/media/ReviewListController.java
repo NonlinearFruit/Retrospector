@@ -8,6 +8,7 @@ package retrospector.fxml.media;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
@@ -15,7 +16,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
@@ -114,7 +114,8 @@ public class ReviewListController implements Initializable {
     }    
     
     public void update() {
-        reviewTable.setItems(FXCollections.observableArrayList(getMedia().getReviews()));
+        List<Review> reviews = DataManager.getMedia(getMedia().getId()).getReviews();
+        reviewTable.setItems(FXCollections.observableArrayList(reviews));
         reviewTable.refresh();
         if (reviewTable.getItems().size() > 0) {
             reviewTable.getSelectionModel().select(0);
@@ -139,7 +140,7 @@ public class ReviewListController implements Initializable {
     private void deleteCurrentReview(ActionEvent event) {
         if (new Alert(Alert.AlertType.WARNING, "Are you sure you want to delete this?", ButtonType.NO, ButtonType.YES).showAndWait().get().equals(ButtonType.YES)) {
             DataManager.deleteDB(getReview());
-            showReviewEditor();
+            update();
         }
     }
     

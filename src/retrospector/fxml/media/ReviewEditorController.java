@@ -99,8 +99,6 @@ public class ReviewEditorController implements Initializable {
     }    
     
     private Media getMedia(){
-        if (currentMedia == null)
-            return new Media();
         return currentMedia.get();
     }
     
@@ -124,8 +122,6 @@ public class ReviewEditorController implements Initializable {
     
     private Review getReview(){
         Review r = currentReview.get();
-        if (r == null)
-            return new Review();
         return r;
     }
     
