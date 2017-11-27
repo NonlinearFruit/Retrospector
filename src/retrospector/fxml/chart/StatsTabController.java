@@ -24,7 +24,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
@@ -36,16 +35,14 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.Slider;
-import javafx.scene.control.Spinner;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
-import org.controlsfx.control.PopOver;
 import retrospector.fxml.core.CoreController.TAB;
 import retrospector.model.DataManager;
 import retrospector.model.Factoid;
@@ -67,6 +64,12 @@ public class StatsTabController implements Initializable {
     private ObjectProperty<Media> currentMedia;
     private ObservableList<Media> allMedia = FXCollections.observableArrayList();
     public static final String[] colors = new String[]{"red","orange","yellowgreen","seagreen","lightseagreen","skyblue","royalblue","grey","mediumpurple","palevioletred","firebrick"};
+//    public static final Color[] colors = new Color[]{
+//        Color.RED,            Color.ORANGE,         Color.YELLOWGREEN,
+//        Color.SEAGREEN,       Color.LIGHTSEAGREEN,  Color.SKYBLUE,
+//        Color.ROYALBLUE,      Color.GREY,           Color.MEDIUMPURPLE,
+//        Color.PALEVIOLETRED,  Color.FIREBRICK
+//    };
     
     @FXML
     private PieChart chartMediaPerCategory;
@@ -408,8 +411,9 @@ public class StatsTabController implements Initializable {
         int index = Arrays.asList(DataManager.getCategories()).indexOf(category);
         if (category.equals(universalCategory))
             index = colors.length-1;
-        chartReviewsPerYear.setStyle("CHART_COLOR_1: "+colors[ (index>0?index:0) % colors.length]+";");
-        chartReviewsPerRating.setStyle("CHART_COLOR_1: "+colors[ (index>0?index:0) % colors.length]+";");
+        String color = colors[ (index>0?index:0) % colors.length];
+        chartReviewsPerYear.setStyle("CHART_COLOR_1: "+color+";");
+        chartReviewsPerRating.setStyle("CHART_COLOR_1: "+color+";");
             
         // Data Mining - Vars
         Map<String, Integer> reviewMap = new HashMap<>();
@@ -450,7 +454,10 @@ public class StatsTabController implements Initializable {
         int month = info.getEarliest().getMonthValue();
         for (int i=0; i <= ChronoUnit.MONTHS.between(info.getEarliest(), LocalDate.now())+1; i++) {
             String key = month+"-"+year;
-            data.getData().add(new XYChart.Data(key, reviewMap.getOrDefault(key, 0)));
+            Integer value = reviewMap.getOrDefault(key, 0);
+            XYChart.Data datapoint = new XYChart.Data(key, value);
+            datapoint.setNode(new HoveredLabelNode(color,value));
+            data.getData().add(datapoint);
             ++month;
             if(month>12){
                 month = 1;
