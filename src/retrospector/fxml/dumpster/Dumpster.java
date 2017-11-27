@@ -49,7 +49,7 @@ public class Dumpster {
     
     public Review getRandomReview(){
         Review r = new Review();
-        r.setRating(random.nextInt(10)+1);
+        r.setRating(getRating());
         r.setUser(users[random.nextInt(users.length)]);
         r.setDate(LocalDate.of(random.nextInt(LocalDate.now().getYear()-earliestYear)+earliestYear,random.nextInt(12)+1,random.nextInt(28)+1));
         r.setReview(reviewStringGenerator.nextString());
@@ -87,5 +87,18 @@ public class Dumpster {
         for (Media m : media) {
             DataManager.createDB(m);
         }
+    }
+    
+    private int getNormal(int mean, int std, int min, int max) {
+        int result = (int) random.nextGaussian()*std + mean;
+        if (result < min)
+            return min;
+        if (result > max)
+            return max;
+        return result;
+    }
+    
+    private int getRating() {
+        return getNormal(6,2,1,10);
     }
 }
