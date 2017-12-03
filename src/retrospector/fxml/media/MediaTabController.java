@@ -7,7 +7,6 @@ package retrospector.fxml.media;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.beans.property.ObjectProperty;
@@ -35,11 +34,13 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TableRow;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javax.script.ScriptException;
+import org.controlsfx.control.PopOver;
 import retrospector.Retrospector;
 import retrospector.fxml.core.CoreController;
 import retrospector.model.Factoid;
@@ -129,6 +130,7 @@ public class MediaTabController implements Initializable {
     private ReviewListController reviewListController;
     private Parent reviewList;
     private RollOver reviewSwapper;
+    private PopOver autofillPopOver;
 
     /**
      * Initializes the controller class.
@@ -453,6 +455,19 @@ public class MediaTabController implements Initializable {
         Font fa = Font.loadFont(Retrospector.class.getResourceAsStream("res/fontawesome-webfont.ttf"), 15);
         autofillBtn.setText(""); // Download symbol
         autofillBtn.setFont(fa);
+        ListView<String> scrapeList = new ListView(FXCollections.observableArrayList(JsDataScraper.getJsFiles()));
+        scrapeList.setOnMouseClicked((click)-> {
+                if (click.getClickCount() == 2) {
+                    String file = scrapeList.getSelectionModel().getSelectedItem();
+                    autofillPopOver.hide();
+                    autofill(file);
+                }
+        });
+        autofillPopOver = new PopOver(scrapeList);
+        autofillPopOver.setAutoHide(true);
+        autofillPopOver.setAutoFix(true);
+        autofillPopOver.setHideOnEscape(true);
+        autofillPopOver.setArrowLocation(PopOver.ArrowLocation.LEFT_TOP);
     }
     
     public void reviewEditor() {
@@ -461,8 +476,11 @@ public class MediaTabController implements Initializable {
 
     @FXML
     private void autofill(ActionEvent event) {
+        autofillPopOver.show(autofillBtn);
+    }
+    
+    private void autofill(String file) {
         Media m = pullMedia();
-        String file = JsDataScraper.getJsFiles()[0];
         try {
             JsDataScraper scraper = JsDataScraper.getScraper(file); 
             m = scraper.autocomplete(m);
