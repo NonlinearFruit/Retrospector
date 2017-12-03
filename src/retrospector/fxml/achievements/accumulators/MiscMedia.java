@@ -26,7 +26,7 @@ public class MiscMedia extends Accumulator<Media> {
     public MiscMedia() {
         starwars = new Achievement("","Star Wars","Star Wars in a title",3);
         starwars.setShowable(false);
-        nerd = new Achievement("","Nerd","Media with 10 facts");
+        nerd = new Achievement("","Nerd","Media with 10 facts",3);
         nerd.setShowable(false);
         
         starwarsFound = false;

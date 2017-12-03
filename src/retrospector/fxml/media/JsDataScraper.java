@@ -33,7 +33,10 @@ public abstract class JsDataScraper {
     public abstract Media autocomplete(Media m);
     
     public static String getUrlContent(String url) {
-        try (Scanner scanner = new Scanner(new URL(url).openStream())) {
+        url = url.replaceAll(" ", "+");
+        System.out.println(url);
+        try (
+            Scanner scanner = new Scanner(new URL(url).openStream())) {
             return scanner.useDelimiter("\\A").next();
         } catch (Exception ex) {
             System.err.println(ex.getMessage());
@@ -68,5 +71,9 @@ public abstract class JsDataScraper {
     public static JsDataScraper getScraper(String file) throws ScriptException {
         JsDataScraper scraper = (JsDataScraper) engine.eval("load('" + PropertyManager.pluginPath + "/" + file + "');");
         return scraper;
+    }
+    
+    public static void print(String msg) {
+        System.out.println(msg);
     }
 }

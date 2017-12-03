@@ -37,8 +37,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.TableRow;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javax.script.ScriptException;
+import retrospector.Retrospector;
 import retrospector.fxml.core.CoreController;
 import retrospector.model.Factoid;
 import retrospector.util.ControlFxTextFieldModifier;
@@ -113,6 +115,8 @@ public class MediaTabController implements Initializable {
     private Button mediaSaveFactoid;
     @FXML
     private VBox reviewBox;
+    @FXML
+    private Button autofillBtn;
     
     private final ObjectProperty<Review> currentReview = new SimpleObjectProperty<>();
     private ObjectProperty<Media> currentMedia;
@@ -444,14 +448,15 @@ public class MediaTabController implements Initializable {
         } catch(IOException ioe) {
             ioe.printStackTrace();
         }
+        
+        // Autofill Stuff
+        Font fa = Font.loadFont(Retrospector.class.getResourceAsStream("res/fontawesome-webfont.ttf"), 15);
+        autofillBtn.setText(""); // Download symbol
+        autofillBtn.setFont(fa);
     }
     
     public void reviewEditor() {
         reviewEditorController.update();
-    }
-    
-    public void showReviewEditor(boolean tf) {
-        
     }
 
     @FXML
@@ -466,6 +471,7 @@ public class MediaTabController implements Initializable {
             updateMediaTab();
         } catch (ScriptException se) {
             Toast.makeText((Stage) reviewBox.getScene().getWindow(), "Autofill failed", 3000, 500, 500);
+            se.printStackTrace();
         }
     }
 }
