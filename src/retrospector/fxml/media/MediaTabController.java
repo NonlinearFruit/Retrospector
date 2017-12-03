@@ -131,6 +131,7 @@ public class MediaTabController implements Initializable {
     private Parent reviewList;
     private RollOver reviewSwapper;
     private PopOver autofillPopOver;
+    private ListView<String> scrapeListView;
 
     /**
      * Initializes the controller class.
@@ -455,15 +456,15 @@ public class MediaTabController implements Initializable {
         Font fa = Font.loadFont(Retrospector.class.getResourceAsStream("res/fontawesome-webfont.ttf"), 15);
         autofillBtn.setText(""); // Download symbol
         autofillBtn.setFont(fa);
-        ListView<String> scrapeList = new ListView(FXCollections.observableArrayList(JsDataScraper.getJsFiles()));
-        scrapeList.setOnMouseClicked((click)-> {
+        scrapeListView = new ListView();
+        scrapeListView.setOnMouseClicked((click)-> {
                 if (click.getClickCount() == 2) {
-                    String file = scrapeList.getSelectionModel().getSelectedItem();
+                    String file = scrapeListView.getSelectionModel().getSelectedItem();
                     autofillPopOver.hide();
                     autofill(file);
                 }
         });
-        autofillPopOver = new PopOver(scrapeList);
+        autofillPopOver = new PopOver(scrapeListView);
         autofillPopOver.setAutoHide(true);
         autofillPopOver.setAutoFix(true);
         autofillPopOver.setHideOnEscape(true);
@@ -476,6 +477,7 @@ public class MediaTabController implements Initializable {
 
     @FXML
     private void autofill(ActionEvent event) {
+        scrapeListView.setItems(FXCollections.observableArrayList(JsDataScraper.getJsFiles()));
         autofillPopOver.show(autofillBtn);
     }
     
