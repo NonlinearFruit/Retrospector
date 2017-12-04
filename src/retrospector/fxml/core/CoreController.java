@@ -20,8 +20,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -29,7 +27,6 @@ import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import retrospector.fxml.list.ListsTabController;
 import retrospector.fxml.quickentry.QuickEntryController;
-import retrospector.fxml.review.ReviewTabController;
 import retrospector.fxml.achievements.AchievementTabController;
 import retrospector.fxml.cheatsheet.Cheatsheet;
 import retrospector.fxml.preferences.PreferencesController;
@@ -271,23 +268,6 @@ public class CoreController implements Initializable {
     public void about(ActionEvent e) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/retrospector/fxml/about/About.fxml"));
-            Parent root = (Parent) fxmlLoader.load();
-            Stage stage = new Stage();
-            UndecoratorScene.setClassicDecoration();
-            UndecoratorScene undecoratorScene = new UndecoratorScene(stage, (Region) root);
-            stage.setScene(undecoratorScene);
-            stage.setScene(undecoratorScene);
-            stage.setTitle("About");
-            stage.show();
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        }
-    }
-    
-    @FXML
-    public void scrape(ActionEvent e) {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/retrospector/fxml/scraper/Scraper.fxml"));
             Parent root = (Parent) fxmlLoader.load();
             Stage stage = new Stage();
             UndecoratorScene.setClassicDecoration();
