@@ -8,6 +8,7 @@ package retrospector.fxml.chart;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
@@ -187,6 +189,8 @@ public class StatsTabController implements Initializable {
     private PopOver mediaPerCategoryPopOver;
     private ChartPopupController reviewPerYearSettings;
     private PopOver reviewPerYearPopOver;
+    private FactoidChartPopupController numOfFactsSettings;
+    private PopOver numOfFactsPopOver;
 
     /**
      * Initializes the controller class.
@@ -205,12 +209,39 @@ public class StatsTabController implements Initializable {
         // Category
         setupCategory();
         // Factoid
+        setupFactoid();
+    }
+    
+    public void setupFactoid() {
         factoidSelector.setItems(FXCollections.observableArrayList(DataManager.getFactiodTypes()));
         factoidSelector.setValue(DataManager.getFactiodTypes()[0]);
         factoidSelector.valueProperty().addListener((observe,old,neo)->updateFactoid());
         categorySelector.valueProperty().addListener((observe,old,neo)->updateFactoid());
         chartNumOfFacts.setLegendVisible(false);
         chartAverageFactRating.setLegendVisible(false);
+        
+        // Pop Overs
+        numOfFactsPopOver = new PopOver();
+        numOfFactsPopOver.setAutoHide(true);
+//        reviewPerYearPopOver.setAutoFix(true);
+        numOfFactsPopOver.setHideOnEscape(true);
+        numOfFactsPopOver.setDetachable(false);
+        numOfFactsPopOver.setArrowLocation(PopOver.ArrowLocation.LEFT_CENTER);
+        chartNumOfFacts.setOnMouseClicked(e -> {
+            if (e.getClickCount() == 2) {
+                numOfFactsPopOver.show(chartNumOfFacts);
+            }
+        });
+
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/retrospector/fxml/chart/FactoidChartPopup.fxml"));
+            Parent root = (Parent) fxmlLoader.load();
+            numOfFactsSettings = fxmlLoader.getController();
+            numOfFactsSettings.setup(this::updateFactoid);
+            numOfFactsPopOver.setContentNode(root);
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
     }
     
     public void setupCategory() {
@@ -457,9 +488,10 @@ public class StatsTabController implements Initializable {
         chartReviewsPerRating.setStyle("CHART_COLOR_1: "+color+";");
             
         // Data Mining - Vars
-        Map<String, Integer> reviewMap = new HashMap<>();
+        Map<LocalDate, Integer> reviewMap = new TreeMap<>();
         int[] reviewsPerRating = new int[DataManager.getMaxRating()+1];
         InfoBlipAccumulator info = new InfoBlipAccumulator();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM'-'yyyy");
         LocalDate cutoff = reviewPerYearSettings.getTimeFrame(); // The current cut off date for Review/Year
         
         // Data Mining - Calcs
@@ -469,7 +501,7 @@ public class StatsTabController implements Initializable {
                 for (Review r : m.getReviews()) {
                     if (strooleans.stream().anyMatch(x->x.getString().equalsIgnoreCase(r.getUser()) && x.isBoolean())) {
                         if (r.getDate().isAfter(cutoff)) {
-                            String key = r.getDate().getMonthValue()+"-"+r.getDate().getYear();
+                            LocalDate key = r.getDate().withDayOfMonth(1);
                             reviewMap.put(key, reviewMap.getOrDefault(key, 0)+1);
                         }
                         reviewsPerRating[r.getRating().intValue()] += 1;
@@ -494,21 +526,17 @@ public class StatsTabController implements Initializable {
         chartReviewsPerYear.getData().clear();
         
         XYChart.Series data = new XYChart.Series();
-        int year = info.getEarliest().getYear();
-        int month = info.getEarliest().getMonthValue();
-        for (int i=0; i <= ChronoUnit.MONTHS.between(info.getEarliest(), LocalDate.now())+1; i++) {
-            String key = month+"-"+year;
-            Integer value = reviewMap.getOrDefault(key, 0);
+        LocalDate earliest = info.getEarliest().isAfter(cutoff) ? info.getEarliest() : cutoff; // Use the earliest date in the data if it is after cutoff date, else use cutoff date
+        earliest = earliest.withDayOfMonth(1);
+        LocalDate thisMonth = LocalDate.now().withDayOfMonth(1);
+        for (LocalDate month : reviewMap.keySet()) {
+            if(month.isAfter(thisMonth))
+                break;
+            String key = month.format(formatter);
+            Integer value = reviewMap.getOrDefault(month, 0);
             XYChart.Data datapoint = new XYChart.Data(key, value);
             datapoint.setNode(new HoveredLabelNode(color,value));
             data.getData().add(datapoint);
-            ++month;
-            if(month>12){
-                month = 1;
-                ++year;
-            }
-            if(year>=LocalDate.now().getYear() && month>LocalDate.now().getMonthValue())
-                break;
         }
         if (data.getData().size()<1)
             data.getData().add(new XYChart.Data<>("", 0));
@@ -526,9 +554,11 @@ public class StatsTabController implements Initializable {
     }
     
     private void updateFactoid() {
-        // Selector Values
+        // Get Vars
         String factoidType = factoidSelector.getValue();
         String category = categorySelector.getValue();
+        Integer minCount = numOfFactsSettings.getMin();
+        Integer maxCount = numOfFactsSettings.getMax();
         
         // Colors
         int index = Arrays.asList(DataManager.getFactiodTypes()).indexOf(factoidType);
@@ -602,8 +632,9 @@ public class StatsTabController implements Initializable {
         numberFactsMap.keySet().stream()
                 .sorted(new NaturalOrderComparator())
                 .forEachOrdered(factoid-> {
-                    if (numberFactsMap.get(factoid)>1)
-                        dataNum.getData().add(new XYChart.Data<>(factoid, numberFactsMap.get(factoid)));
+                    Integer count = numberFactsMap.get(factoid);
+                    if (count >= minCount && count <= maxCount)
+                        dataNum.getData().add(new XYChart.Data<>(factoid, count));
                 });
         if (dataNum.getData().size()<1)
             dataNum.getData().add(new XYChart.Data<>("", 0));
@@ -616,8 +647,9 @@ public class StatsTabController implements Initializable {
         ratingFactsMap.keySet().stream()
                 .sorted(new NaturalOrderComparator())
                 .forEachOrdered(factoid->{
-                    if (countReviewFactsMap.get(factoid)>=threshold)
-                        dataAve.getData().add(new XYChart.Data<>(factoid, ratingFactsMap.get(factoid)*1.0/countReviewFactsMap.get(factoid)));
+                    Integer count = countReviewFactsMap.get(factoid);
+                    if (count>=minCount && count<=maxCount)
+                        dataAve.getData().add(new XYChart.Data<>(factoid, ratingFactsMap.get(factoid)*1.0/count));
                 });
         if (dataAve.getData().size()<1)
             dataAve.getData().add(new XYChart.Data<>("", 0));
