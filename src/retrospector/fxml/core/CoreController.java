@@ -202,7 +202,6 @@ public class CoreController implements Initializable {
             UndecoratorScene.setClassicDecoration();
             UndecoratorScene undecoratorScene = new UndecoratorScene(stage, (Region) root);
             stage.setScene(undecoratorScene);
-            stage.setScene(undecoratorScene);
             QuickEntryController qec = fxmlLoader.getController();
             qec.setup(currentTab);
             stage.setTitle("Quick Entry");
@@ -221,7 +220,6 @@ public class CoreController implements Initializable {
             UndecoratorScene.setClassicDecoration();
             UndecoratorScene undecoratorScene = new UndecoratorScene(stage, (Region) root);
             stage.setScene(undecoratorScene);
-            stage.setScene(undecoratorScene);
             PreferencesController qec = fxmlLoader.getController();
             stage.setTitle("Preferences");
             stage.show();
@@ -239,7 +237,6 @@ public class CoreController implements Initializable {
             UndecoratorScene.setClassicDecoration();
             UndecoratorScene undecoratorScene = new UndecoratorScene(stage, (Region) root);
             stage.setScene(undecoratorScene);
-            stage.setScene(undecoratorScene);
             stage.setTitle("Server");
             stage.show();
         } catch (IOException ioe) {
@@ -256,7 +253,6 @@ public class CoreController implements Initializable {
             UndecoratorScene.setClassicDecoration();
             UndecoratorScene undecoratorScene = new UndecoratorScene(stage, (Region) root);
             stage.setScene(undecoratorScene);
-            stage.setScene(undecoratorScene);
             stage.setTitle("Performance Test");
             stage.show();
         } catch (IOException ioe) {
@@ -272,7 +268,6 @@ public class CoreController implements Initializable {
             Stage stage = new Stage();
             UndecoratorScene.setClassicDecoration();
             UndecoratorScene undecoratorScene = new UndecoratorScene(stage, (Region) root);
-            stage.setScene(undecoratorScene);
             stage.setScene(undecoratorScene);
             stage.setTitle("About");
             stage.show();

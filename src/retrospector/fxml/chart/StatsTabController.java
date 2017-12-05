@@ -5,6 +5,7 @@
  */
 package retrospector.fxml.chart;
 
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -23,8 +24,10 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
@@ -38,11 +41,11 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
+import org.controlsfx.control.PopOver;
 import retrospector.fxml.core.CoreController.TAB;
 import retrospector.model.DataManager;
 import retrospector.model.Factoid;
@@ -64,12 +67,6 @@ public class StatsTabController implements Initializable {
     private ObjectProperty<Media> currentMedia;
     private ObservableList<Media> allMedia = FXCollections.observableArrayList();
     public static final String[] colors = new String[]{"red","orange","yellowgreen","seagreen","lightseagreen","skyblue","royalblue","grey","mediumpurple","palevioletred","firebrick"};
-//    public static final Color[] colors = new Color[]{
-//        Color.RED,            Color.ORANGE,         Color.YELLOWGREEN,
-//        Color.SEAGREEN,       Color.LIGHTSEAGREEN,  Color.SKYBLUE,
-//        Color.ROYALBLUE,      Color.GREY,           Color.MEDIUMPURPLE,
-//        Color.PALEVIOLETRED,  Color.FIREBRICK
-//    };
     
     @FXML
     private PieChart chartMediaPerCategory;
@@ -185,6 +182,11 @@ public class StatsTabController implements Initializable {
     private BarChart<String, Number> chartAverageFactRating;
     @FXML
     private BarChart<String, Number> chartNumOfFacts;
+    
+    private ChartPopupController mediaPerCategorySettings;
+    private PopOver mediaPerCategoryPopOver;
+    private ChartPopupController reviewPerYearSettings;
+    private PopOver reviewPerYearPopOver;
 
     /**
      * Initializes the controller class.
@@ -199,22 +201,7 @@ public class StatsTabController implements Initializable {
         chartAverageFactRating.getData().add(new XYChart.Series(FXCollections.observableArrayList(new XYChart.Data("",0))));
         chartNumOfFacts.getData().add(new XYChart.Series(FXCollections.observableArrayList(new XYChart.Data("",0))));
         // Overall
-        for (String user : DataManager.getUsers()) {
-            addUserToOverallUserList(user);
-        }
-        overallUserList.setCellFactory(CheckBoxListCell.forListView(Stroolean::booleanProperty));
-        overallUserList.setOnMouseClicked(e->{
-            if (e.getClickCount() == 2){
-                Stroolean me = overallUserList.getSelectionModel().getSelectedItem();
-                for (Stroolean stroolean : strooleans) {
-                    stroolean.setBoolean(false);
-                }
-                me.setBoolean(true);
-            }
-        });
-        chartMediaPerCategory.setLegendVisible(true);
-        chartRpdX.setLabel("Day");
-        chartRpdY.setLabel("Reviews");
+        setupOverall();
         // Category
         setupCategory();
         // Factoid
@@ -238,23 +225,67 @@ public class StatsTabController implements Initializable {
         chartRpyX.setLabel("Month");
         chartRpyY.setLabel("Reviews");
         
-        // Pop ups
-//        chartReviewsPerYear.setOnMouseClicked(e->{
-//            if (e.getClickCount() == 2) {
-//                ObservableList lst = FXCollections.observableArrayList("Days","Weeks","Months","Years");
-//                Spinner spn = new Spinner(lst);
-//                Slider sldr = new Slider(5.0,50.0,12.0);
-//                sldr.setSnapToTicks(true);
-//                sldr.setMajorTickUnit(10);
-//                sldr.setMinorTickCount(2);
-//                sldr.setShowTickMarks(true);
-//                sldr.setShowTickLabels(true);
-//                VBox box = new VBox(sldr,spn);
-//                box.setAlignment(Pos.TOP_CENTER);
-//                PopOver popup = new PopOver(box);
-//                popup.show(chartReviewsPerYear);
-//            }
-//        });
+        // Pop Overs
+        reviewPerYearPopOver = new PopOver();
+        reviewPerYearPopOver.setAutoHide(true);
+//        reviewPerYearPopOver.setAutoFix(true);
+        reviewPerYearPopOver.setHideOnEscape(true);
+        reviewPerYearPopOver.setDetachable(false);
+        reviewPerYearPopOver.setArrowLocation(PopOver.ArrowLocation.LEFT_CENTER);
+        chartReviewsPerYear.setOnMouseClicked(e->{
+            if (e.getClickCount() == 2)
+                reviewPerYearPopOver.show(chartReviewsPerYear);
+        });
+        
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/retrospector/fxml/chart/ChartPopup.fxml"));
+            Parent root = (Parent) fxmlLoader.load();
+            reviewPerYearSettings = fxmlLoader.getController();
+            reviewPerYearSettings.setup(this::updateCategory);
+            reviewPerYearPopOver.setContentNode(root);
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+    }
+    
+    public void setupOverall() {
+        for (String user : DataManager.getUsers()) {
+            addUserToOverallUserList(user);
+        }
+        overallUserList.setCellFactory(CheckBoxListCell.forListView(Stroolean::booleanProperty));
+        overallUserList.setOnMouseClicked(e -> {
+            if (e.getClickCount() == 2) {
+                Stroolean me = overallUserList.getSelectionModel().getSelectedItem();
+                for (Stroolean stroolean : strooleans)
+                    stroolean.setBoolean(false);
+                me.setBoolean(true);
+            }
+        });
+        chartRpdX.setLabel("Day");
+        chartRpdY.setLabel("Reviews");
+        chartMediaPerCategory.setLegendVisible(true);
+        
+        // Pop Overs
+        mediaPerCategoryPopOver = new PopOver();
+        mediaPerCategoryPopOver.setAutoHide(true);
+//        mediaPerCategoryPopOver.setAutoFix(true);
+        mediaPerCategoryPopOver.setHideOnEscape(true);
+        mediaPerCategoryPopOver.setDetachable(false);
+        mediaPerCategoryPopOver.setArrowLocation(PopOver.ArrowLocation.LEFT_CENTER);
+        chartMediaPerCategory.setOnMouseClicked(e -> {
+            if (e.getClickCount() == 2)
+                mediaPerCategoryPopOver.show(chartMediaPerCategory);
+        });
+        
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/retrospector/fxml/chart/ChartPopup.fxml"));
+            Parent root = (Parent) fxmlLoader.load();
+            mediaPerCategorySettings = fxmlLoader.getController();
+            mediaPerCategorySettings.setup(this::updateOverall);
+            mediaPerCategoryPopOver.setContentNode(root);
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
     }
     
     public void setup(ObjectProperty<TAB> aTab, ObjectProperty<Media> aMedia){
@@ -305,14 +336,19 @@ public class StatsTabController implements Initializable {
         // Graph Title
         chartReviewsPerDay.setTitle("Past "+last__days+" Days");
         
+        // Hide Pop Over
+        mediaPerCategoryPopOver.hide();
+        
         // Data Mining - Vars
         Map<String, Integer> categories = new HashMap<>();
         Map<LocalDate, Map<String, Integer>> last30Days = new HashMap<>();
         InfoBlipAccumulator info = new InfoBlipAccumulator();
+        LocalDate cutoff = mediaPerCategorySettings.getTimeFrame(); // The current cut off date for Media/Category
         
         // Data Mining - Calcs
         for (Media m : allMedia) {
             boolean used = false;
+            boolean beatCutOff = false;
             for (Review r : m.getReviews()) {
                 if (strooleans.stream().anyMatch(x->x.getString().equalsIgnoreCase(r.getUser()) && x.isBoolean())) {
                     if(ChronoUnit.DAYS.between(r.getDate(), LocalDate.now())<=last__days){
@@ -321,16 +357,18 @@ public class StatsTabController implements Initializable {
                         cat2Num.put(m.getCategory(), num+1);
                         last30Days.put(r.getDate(), cat2Num);
                     }
+                    if(r.getDate().isAfter(cutoff))
+                        beatCutOff = true;
                     info.accumulate(r);
                     used = true;
                 }
             }
             if (used) {
-                categories.put(m.getCategory(), categories.getOrDefault(m.getCategory(), 0)+1);
                 info.accumulate(m);
-                for (Factoid f : m.getFactoids()) {
+                if (beatCutOff)
+                    categories.put(m.getCategory(), categories.getOrDefault(m.getCategory(), 0)+1);
+                for (Factoid f : m.getFactoids())
                     info.accumulate(f);
-                }
 //                media++;
             }
         }
@@ -407,6 +445,9 @@ public class StatsTabController implements Initializable {
         // Category Chooser
         String category = categorySelector.getValue();
         
+        // Pop Overs
+        reviewPerYearPopOver.hide();
+        
         // Colors
         int index = Arrays.asList(DataManager.getCategories()).indexOf(category);
         if (category.equals(universalCategory))
@@ -419,6 +460,7 @@ public class StatsTabController implements Initializable {
         Map<String, Integer> reviewMap = new HashMap<>();
         int[] reviewsPerRating = new int[DataManager.getMaxRating()+1];
         InfoBlipAccumulator info = new InfoBlipAccumulator();
+        LocalDate cutoff = reviewPerYearSettings.getTimeFrame(); // The current cut off date for Review/Year
         
         // Data Mining - Calcs
         for (Media m : allMedia) {
@@ -426,9 +468,11 @@ public class StatsTabController implements Initializable {
                 boolean used = false;
                 for (Review r : m.getReviews()) {
                     if (strooleans.stream().anyMatch(x->x.getString().equalsIgnoreCase(r.getUser()) && x.isBoolean())) {
+                        if (r.getDate().isAfter(cutoff)) {
+                            String key = r.getDate().getMonthValue()+"-"+r.getDate().getYear();
+                            reviewMap.put(key, reviewMap.getOrDefault(key, 0)+1);
+                        }
                         reviewsPerRating[r.getRating().intValue()] += 1;
-                        String key = r.getDate().getMonthValue()+"-"+r.getDate().getYear();
-                        reviewMap.put(key, reviewMap.getOrDefault(key, 0)+1);
                         info.accumulate(r);
                         used = true;
                     }
