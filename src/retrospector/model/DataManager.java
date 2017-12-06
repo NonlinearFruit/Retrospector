@@ -505,7 +505,21 @@ public class DataManager {
             pstmt.setString(7, media.getType().toString());                  
             pstmt.setInt(8, media.getId());                  
             pstmt.executeUpdate();
-             
+            
+            for (Review review : media.getReviews()) {
+                if (review.getId() != null && review.getId() != 0)
+                    updateDB(review);
+                else
+                    createDB(review);
+            }
+            
+            for (Factoid factoid : media.getFactoids()) {
+                if (factoid.getId() != null && factoid.getId() != 0)
+                    updateDB(factoid);
+                else
+                    createDB(factoid);
+            }
+            
             if(media.getId()<1)
                 System.err.println("Bad media update");
         } catch (SQLException ex) {
@@ -531,7 +545,7 @@ public class DataManager {
             pstmt.setInt(6, review.getId()); 
             pstmt.executeUpdate();
             
-            if(review.getId()==-1)
+            if(review.getId()<1)
                 System.err.println("Bad review update");
         } catch (SQLException ex) {
             System.err.println("in connection" + ex);
@@ -553,7 +567,7 @@ public class DataManager {
             pstmt.setInt(4, factoid.getId()); 
             pstmt.executeUpdate();
             
-            if(factoid.getId()==-1)
+            if(factoid.getId()<1)
                 System.err.println("Bad factoid update");
         } catch (SQLException ex) {
             System.err.println("in connection" + ex);

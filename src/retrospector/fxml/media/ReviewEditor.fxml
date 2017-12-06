@@ -14,10 +14,9 @@
 <?import javafx.scene.text.Text?>
 <?import org.controlsfx.control.Rating?>
 
-
 <VBox alignment="CENTER" prefHeight="400.0" prefWidth="370.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="retrospector.fxml.media.ReviewEditorController">
    <children>
-      <HBox>
+      <HBox VBox.vgrow="NEVER">
          <children>
             <VBox alignment="CENTER">
                <children>
@@ -45,11 +44,11 @@
             </VBox>
          </children>
       </HBox>
-      <Slider fx:id="reviewRater" blockIncrement="1.0" majorTickUnit="1.0" max="10.0" maxWidth="600.0" min="1.0" minorTickCount="0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="6.0" />
-      <TextField fx:id="reviewUser" maxWidth="300.0" promptText="User" />
+      <Slider fx:id="reviewRater" blockIncrement="1.0" majorTickUnit="1.0" max="10.0" maxWidth="600.0" min="1.0" minorTickCount="0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="6.0" VBox.vgrow="NEVER" />
+      <TextField fx:id="reviewUser" maxWidth="300.0" promptText="User" VBox.vgrow="NEVER" />
       <DatePicker fx:id="reviewDate" maxWidth="300.0" promptText="Date" VBox.vgrow="NEVER" />
       <TextArea fx:id="reviewDescription" maxHeight="300.0" maxWidth="300.0" prefHeight="200.0" prefWidth="200.0" promptText="Review" wrapText="true" VBox.vgrow="ALWAYS" />
-      <HBox alignment="CENTER" maxWidth="300.0">
+      <HBox alignment="CENTER" maxWidth="300.0" VBox.vgrow="NEVER">
          <children>
             <Button fx:id="reviewSave" mnemonicParsing="false" text="Save" />
             <Button fx:id="reviewDelete" mnemonicParsing="false" text="Delete" />

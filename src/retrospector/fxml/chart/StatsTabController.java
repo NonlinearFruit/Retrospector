@@ -504,7 +504,7 @@ public class StatsTabController implements Initializable {
                             LocalDate key = r.getDate().withDayOfMonth(1);
                             reviewMap.put(key, reviewMap.getOrDefault(key, 0)+1);
                         }
-                        reviewsPerRating[r.getRating().intValue()] += 1;
+                        reviewsPerRating[r.getRating()] += 1;
                         info.accumulate(r);
                         used = true;
                     }
