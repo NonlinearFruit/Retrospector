@@ -18,6 +18,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
+import retrospector.model.DataManager;
 import retrospector.model.Media;
 import retrospector.util.PropertyManager;
 
@@ -75,5 +76,9 @@ public abstract class JsDataScraper {
     
     public static void print(String msg) {
         System.out.println(msg);
+    }
+    
+    public static String getDefaultCategory() {
+        return DataManager.getCategories()[0];
     }
 }
