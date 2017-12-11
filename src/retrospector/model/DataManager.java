@@ -507,6 +507,7 @@ public class DataManager {
             pstmt.executeUpdate();
             
             for (Review review : media.getReviews()) {
+                review.setMediaId(media.getId());
                 if (review.getId() != null && review.getId() != 0)
                     updateDB(review);
                 else
@@ -514,6 +515,7 @@ public class DataManager {
             }
             
             for (Factoid factoid : media.getFactoids()) {
+                factoid.setMediaId(media.getId());
                 if (factoid.getId() != null && factoid.getId() != 0)
                     updateDB(factoid);
                 else

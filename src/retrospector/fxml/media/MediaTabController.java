@@ -147,6 +147,12 @@ public class MediaTabController implements Initializable {
         nextPreviousFunct = np;
         reviewEditorController.setup(()->{reviewListController.update();reviewSwapper.showFront();}, currentMedia, currentReview);
         reviewListController.setup(()->{reviewEditorController.update();reviewSwapper.showBack();}, currentMedia, currentReview);
+        currentTab.addListener((observe,old,neo) -> {
+//            if (old == TAB.MEDIA && neo != TAB.MEDIA) {
+            if (old == TAB.MEDIA) {
+                reviewSwapper.showFront();
+            }
+        });
     }
     
     public void update(){

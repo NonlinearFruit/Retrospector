@@ -106,6 +106,7 @@ public class ReviewEditorController implements Initializable {
         this.showReviewList = showReviewList;
         currentMedia = m;
         currentReview = r;
+        currentReview.addListener((observe, old, neo) -> update());
     }
     
     private void showReviewList() {
@@ -126,6 +127,8 @@ public class ReviewEditorController implements Initializable {
     }
     
     public void update(){
+        if (getReview() == null)
+            return;
         reviewRater.setValue(getReview().getRating().doubleValue());
         Platform.runLater(()->reviewRater.requestFocus());
         reviewDescription.setText(getReview().getReview());
