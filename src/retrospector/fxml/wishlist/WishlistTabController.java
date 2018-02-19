@@ -89,6 +89,8 @@ public class WishlistTabController implements Initializable {
     private int currentWishId;
     private ObjectProperty<CoreController.TAB> currentTab;
     private ObjectProperty<Media> currentMedia;
+    @FXML
+    private Button cancelBtn;
     
     /**
      * Initializes the controller class.
@@ -168,6 +170,7 @@ public class WishlistTabController implements Initializable {
         descriptionField.setDisable(!tf);
         
         saveBtn.setDisable(!tf);
+        cancelBtn.setDisable(!tf);
         deleteBtn.setDisable(!tf);
         mediaBtn.setDisable(!tf);
     }
@@ -239,7 +242,7 @@ public class WishlistTabController implements Initializable {
         update();
     }
 
-//    @FXML
+    @FXML
     private void cancelWish(ActionEvent event) {
         clear();
     }

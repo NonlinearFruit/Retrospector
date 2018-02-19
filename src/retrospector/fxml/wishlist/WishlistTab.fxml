@@ -61,6 +61,7 @@
          <children>
             <Button fx:id="newBtn" mnemonicParsing="false" onAction="#newWish" text="New" />
             <Button fx:id="saveBtn" mnemonicParsing="false" onAction="#saveWish" text="Save" />
+            <Button fx:id="cancelBtn" mnemonicParsing="false" onAction="#cancelWish" text="Cancel" />
             <Button fx:id="deleteBtn" mnemonicParsing="false" onAction="#deleteWish" text="Delete" />
             <Button fx:id="mediaBtn" mnemonicParsing="false" onAction="#sendToMedia" text="Send to Media" />
          </children>
@@ -70,7 +71,7 @@
             <Insets bottom="10.0" top="10.0" />
          </padding>
       </Separator>
-      <TextField fx:id="searchField" promptText="Search" />
+      <TextField fx:id="searchField" promptText="Search" style="-fx-background-image: url('/retrospector/fxml/search/searchGlass.png'); -fx-background-repeat: no-repeat; -fx-background-position: right center; -fx-background-size: 20;" />
       <TableView fx:id="table" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
         <columns>
           <TableColumn fx:id="titleColm" prefWidth="286.0" text="Title" />
