@@ -66,15 +66,23 @@ public class DataManager {
     
     public static void makeBackup(){
         try{
-        String backupDir = "'"+PropertyManager.retroFolder+"/Backup/'";
-        Statement stmt = getConnection().createStatement();
-        ResultSet rs = stmt.executeQuery("BACKUP DATABASE TO "+backupDir);
+            String backupDir = "'"+PropertyManager.retroFolder+"/Backup/'";
+            Statement stmt = getConnection().createStatement();
+            ResultSet rs = stmt.executeQuery("BACKUP DATABASE TO "+backupDir);
         } catch(SQLException ex) {
             ex.printStackTrace();
         }
     }
     
-    public static ObservableList<Media> getMedia(){
+    public static ObservableList<Media> getWishlist() {
+        return getMedia(true);
+    }
+    
+    public static ObservableList<Media> getMedia() {
+        return getMedia(false);
+    }
+    
+    private static ObservableList<Media> getMedia(boolean wishlistOrNo){
         Statement stmt;
         ResultSet rs = null;
         ResultSet rs2 = null;
@@ -82,7 +90,8 @@ public class DataManager {
 
         try{
             stmt = getConnection().createStatement();
-            rs = stmt.executeQuery("select * from media");
+            String equals = wishlistOrNo? "=" : "<>";
+            rs = stmt.executeQuery("select * from media m where m.type"+equals+"'WISHLIST'");
             while (rs.next()) {
                 try{
                     Media medium = new Media();
@@ -127,7 +136,7 @@ public class DataManager {
                     list.add(medium);
                 } catch(SQLException e){System.err.println("Get media failed. (getMedia)");}
             }
-        } catch(SQLException e){System.err.println("Get media list failed. (getMedia)");}
+        } catch(SQLException e){System.err.println("Get media list failed. (getMedia)"); e.printStackTrace();}
         return  list;
     }
     

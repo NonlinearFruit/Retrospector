@@ -5,6 +5,10 @@
  */
 package retrospector.fxml.achievements;
 
+import retrospector.fxml.achievements.tables.HighScoreTable;
+import retrospector.fxml.achievements.tables.HighScore;
+import retrospector.fxml.achievements.tables.TopMedia;
+import retrospector.fxml.achievements.tables.TopMediaTable;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +25,8 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import retrospector.fxml.achievements.tables.MediaStreak;
+import retrospector.fxml.achievements.tables.MediaStreakTable;
 import retrospector.fxml.core.CoreController;
 import retrospector.model.DataManager;
 
@@ -103,6 +109,15 @@ public class AchievementTabController implements Initializable {
         
         
         highscoreBox.getChildren().clear();
+        // Media Streak Display
+        List<MediaStreak> streaks = new ArrayList<>();
+        for (String category : DataManager.getCategories()) {
+            streaks.add(AchievementFactory.getMediaStreak(category));
+        }
+        highscoreBox.getChildren().add(new MediaStreakTable(streaks));
+        
+        highscoreBox.getChildren().add(new Separator(Orientation.VERTICAL));
+        
         // Highscore Display
         List<HighScore> scores = new ArrayList<>();
         for (String category : DataManager.getCategories()) {

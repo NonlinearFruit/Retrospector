@@ -19,7 +19,7 @@ import retrospector.util.PropertyManager;
  */
 public class Media {
     // public static enum Category{MOVIE,TV_SERIES,BOOK,PODCAST,YOUTUBE,POEM,MUSIC,VIDEO_GAME,TABLETOP_GAME,PRODUCT,OTHER}
-    public static enum Type{MINISERIES,SERIES,SINGLE}
+    public static enum Type{MINISERIES,SERIES,SINGLE,WISHLIST}
     
     private List<Review> reviews;
     private List<Factoid> factoids;

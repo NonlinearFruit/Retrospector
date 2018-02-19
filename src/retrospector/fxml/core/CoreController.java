@@ -30,6 +30,7 @@ import retrospector.fxml.quickentry.QuickEntryController;
 import retrospector.fxml.achievements.AchievementTabController;
 import retrospector.fxml.cheatsheet.Cheatsheet;
 import retrospector.fxml.preferences.PreferencesController;
+import retrospector.fxml.wishlist.WishlistTabController;
 import retrospector.model.*;
 import retrospector.util.Toast;
 
@@ -54,8 +55,10 @@ public class CoreController implements Initializable {
     private Tab chartTab;
     @FXML
     private Tab listTab;
+    @FXML
+    private Tab wishlistTab;
 
-    public static enum TAB{ SEARCH, MEDIA, CHART, LIST, ACHIEVEMENT} 
+    public static enum TAB{ SEARCH, MEDIA, CHART, WISHLIST, LIST, ACHIEVEMENT} 
     public static final DecimalFormat ratingFormat =  new DecimalFormat("#.#");
     
     private final ObjectProperty<Media> currentMedia = new SimpleObjectProperty<>();
@@ -64,6 +67,7 @@ public class CoreController implements Initializable {
     private StatsTabController statsController;
     private SearchTabController searchController;
     private MediaTabController mediaController;
+    private WishlistTabController wishController;
     private ListsTabController listsController;
     private AchievementTabController achieveController;
     
@@ -77,6 +81,12 @@ public class CoreController implements Initializable {
         mediaTab.setContent(ldr.getRoot());
         mediaController = ldr.getController();
         mediaController.setup(currentTab,currentMedia,this::nextPreviousMedia);
+    }
+    
+    public void setWishlistController(FXMLLoader ldr) {
+        wishlistTab.setContent(ldr.getRoot());
+        wishController = ldr.getController();
+        wishController.setup(currentTab, currentMedia);
     }
     
     public void setListController(FXMLLoader ldr){ 
@@ -129,6 +139,10 @@ public class CoreController implements Initializable {
             if(neo)
                 setTab(TAB.CHART);
         });
+        wishlistTab.selectedProperty().addListener((observe,old,neo)->{
+            if(neo)
+                setTab(TAB.WISHLIST);
+        });
         listTab.selectedProperty().addListener((observe,old,neo)->{
             if(neo)
                 setTab(TAB.LIST);
@@ -151,6 +165,9 @@ public class CoreController implements Initializable {
                 case CHART:
                     tab = chartTab;
                     break;
+                case WISHLIST:
+                    tab = wishlistTab;
+                    break;
                 case LIST:
                     tab = listTab;
                     break;
@@ -168,6 +185,8 @@ public class CoreController implements Initializable {
                 mediaController.update();
             else if(neo.getText().equals("Chart"))
                 statsController.update();
+            else if(neo.getText().equals("Wishlist"))
+                wishController.update();
             else if(neo.getText().equals("List"))
                 listsController.update();
             else if(neo.getText().equals("Achievement"))

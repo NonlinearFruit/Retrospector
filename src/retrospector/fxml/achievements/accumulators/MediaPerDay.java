@@ -37,7 +37,7 @@ public class MediaPerDay extends Accumulator<Media>{
     private Achievement lowScoreBronze;
     
     // Day -> Category -> # Reviews
-    private Map<LocalDate,Map<String,Integer>> categoryMap;
+    public Map<LocalDate,Map<String,Integer>> categoryMap;
     // Day -> User -> # Reviews
     private Map<LocalDate,Map<String,Integer>> userMap;
     // Category -> Month -> # Reviews

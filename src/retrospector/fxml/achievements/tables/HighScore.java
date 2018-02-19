@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package retrospector.fxml.achievements;
+package retrospector.fxml.achievements.tables;
 
 import java.time.LocalDate;
 

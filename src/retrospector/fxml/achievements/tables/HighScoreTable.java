@@ -3,15 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package retrospector.fxml.achievements;
+package retrospector.fxml.achievements.tables;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
-import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
-import retrospector.fxml.chart.StatsTabController;
-import retrospector.model.DataManager;
 
 /**`
  *

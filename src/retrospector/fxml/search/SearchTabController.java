@@ -185,39 +185,6 @@ public class SearchTabController implements Initializable {
         searchCurrentAverage.setText(String.format("%.2f", totalCurrentRating * 1.0 / totalNumberMedia));
     }
     
-    private boolean isMatchForMedia(String query, Media media){
-        boolean pass = true;
-        if(query.endsWith("|") && !query.endsWith("||"))
-            query = query.substring(0, query.length()-1);
-        String[] queries = query.toLowerCase().split(":");
-        List<String> searchables = new ArrayList<>();
-        searchables.addAll(Arrays.asList(
-                media.getTitle().toLowerCase(),
-                media.getCreator().toLowerCase(),
-                media.getSeason().toLowerCase(),
-                media.getEpisode().toLowerCase(),
-                media.getCategory().toLowerCase()
-        ));
-        for (Factoid fact : media.getFactoids()) {
-            searchables.add(fact.getContent().toLowerCase());
-        }
-        for (String q : queries) {
-            String[] optns = q.split("\\|\\|");
-            boolean minorPass = false;
-            for (String optn : optns) {
-                boolean negator = optn.length()>1 && optn.startsWith("!");
-                if ( !negator && searchables.stream().anyMatch(s -> s.contains(optn)) )
-                    minorPass = true;
-                if ( negator && !searchables.stream().anyMatch(s -> s.contains(optn.substring(1))) )
-                    minorPass = true;
-            }
-            if (!minorPass) {
-                pass = false;
-            }
-        }
-        return pass;
-    }
-    
     private void initSearchTab(){
         searchEditMedia.setDisable(true);
         searchDeleteMedia.setDisable(true);

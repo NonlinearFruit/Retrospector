@@ -5,6 +5,8 @@
  */
 package retrospector.fxml.achievements;
 
+import retrospector.fxml.achievements.tables.HighScore;
+import retrospector.fxml.achievements.tables.TopMedia;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -28,6 +30,7 @@ import retrospector.fxml.achievements.accumulators.MultipleReviews;
 import retrospector.fxml.achievements.accumulators.Ratings;
 import retrospector.fxml.achievements.accumulators.ReviewsPerDay;
 import retrospector.fxml.achievements.accumulators.RockPaperScissors;
+import retrospector.fxml.achievements.tables.MediaStreak;
 import retrospector.model.DataManager;
 import retrospector.model.Factoid;
 import retrospector.model.Media;
@@ -143,6 +146,46 @@ public class AchievementFactory {
             best = new TopMedia(category);
         
         return best;
+    }
+    
+    public static MediaStreak getMediaStreak(String category) {
+        if (miscSeries == null)
+            return new MediaStreak(category);
+        
+        // Day -> Category -> # Reviews
+        Map<LocalDate,Map<String,Integer>> categoryMap = mediaPerDay.categoryMap;
+        
+        int maxLen = 0;
+        LocalDate date = LocalDate.now();
+        
+        for (LocalDate today : categoryMap.keySet()) {
+            if (!categoryMap.get(today).containsKey(category))
+                continue;
+            
+            if (category.equals("Poem"))
+                System.out.println(today);
+            
+            LocalDate yesterday = today.minus(1,ChronoUnit.DAYS);
+            if (!categoryMap.containsKey(yesterday) || !categoryMap.get(yesterday).containsKey(category))
+            {
+                // Then check for next elements in the
+                // sequence
+                int currentLen = 1;
+                LocalDate tomorrow = today.plus(1,ChronoUnit.DAYS);
+                while (categoryMap.containsKey(tomorrow) && categoryMap.get(tomorrow).containsKey(category)) {
+                    tomorrow = tomorrow.plus(1,ChronoUnit.DAYS);
+                    currentLen++;
+                }
+ 
+                // update  optimal length if this length
+                // is more
+                if (maxLen<currentLen) {
+                    maxLen = currentLen;
+                    date = tomorrow;
+                }
+            }
+        }
+        return new MediaStreak(category,date, maxLen);
     }
     
     public static Integer getLongestConsecutiveDays(Integer reviewThreshold, Map<LocalDate,Integer> map) {
