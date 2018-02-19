@@ -40,9 +40,9 @@ public class ReviewsPerDay extends Accumulator<Review>{
     
     public ReviewsPerDay() {
         String hint = "Keep the doctor away";
-        fanatic = new Achievement("","Fanatic","1 review/day for a year",1);
+        fanatic = new Achievement("","Fanatic","1 review/day for 3 months",1);
         fanatic.setHint(hint);
-        obsessed = new Achievement("","Obsessed","1 review/day for a 90 days",2);
+        obsessed = new Achievement("","Obsessed","1 review/day for 2 months",2);
         obsessed.setHint(hint);
         hooked = new Achievement("","Hooked","1 review/day for a month",3);
         hooked.setHint(hint);
@@ -74,12 +74,12 @@ public class ReviewsPerDay extends Accumulator<Review>{
         Integer largeLength = AchievementFactory.getLongestConsecutiveDays(largeThreshold, reviewsPerDay);
         Integer largeCurrentLength = AchievementFactory.getLongestConsecutiveFromToday(largeThreshold, reviewsPerDay);
         
-        fanatic.setProgress(Achievement.scaleToFit(smallLength, 365));
+        fanatic.setProgress(Achievement.scaleToFit(smallLength, 90));
         if (!fanatic.isUnlocked())
-            fanatic.setProgress(Achievement.scaleToFit(smallCurrentLength, 365));
-        obsessed.setProgress(Achievement.scaleToFit(smallLength, 90));
+            fanatic.setProgress(Achievement.scaleToFit(smallCurrentLength, 90));
+        obsessed.setProgress(Achievement.scaleToFit(smallLength, 60));
         if (!obsessed.isUnlocked())
-            obsessed.setProgress(Achievement.scaleToFit(smallCurrentLength, 90));
+            obsessed.setProgress(Achievement.scaleToFit(smallCurrentLength, 60));
         hooked.setProgress(Achievement.scaleToFit(smallLength, 30));
         if (!hooked.isUnlocked())
             hooked.setProgress(Achievement.scaleToFit(smallCurrentLength, 30));

@@ -82,6 +82,11 @@ public class DataManager {
         return getMedia(false);
     }
     
+    /**
+     * Gets media objects from the database
+     * @param wishlistOrNo [true: wishlist only, false: media only]
+     * @return 
+     */
     private static ObservableList<Media> getMedia(boolean wishlistOrNo){
         Statement stmt;
         ResultSet rs = null;
@@ -241,7 +246,7 @@ public class DataManager {
         ObservableList<String> titles = FXCollections.observableArrayList();
         try {
             stmt = getConnection().createStatement();       
-            rs = stmt.executeQuery("select distinct title from media");
+            rs = stmt.executeQuery("select distinct title from media m where m.type<>'WISHLIST'");
             while (rs.next()) {
                 try {
                     titles.add(rs.getString(1));
@@ -262,7 +267,7 @@ public class DataManager {
         ObservableList<String> creators = FXCollections.observableArrayList();
         try {
             stmt = getConnection().createStatement();       
-            rs = stmt.executeQuery("select distinct creator from media");
+            rs = stmt.executeQuery("select distinct creator from media m where m.type<>'WISHLIST'");
             while (rs.next()) {
                 try {
                     creators.add(rs.getString(1));
@@ -283,7 +288,7 @@ public class DataManager {
         ObservableList<String> seasons = FXCollections.observableArrayList();
         try {
             stmt = getConnection().createStatement();       
-            rs = stmt.executeQuery("select distinct season from media");
+            rs = stmt.executeQuery("select distinct season from media m where m.type<>'WISHLIST'");
             while (rs.next()) {
                 try {
                     seasons.add(rs.getString(1));
@@ -304,7 +309,7 @@ public class DataManager {
         ObservableList<String> episodes = FXCollections.observableArrayList();
         try {
             stmt = getConnection().createStatement();       
-            rs = stmt.executeQuery("select distinct title from media");
+            rs = stmt.executeQuery("select distinct title from media m where m.type<>'WISHLIST'");
             while (rs.next()) {
                 try {
                     episodes.add(rs.getString(1));
