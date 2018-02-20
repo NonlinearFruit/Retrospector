@@ -83,14 +83,14 @@ public class WishlistTabController implements Initializable {
     private Button deleteBtn;
     @FXML
     private Button mediaBtn;
+    @FXML
+    private Button cancelBtn;
 
     
     private ObservableList<Media> wishMedia;
     private int currentWishId;
     private ObjectProperty<CoreController.TAB> currentTab;
     private ObjectProperty<Media> currentMedia;
-    @FXML
-    private Button cancelBtn;
     
     /**
      * Initializes the controller class.
@@ -223,7 +223,6 @@ public class WishlistTabController implements Initializable {
         int index = table.getSelectionModel().getFocusedIndex();
         wishMedia.clear();
         wishMedia.addAll(DataManager.getWishlist());
-        Collections.reverse(wishMedia); // Place newest stuff first
         table.refresh();
         if (table.getItems().contains(getMedia())) {
             table.getSelectionModel().select(getMedia());

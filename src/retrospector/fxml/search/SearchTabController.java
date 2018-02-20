@@ -110,7 +110,6 @@ public class SearchTabController implements Initializable {
         int index = searchTable.getSelectionModel().getFocusedIndex();
         searchTableData.clear();
         searchTableData.addAll(DataManager.getMedia());
-        Collections.reverse(searchTableData); // Place newest stuff first
         searchTable.refresh();
         if(searchTable.getItems().contains(getMedia()))
             searchTable.getSelectionModel().select(getMedia());
@@ -204,7 +203,6 @@ public class SearchTabController implements Initializable {
         // Table data setup
         searchTable.setPlaceholder(new Text("Create your first Media by clicking the 'New' button!"));
         searchTableData = DataManager.getMedia();
-        Collections.reverse(searchTableData); // Place newest stuff first
         FilteredList<Media> mediaFiltered = new FilteredList(searchTableData,x->true);
         SortedList<Media> mediaSortable = new SortedList<>(mediaFiltered);
         searchTable.setItems(mediaSortable);

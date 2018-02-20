@@ -96,7 +96,15 @@ public class DataManager {
         try{
             stmt = getConnection().createStatement();
             String equals = wishlistOrNo? "=" : "<>";
-            rs = stmt.executeQuery("select * from media m where m.type"+equals+"'WISHLIST'");
+            rs = stmt.executeQuery("" +
+                    "SELECT media.* \n" +
+                    "FROM media \n" +
+                    "LEFT JOIN review " +
+                    "ON media.id = review.mediaID\n" +
+                    "WHERE type"+equals+"'WISHLIST'" +
+                    "GROUP BY media.id\n" +
+                    "ORDER BY IsNull(Max(review.id),2000000) DESC\n" + // This constant is bad news :(
+                    "");
             while (rs.next()) {
                 try{
                     Media medium = new Media();
