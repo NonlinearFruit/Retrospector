@@ -275,7 +275,7 @@ public class MediaTabController implements Initializable {
         ControlFxTextFieldModifier.autocompleteMe(mediaEpisode, DataManager.getEpisodes());
         mediaDescription.textProperty().addListener((observe,old,neo)->mediaSave.setDisable(false));
         mediaCategory.getSelectionModel().selectedItemProperty().addListener((observe,old,neo)->mediaSave.setDisable(false));
-        mediaType.setItems(FXCollections.observableArrayList(Media.Type.values()));
+        mediaType.setItems(FXCollections.observableArrayList(Media.Type.SINGLE, Media.Type.MINISERIES, Media.Type.SERIES));
         mediaType.getSelectionModel().selectedItemProperty().addListener((observe,old,neo)->{
             switch(neo){
                 case SERIES:

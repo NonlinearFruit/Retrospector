@@ -19,7 +19,7 @@ public class MediaStreakTable extends Table<MediaStreak>{
     private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd yy");
     
     public MediaStreakTable(List<MediaStreak> scores) {
-        super( "Media Streaks", Arrays.asList("Category", "Score", "Date"), scores );
+        super( "Media Streaks", Arrays.asList("Category", "Days", "Date"), scores );
     }
     
     @Override

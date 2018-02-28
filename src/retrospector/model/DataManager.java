@@ -103,7 +103,7 @@ public class DataManager {
                     "ON media.id = review.mediaID\n" +
                     "WHERE type"+equals+"'WISHLIST'" +
                     "GROUP BY media.id\n" +
-                    "ORDER BY IsNull(Max(review.id),media.id) DESC\n" + // This constant is bad news :(
+                    "ORDER BY (CASE WHEN MAX(review.id) IS NULL THEN 1 ELSE 0 END) DESC, MAX(review.id) DESC\n" + // Nulls first then order by most recent review
                     "");
             while (rs.next()) {
                 try{
