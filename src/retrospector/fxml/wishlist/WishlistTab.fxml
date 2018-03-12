@@ -74,8 +74,9 @@
       <TextField fx:id="searchField" promptText="Search" style="-fx-background-image: url('/retrospector/fxml/search/searchGlass.png'); -fx-background-repeat: no-repeat; -fx-background-position: right center; -fx-background-size: 20;" />
       <TableView fx:id="table" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
         <columns>
-          <TableColumn fx:id="titleColm" prefWidth="286.0" text="Title" />
-          <TableColumn fx:id="creatorColm" prefWidth="256.0" text="Creator" />
+            <TableColumn fx:id="numColm" prefWidth="25.0" text="#" />
+          <TableColumn fx:id="titleColm" prefWidth="350.0" text="Title" />
+          <TableColumn fx:id="creatorColm" prefWidth="200.0" text="Creator" />
             <TableColumn fx:id="seasonColm" prefWidth="160.0" text="Season" />
             <TableColumn fx:id="episodeColm" prefWidth="160.0" text="Episode" />
             <TableColumn fx:id="categoryColm" prefWidth="160.0" text="Category" />

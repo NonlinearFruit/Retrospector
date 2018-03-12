@@ -162,9 +162,6 @@ public class AchievementFactory {
             if (!categoryMap.get(today).containsKey(category))
                 continue;
             
-            if (category.equals("Poem"))
-                System.out.println(today);
-            
             LocalDate yesterday = today.minus(1,ChronoUnit.DAYS);
             if (!categoryMap.containsKey(yesterday) || !categoryMap.get(yesterday).containsKey(category))
             {

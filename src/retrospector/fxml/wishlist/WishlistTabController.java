@@ -5,9 +5,7 @@
  */
 package retrospector.fxml.wishlist;
 
-import java.math.BigDecimal;
 import java.net.URL;
-import java.util.Collections;
 import java.util.ResourceBundle;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -62,6 +60,8 @@ public class WishlistTabController implements Initializable {
     @FXML
     private TableView<Media> table;
     @FXML
+    private TableColumn<Media, Integer> numColm;
+    @FXML
     private TableColumn<Media, String> titleColm;
     @FXML
     private TableColumn<Media, String> creatorColm;
@@ -108,6 +108,8 @@ public class WishlistTabController implements Initializable {
         table.setItems(sortedMedia);
         
         // Columns
+        numColm.setSortable(false);
+        numColm.setCellValueFactory(p -> new ReadOnlyObjectWrapper(1+table.getItems().indexOf(p.getValue())));
         titleColm.setCellValueFactory(new PropertyValueFactory("Title"));
         creatorColm.setCellValueFactory(new PropertyValueFactory("Creator"));
         seasonColm.setCellValueFactory(new PropertyValueFactory("Season"));

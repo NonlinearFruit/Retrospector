@@ -32,6 +32,8 @@ public class UserCounts extends Accumulator<Review>{
     private Achievement popular;
     
     private Achievement social;
+    private Achievement amicable;
+    private Achievement gregarious;
     
     private Map<String,Integer> userReviews;
     private Integer totalReviews;
@@ -59,6 +61,10 @@ public class UserCounts extends Accumulator<Review>{
         hint = "Retrospecting is a great way to make friends*";
         social = new Achievement("","Social","Have 3 users",3);
         social.setHint(hint);
+        amicable = new Achievement("","Amicable","Have 6 users",2);
+        amicable.setShowable(false);
+        gregarious = new Achievement("","Gregarious","Have 10 users",1);
+        gregarious.setShowable(false);
     }
     
     @Override
@@ -90,11 +96,13 @@ public class UserCounts extends Accumulator<Review>{
         popular.setProgress(Achievement.scaleToFit(totalReviews, 100));
         
         social.setProgress(Achievement.scaleToFit(numUsers, 3));
+        amicable.setProgress(Achievement.scaleToFit(numUsers, 6));
+        gregarious.setProgress(Achievement.scaleToFit(numUsers, 10));
         
         return super.getShowableAchievements(
                 anthropologist, famous, popular,
                 bff, chum, friend,
-                social
+                gregarious, amicable, social
         );
     }
     

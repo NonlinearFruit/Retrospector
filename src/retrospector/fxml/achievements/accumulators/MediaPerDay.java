@@ -130,8 +130,6 @@ public class MediaPerDay extends Accumulator<Media>{
                 .min()
                 .orElse(0);
         
-        System.out.println(maxScore+" max:min "+minScore);
-        
         spree.setProgress(spreeSize>=5? 100:0);
         binge.setProgress(bingeSize>=10? 100:0);
         marathon.setProgress(haveMarathon? 100:0);
