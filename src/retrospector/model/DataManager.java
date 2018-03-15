@@ -101,9 +101,11 @@ public class DataManager {
                     "FROM media \n" +
                     "LEFT JOIN review " +
                     "ON media.id = review.mediaID\n" +
-                    "WHERE type"+equals+"'WISHLIST'" +
+                    "WHERE type"+equals+"'WISHLIST'\n" +
                     "GROUP BY media.id\n" +
-                    "ORDER BY (CASE WHEN MAX(review.id) IS NULL THEN 1 ELSE 0 END) DESC, MAX(review.id) DESC\n" + // Nulls first then order by most recent review
+                    "ORDER BY " + // Order so that no-reviews are first, then most recent reviews
+                        "(CASE WHEN MAX(review.id) IS NULL THEN media.id ELSE 0 END) DESC, " +
+                        "MAX(review.id) DESC " + 
                     "");
             while (rs.next()) {
                 try{
@@ -607,6 +609,14 @@ public class DataManager {
             PreparedStatement pstmt;
 
             pstmt = getConnection().prepareStatement("delete from media where id=?");
+            pstmt.setInt(1, media.getId()); 
+            pstmt.executeUpdate();
+
+            pstmt = getConnection().prepareStatement("delete from review where mediaId=?");
+            pstmt.setInt(1, media.getId()); 
+            pstmt.executeUpdate();
+
+            pstmt = getConnection().prepareStatement("delete from media where mediaId=?");
             pstmt.setInt(1, media.getId()); 
             pstmt.executeUpdate();
             

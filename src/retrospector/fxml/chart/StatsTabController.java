@@ -75,55 +75,7 @@ public class StatsTabController implements Initializable {
     @FXML
     private ChoiceBox<String> categorySelector;
     @FXML
-    private Text categoryMedia;
-    @FXML
-    private Text categoryUser;
-    @FXML
-    private Text categoryTime;
-    @FXML
-    private Text categorySingle;
-    @FXML
-    private Text categoryMiniseries;
-    @FXML
-    private Text categorySeries;
-    @FXML
-    private Text categoryPerMonth;
-    @FXML
-    private Text mediaMedia;
-    @FXML
-    private Text mediaReview;
-    @FXML
-    private Text mediaUser;
-    @FXML
-    private Text mediaTime;
-    @FXML
-    private Text mediaCurrentRating;
-    @FXML
-    private Text mediaAllRating;
-    @FXML
-    private Text categoryCurrentRating;
-    @FXML
-    private Text categoryAllRating;
-    @FXML
-    private Text mediaSeries;
-    @FXML
-    private Text mediaMiniseries;
-    @FXML
-    private Text mediaPerMonth;
-    @FXML
-    private Text categoryReview;
-    @FXML
-    private Text mediaSingle;
-    @FXML
     private LineChart<Number, Number> chartReviewsPerYear;
-    @FXML
-    private Text categoryTitle;
-    @FXML
-    private Text categoryCreator;
-    @FXML
-    private Text mediaTitle;
-    @FXML
-    private Text mediaCreator;
     @FXML
     private StackedBarChart<String, Number> chartReviewsPerDay;
     @FXML
@@ -143,41 +95,11 @@ public class StatsTabController implements Initializable {
     @FXML
     private ListView<Stroolean> overallUserList;
     @FXML
-    private VBox categoryStatBox;
-    @FXML
-    private VBox mediaStatBox;
-    @FXML
     private HBox overallContainer;
     @FXML
     private HBox categoryContainer;
     @FXML
     private HBox mediaContainer;
-    @FXML
-    private VBox categoryStatBox1;
-    @FXML
-    private Text categoryMedia1;
-    @FXML
-    private Text categoryReview1;
-    @FXML
-    private Text categoryUser1;
-    @FXML
-    private Text categoryTime1;
-    @FXML
-    private Text categoryTitle1;
-    @FXML
-    private Text categoryCreator1;
-    @FXML
-    private Text categorySingle1;
-    @FXML
-    private Text categoryMiniseries1;
-    @FXML
-    private Text categorySeries1;
-    @FXML
-    private Text categoryPerMonth1;
-    @FXML
-    private Text categoryCurrentRating1;
-    @FXML
-    private Text categoryAllRating1;
     @FXML
     private ChoiceBox<String> factoidSelector;
     @FXML

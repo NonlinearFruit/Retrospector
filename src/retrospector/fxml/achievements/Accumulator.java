@@ -6,6 +6,7 @@
 package retrospector.fxml.achievements;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -20,6 +21,7 @@ public abstract class Accumulator<T> {
     
     protected List<AchievementFX> getShowableAchievements(Achievement... achievements) {
         List<AchievementFX> list = new ArrayList<>();
+//        Arrays.stream(achievements).forEach((a)->System.out.println(a.getHint()));
         for (Achievement achievement : achievements)
             if (achievement.isUnlocked() || achievement.isShowable())
                 list.add(new AchievementFX(achievement));
