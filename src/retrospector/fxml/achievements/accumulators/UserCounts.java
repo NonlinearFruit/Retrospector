@@ -43,7 +43,7 @@ public class UserCounts extends Accumulator<Review>{
         totalReviews = 0;
         
         String hint = "Those who retrospect together, stay together";
-        bff = new Achievement("","BFFs","1,000 reviews from a user",1);
+        bff = new Achievement("","BFFs","1k reviews from a user",1);
         bff.setHint(hint);
         chum = new Achievement("","Chums","100 reviews from a user",2);
         chum.setHint(hint);
@@ -51,9 +51,9 @@ public class UserCounts extends Accumulator<Review>{
         friend.setHint(hint);
         
         hint = "Ask your friends";
-        anthropologist = new Achievement("","Anthropologist","10,000 reviews from users",1);
+        anthropologist = new Achievement("","Anthropologist","10k reviews from users",1);
         anthropologist.setHint(hint);
-        famous = new Achievement("","Famous","1,000 reviews from users",2);
+        famous = new Achievement("","Famous","1k reviews from users",2);
         famous.setHint(hint);
         popular = new Achievement("","Popular","100 reviews from users",3);
         popular.setHint(hint);

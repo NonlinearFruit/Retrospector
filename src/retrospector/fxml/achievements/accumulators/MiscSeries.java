@@ -34,7 +34,7 @@ public class MiscSeries extends Accumulator<Media>{
     public MiscSeries() {
         inconsistent = new Achievement("","Inconsistent","Title with a 1 and 10 rating",3);
         inconsistent.setShowable(false);
-        masterpiece = new Achievement("","True Masterpiece","Title with ten 10 ratings",2);
+        masterpiece = new Achievement("","True Masterpiece","Title with ten 10 ratings",1);
         masterpiece.setShowable(false);
         
         mapRatings = new HashMap<>();

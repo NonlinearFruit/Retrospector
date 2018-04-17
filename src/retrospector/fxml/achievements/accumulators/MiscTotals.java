@@ -42,7 +42,7 @@ public class MiscTotals extends Accumulator<Media> {
         doubledip.setHint(hint);
         dejavu = new Achievement("","Deja Vu","100 more reviews than media",2);
         dejavu.setHint(hint);
-        timeloop = new Achievement("","Time Loop","1000 more reviews than media",1);
+        timeloop = new Achievement("","Time Loop","1k more reviews than media",1);
         timeloop.setHint(hint);
     }
 

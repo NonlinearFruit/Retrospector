@@ -48,7 +48,7 @@ public class MediaCounts extends Accumulator<Media>{
     
     public MediaCounts() {
         String hint = "Master of none";
-        renaissance = new Achievement("","Renaissance Man","1,000 media in each category",1);
+        renaissance = new Achievement("","Renaissance Man","1k media in each category",1);
         renaissance.setHint(hint);
         rounded = new Achievement("","Well Rounded","100 media in each category",2);
         rounded.setHint(hint);
@@ -56,17 +56,17 @@ public class MediaCounts extends Accumulator<Media>{
         jack.setHint(hint);
         
         hint = "Specialize";
-        academic = new Achievement("","Academic","Category with 10,000 media",1);
+        academic = new Achievement("","Academic","Category with 10k media",1);
         academic.setHint(hint);
-        enthusiast = new Achievement("","Enthusiast","Category with 1,000 media",2);
+        enthusiast = new Achievement("","Enthusiast","Category with 1k media",2);
         enthusiast.setHint(hint);
         dabbler = new Achievement("","Dabbler","Category with 100 media",3);
         dabbler.setHint(hint);
         
         hint = "Gotta catch them all";
-        connoisseur = new Achievement("","Connoisseur","Collect 10,000 media",1);
+        connoisseur = new Achievement("","Connoisseur","Collect 10k media",1);
         connoisseur.setHint(hint);
-        collector = new Achievement("","Collector","Collect 1,000 media",2);
+        collector = new Achievement("","Collector","Collect 1k media",2);
         collector.setHint(hint);
         hobbiest = new Achievement("","Hobbyist","Collect 100 media",3);
         hobbiest.setHint(hint);
