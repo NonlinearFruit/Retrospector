@@ -148,12 +148,8 @@ public class AchievementFactory {
         return best;
     }
     
-    public static MediaStreak getMediaStreak(String category) {
-        if (miscSeries == null)
-            return new MediaStreak(category);
-        
-        // Day -> Category -> # Reviews
-        Map<LocalDate,Map<String,Integer>> categoryMap = mediaPerDay.categoryMap;
+    public static MediaStreak getMediaStreak(String category, Map<LocalDate,Map<String,Integer>> categoryMap) {
+        // categoryMap = Day -> Category -> # Reviews
         
         int maxLen = 0;
         LocalDate date = LocalDate.now();
@@ -183,6 +179,10 @@ public class AchievementFactory {
             }
         }
         return new MediaStreak(category,date, maxLen);
+    }
+    
+    public static MediaStreak getMediaStreak(String category) {
+        return mediaPerDay.mediaStreaks.get(category);
     }
     
     public static Integer getLongestConsecutiveDays(Integer reviewThreshold, Map<LocalDate,Integer> map) {
