@@ -265,7 +265,9 @@ public class StatsTabController implements Initializable {
     }
     
     public void addUserToOverallUserList(String user) {
-        Stroolean c = new Stroolean(user,true);
+        Stroolean c = new Stroolean(user,false);
+        if (user.equals(DataManager.getDefaultUser()))
+            c.setBoolean(true);
         c.booleanProperty().addListener((observe,old,neo)->update());
         strooleans.add(c);
         overallUserList.getItems().add(c);
