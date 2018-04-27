@@ -91,6 +91,7 @@ public class Retrospector extends Application {
                 updateProgress(step++,totalSteps);
                 updateMessage("Loading Database . . .");
                 DataManager.startDB();
+                DataManager.makeBackup("Retrospector-Automatic");
                 updateProgress(step++,totalSteps);
                 
                 updateMessage("Loading Core . . .");

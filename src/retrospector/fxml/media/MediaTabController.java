@@ -273,6 +273,7 @@ public class MediaTabController implements Initializable {
         ControlFxTextFieldModifier.autocompleteMe(mediaSeason, DataManager.getSeasons());
         mediaEpisode.textProperty().addListener((observe,old,neo)->mediaSave.setDisable(false));
         ControlFxTextFieldModifier.autocompleteMe(mediaEpisode, DataManager.getEpisodes());
+        ControlFxTextFieldModifier.autocompleteMe(mediaContentFactoid, DataManager.getFactoidContents());
         mediaDescription.textProperty().addListener((observe,old,neo)->mediaSave.setDisable(false));
         mediaCategory.getSelectionModel().selectedItemProperty().addListener((observe,old,neo)->mediaSave.setDisable(false));
         mediaType.setItems(FXCollections.observableArrayList(Media.Type.SINGLE, Media.Type.MINISERIES, Media.Type.SERIES));

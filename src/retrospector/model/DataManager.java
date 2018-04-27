@@ -5,6 +5,10 @@
  */
 package retrospector.model;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -12,6 +16,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Date;
 import java.sql.ResultSet;
+import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import retrospector.model.Media.Type;
@@ -64,14 +69,25 @@ public class DataManager {
             
     }
     
-    public static void makeBackup(){
-        try{
-            String backupDir = "'"+PropertyManager.retroFolder+"/Backup/'";
+    public static void makeBackup(String filename){
+        try {
+            String backupDir = PropertyManager.retroFolder+"/Backup/";
+            if (!filename.isEmpty()) {
+                filename += ".tar.gz";
+                backupDir += filename;
+                Files.deleteIfExists(Paths.get(backupDir));
+            }
             Statement stmt = getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery("BACKUP DATABASE TO "+backupDir);
+            ResultSet rs = stmt.executeQuery("BACKUP DATABASE TO '" + backupDir + "'");
         } catch(SQLException ex) {
             ex.printStackTrace();
+        } catch(IOException ioe) {
+            ioe.printStackTrace();
         }
+    }
+    
+    public static void makeBackup() {
+        makeBackup("");
     }
     
     public static ObservableList<Media> getWishlist() {
@@ -327,6 +343,31 @@ public class DataManager {
             }
         } catch (SQLException e) {System.err.println("Get episode list failed. (getEpisodes)");}
         return episodes;
+    }
+
+    /**
+     * Create a list of all unique factoid contents in the db so far
+     * @return 
+     */
+    public static List<String> getFactoidContents() {
+        Statement stmt;
+        ResultSet rs = null;
+
+        ObservableList<String> contents = FXCollections.observableArrayList();
+        try {
+            stmt = getConnection().createStatement();
+            rs = stmt.executeQuery("select distinct content from factoid f");
+            while (rs.next()) {
+                try {
+                    contents.add(rs.getString(1));
+                } catch (SQLException e) {
+                    System.err.println("Get factoid failed. (getFactoidContents)");
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Get factoid list failed. (getFactoidContents)");
+        }
+        return contents;
     }
     
     /**
