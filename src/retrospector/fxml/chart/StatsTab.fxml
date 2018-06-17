@@ -108,54 +108,5 @@
             <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
          </padding>
       </HBox>
-      <HBox fx:id="mediaContainer" spacing="5.0">
-         <children>
-            <VBox maxWidth="120.0" minWidth="120.0" HBox.hgrow="ALWAYS">
-               <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Factoid">
-                     <font>
-                        <Font size="25.0" />
-                     </font>
-                  </Text>
-                  <ChoiceBox fx:id="factoidSelector" prefWidth="150.0" />
-               </children>
-            </VBox>
-            <BarChart fx:id="chartAverageFactRating" maxWidth="580.0" title="Average Rating" HBox.hgrow="ALWAYS">
-              <xAxis>
-                <CategoryAxis side="BOTTOM" />
-              </xAxis>
-              <yAxis>
-                <NumberAxis side="LEFT" />
-              </yAxis>
-            </BarChart>
-            <VBox fx:id="mediaStatBox" prefHeight="200.0" prefWidth="100.0">
-               <children>
-                  <Text fx:id="mediaMedia" strokeType="OUTSIDE" strokeWidth="0.0" text="Media" />
-                  <Text fx:id="mediaReview" strokeType="OUTSIDE" strokeWidth="0.0" text="Review" />
-                  <Text fx:id="mediaUser" strokeType="OUTSIDE" strokeWidth="0.0" text="User" />
-                  <Text fx:id="mediaTime" strokeType="OUTSIDE" strokeWidth="0.0" text="Time" />
-                  <Text fx:id="mediaTitle" strokeType="OUTSIDE" strokeWidth="0.0" text="Title" />
-                  <Text fx:id="mediaCreator" strokeType="OUTSIDE" strokeWidth="0.0" text="Creator" />
-                  <Text fx:id="mediaSingle" strokeType="OUTSIDE" strokeWidth="0.0" text="Single" />
-                  <Text fx:id="mediaMiniseries" strokeType="OUTSIDE" strokeWidth="0.0" text="Miniseries" />
-                  <Text fx:id="mediaSeries" strokeType="OUTSIDE" strokeWidth="0.0" text="Series" />
-                  <Text fx:id="mediaPerMonth" strokeType="OUTSIDE" strokeWidth="0.0" text="Per Month" />
-                  <Text fx:id="mediaCurrentRating" strokeType="OUTSIDE" strokeWidth="0.0" text="Current" />
-                  <Text fx:id="mediaAllRating" strokeType="OUTSIDE" strokeWidth="0.0" text="All" />
-               </children>
-            </VBox>
-            <BarChart fx:id="chartNumOfFacts" title="# of Facts" HBox.hgrow="SOMETIMES">
-              <xAxis>
-                <CategoryAxis side="BOTTOM" />
-              </xAxis>
-              <yAxis>
-                <NumberAxis side="LEFT" />
-              </yAxis>
-            </BarChart>
-         </children>
-         <padding>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="5.0" />
-         </padding>
-      </HBox>
    </items>
 </SplitPane>

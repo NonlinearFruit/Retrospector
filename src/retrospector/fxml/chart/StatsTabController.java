@@ -10,19 +10,14 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -42,18 +37,15 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
-import javafx.scene.text.Text;
 import org.controlsfx.control.PopOver;
 import retrospector.fxml.core.CoreController.TAB;
 import retrospector.model.DataManager;
 import retrospector.model.Factoid;
 import retrospector.model.Media;
 import retrospector.model.Review;
-import retrospector.util.NaturalOrderComparator;
 import retrospector.util.Stroolean;
 
 /**
@@ -98,21 +90,11 @@ public class StatsTabController implements Initializable {
     private HBox overallContainer;
     @FXML
     private HBox categoryContainer;
-    @FXML
-    private HBox mediaContainer;
-    @FXML
-    private ChoiceBox<String> factoidSelector;
-    @FXML
-    private BarChart<String, Number> chartAverageFactRating;
-    @FXML
-    private BarChart<String, Number> chartNumOfFacts;
     
     private ChartPopupController mediaPerCategorySettings;
     private PopOver mediaPerCategoryPopOver;
     private ChartPopupController reviewPerYearSettings;
     private PopOver reviewPerYearPopOver;
-    private FactoidChartPopupController numOfFactsSettings;
-    private PopOver numOfFactsPopOver;
 
     /**
      * Initializes the controller class.
@@ -124,46 +106,10 @@ public class StatsTabController implements Initializable {
         chartReviewsPerYear.getData().add(new XYChart.Series(FXCollections.observableArrayList(new XYChart.Data("",0))));
         chartReviewsPerDay.getData().add(new XYChart.Series(FXCollections.observableArrayList(new XYChart.Data("",0))));
         chartReviewsPerRating.getData().add(new XYChart.Series(FXCollections.observableArrayList(new XYChart.Data("",0))));
-        chartAverageFactRating.getData().add(new XYChart.Series(FXCollections.observableArrayList(new XYChart.Data("",0))));
-        chartNumOfFacts.getData().add(new XYChart.Series(FXCollections.observableArrayList(new XYChart.Data("",0))));
         // Overall
         setupOverall();
         // Category
         setupCategory();
-        // Factoid
-        setupFactoid();
-    }
-    
-    public void setupFactoid() {
-        factoidSelector.setItems(FXCollections.observableArrayList(DataManager.getFactiodTypes()));
-        factoidSelector.setValue(DataManager.getFactiodTypes()[0]);
-        factoidSelector.valueProperty().addListener((observe,old,neo)->updateFactoid());
-        categorySelector.valueProperty().addListener((observe,old,neo)->updateFactoid());
-        chartNumOfFacts.setLegendVisible(false);
-        chartAverageFactRating.setLegendVisible(false);
-        
-        // Pop Overs
-        numOfFactsPopOver = new PopOver();
-        numOfFactsPopOver.setAutoHide(true);
-//        reviewPerYearPopOver.setAutoFix(true);
-        numOfFactsPopOver.setHideOnEscape(true);
-        numOfFactsPopOver.setDetachable(false);
-        numOfFactsPopOver.setArrowLocation(PopOver.ArrowLocation.LEFT_CENTER);
-        chartNumOfFacts.setOnMouseClicked(e -> {
-            if (e.getClickCount() == 2) {
-                numOfFactsPopOver.show(chartNumOfFacts);
-            }
-        });
-
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/retrospector/fxml/chart/FactoidChartPopup.fxml"));
-            Parent root = (Parent) fxmlLoader.load();
-            numOfFactsSettings = fxmlLoader.getController();
-            numOfFactsSettings.setup(this::updateFactoid);
-            numOfFactsPopOver.setContentNode(root);
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        }
     }
     
     public void setupCategory() {
@@ -261,7 +207,6 @@ public class StatsTabController implements Initializable {
         allMedia.addAll(DataManager.getMedia());
         Platform.runLater(()->updateOverall());
         Platform.runLater(()->updateCategory());
-        Platform.runLater(()->updateFactoid());
     }
     
     public void addUserToOverallUserList(String user) {
@@ -478,109 +423,6 @@ public class StatsTabController implements Initializable {
             data.getData().add(new XYChart.Data<>("", 0));
         chartReviewsPerRating.getData().clear();
         chartReviewsPerRating.getData().add(data);
-    }
-    
-    private void updateFactoid() {
-        // Get Vars
-        String factoidType = factoidSelector.getValue();
-        String category = categorySelector.getValue();
-        Integer minCount = numOfFactsSettings.getMin();
-        Integer maxCount = numOfFactsSettings.getMax();
-        
-        // Colors
-        int index = Arrays.asList(DataManager.getFactiodTypes()).indexOf(factoidType);
-        chartAverageFactRating.setStyle("CHART_COLOR_1: "+colors[ (index>=0?colors.length-index:0) % colors.length]+";");
-        chartNumOfFacts.setStyle("CHART_COLOR_1: "+colors[ (index>=0?colors.length-index:0) % colors.length]+";");
-            
-        // Data Mining - Vars
-        final Integer threshold = 5;
-        final Integer maxLabelLen = 13;
-        Map<String, Integer> ratingFactsMap = new HashMap<>();
-        Map<String, Integer> countReviewFactsMap = new HashMap<>();
-        Map<String, Integer> numberFactsMap = new HashMap<>();
-        InfoBlipAccumulator info = new InfoBlipAccumulator();
-        
-        // Data Mining - Calcs
-        for (Media m : allMedia) {
-            List<Factoid> factoids = new ArrayList<>(m.getFactoids());
-            factoids.add(new Factoid("Title",m.getTitle()));
-            factoids.add(new Factoid("Creator",m.getCreator()));
-            factoids.add(new Factoid("Season",m.getSeason()));
-            factoids.add(new Factoid("Episode",m.getEpisode()));
-            factoids.add(new Factoid("Category",m.getCategory()));
-            if (category.equals(m.getCategory()) || category.equals(universalCategory)){
-                boolean user = false;
-                boolean fact = false;
-                
-                for (Review r : m.getReviews())
-                    if (strooleans.stream().anyMatch(x->x.getString().equalsIgnoreCase(r.getUser()) && x.isBoolean()))
-                        user = true;
-                
-                for (Factoid factiod : factoids)
-                    if (factiod.getTitle().equals(factoidType))
-                        fact = true;
-                
-                if (user && fact) {
-                    Set<String> contentTypes = new HashSet<>();
-                    info.accumulate(m);
-                    SimpleIntegerProperty rating = new SimpleIntegerProperty(0);
-                    SimpleIntegerProperty count = new SimpleIntegerProperty(0);
-                    for (Review r : m.getReviews())
-                        if (strooleans.stream().anyMatch(x->x.getString().equalsIgnoreCase(r.getUser()) && x.isBoolean())) {
-                            rating.set(rating.get()+r.getRating());
-                            count.set(count.get()+1);
-                            info.accumulate(r);
-                        }
-                    for (Factoid factoid : factoids)
-                        if (factoid.getTitle().equals(factoidType)) {
-                            String f = factoid.getContent();
-                            if (f.length()>maxLabelLen)
-                                f = f.substring(0,maxLabelLen);
-                            contentTypes.add(f);
-                            numberFactsMap.put(f,numberFactsMap.getOrDefault(f, 0)+1);
-                            info.accumulate(factoid);
-                        }
-                    contentTypes.stream()
-                            .forEach(content->{
-                                ratingFactsMap.put(content,ratingFactsMap.getOrDefault(content, 0)+rating.get());
-                                countReviewFactsMap.put(content,countReviewFactsMap.getOrDefault(content, 0)+count.get());
-                            });
-                }
-            }
-        }
-        if (mediaContainer.getChildren().size() > 3)
-            mediaContainer.getChildren().remove(2);
-        mediaContainer.getChildren().add(2,info.getInfo());
-        
-        // Chart - # of Facts
-        chartNumOfFacts.getData().clear();
-        XYChart.Series<String,Number> dataNum = new XYChart.Series<>();
-        dataNum.setName(factoidType);
-        numberFactsMap.keySet().stream()
-                .sorted(new NaturalOrderComparator())
-                .forEachOrdered(factoid-> {
-                    Integer count = numberFactsMap.get(factoid);
-                    if (count >= minCount && count <= maxCount)
-                        dataNum.getData().add(new XYChart.Data<>(factoid, count));
-                });
-        if (dataNum.getData().size()<1)
-            dataNum.getData().add(new XYChart.Data<>("", 0));
-        chartNumOfFacts.getData().add(dataNum);
-        
-        // Chart - Average Fact Rating
-        chartAverageFactRating.getData().clear();
-        XYChart.Series<String,Number> dataAve = new XYChart.Series<>();
-        dataAve.setName(factoidType);
-        ratingFactsMap.keySet().stream()
-                .sorted(new NaturalOrderComparator())
-                .forEachOrdered(factoid->{
-                    Integer count = countReviewFactsMap.get(factoid);
-                    if (count>=minCount && count<=maxCount)
-                        dataAve.getData().add(new XYChart.Data<>(factoid, ratingFactsMap.get(factoid)*1.0/count));
-                });
-        if (dataAve.getData().size()<1)
-            dataAve.getData().add(new XYChart.Data<>("", 0));
-        chartAverageFactRating.getData().add(dataAve);
     }
     
     // Takes a date and returns the year with decimal value for the
