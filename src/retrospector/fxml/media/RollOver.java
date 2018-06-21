@@ -64,8 +64,6 @@ public class RollOver extends StackPane {
         
         angle = createAngleProperty();
 
-        this.setPadding(new Insets(30));
-
         Double height = Math.max(front.getLayoutX(), back.getLayoutX());
         Double width = Math.max(front.getLayoutY(), back.getLayoutY());
         this.setMinHeight(height);

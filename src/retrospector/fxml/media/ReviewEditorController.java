@@ -5,7 +5,6 @@
  */
 package retrospector.fxml.media;
 
-import retrospector.fxml.review.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
@@ -22,7 +21,6 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import org.controlsfx.control.Rating;
-import retrospector.fxml.core.CoreController.TAB;
 import static retrospector.fxml.core.CoreController.ratingFormat;
 import retrospector.model.DataManager;
 import retrospector.model.Media;
