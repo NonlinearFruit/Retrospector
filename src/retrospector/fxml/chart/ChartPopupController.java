@@ -34,7 +34,7 @@ public class ChartPopupController implements Initializable {
         public LocalDate getEarliest(LocalDate fromHere) {
             if (months < 0)
                 return LocalDate.MIN;
-            return fromHere.minusMonths(months);
+            return fromHere.minusMonths(months).withDayOfMonth(1).minusDays(1);
         }
         
         public LocalDate getEarliest() {
