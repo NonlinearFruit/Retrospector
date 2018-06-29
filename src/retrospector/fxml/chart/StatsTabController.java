@@ -101,11 +101,13 @@ public class StatsTabController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-//        Collections.rotate(Arrays.asList(colors), -5);
         // Bug Work Around
-        chartReviewsPerYear.getData().add(new XYChart.Series(FXCollections.observableArrayList(new XYChart.Data("",0))));
-        chartReviewsPerDay.getData().add(new XYChart.Series(FXCollections.observableArrayList(new XYChart.Data("",0))));
-        chartReviewsPerRating.getData().add(new XYChart.Series(FXCollections.observableArrayList(new XYChart.Data("",0))));
+        chartReviewsPerYear.getXAxis().setAnimated(false);
+        chartReviewsPerYear.setAnimated(true);
+        chartReviewsPerDay.getXAxis().setAnimated(false);
+        chartReviewsPerDay.setAnimated(true);
+        chartReviewsPerRating.getXAxis().setAnimated(false);
+        chartReviewsPerRating.setAnimated(true);
         // Overall
         setupOverall();
         // Category
