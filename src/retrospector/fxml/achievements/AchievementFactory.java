@@ -154,17 +154,17 @@ public class AchievementFactory {
         int maxLen = 0;
         LocalDate date = LocalDate.now();
         
-        for (LocalDate today : categoryMap.keySet()) {
-            if (!categoryMap.get(today).containsKey(category))
+        for (LocalDate day : categoryMap.keySet()) {
+            if (!categoryMap.get(day).containsKey(category))
                 continue;
             
-            LocalDate yesterday = today.minus(1,ChronoUnit.DAYS);
+            LocalDate yesterday = day.minus(1,ChronoUnit.DAYS);
             if (!categoryMap.containsKey(yesterday) || !categoryMap.get(yesterday).containsKey(category))
             {
                 // Then check for next elements in the
                 // sequence
                 int currentLen = 1;
-                LocalDate tomorrow = today.plus(1,ChronoUnit.DAYS);
+                LocalDate tomorrow = day.plus(1,ChronoUnit.DAYS);
                 while (categoryMap.containsKey(tomorrow) && categoryMap.get(tomorrow).containsKey(category)) {
                     tomorrow = tomorrow.plus(1,ChronoUnit.DAYS);
                     currentLen++;
@@ -174,7 +174,7 @@ public class AchievementFactory {
                 // is more
                 if (maxLen<currentLen) {
                     maxLen = currentLen;
-                    date = tomorrow;
+                    date = tomorrow.minus(1,ChronoUnit.DAYS);
                 }
             }
         }
