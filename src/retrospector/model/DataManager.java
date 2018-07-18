@@ -66,7 +66,6 @@ public class DataManager {
                 conn = DriverManager.getConnection(connString,"SA","");
         } catch(SQLException e){System.err.println("Connection failed.");}
         return conn;
-            
     }
     
     public static void makeBackup(String filename){

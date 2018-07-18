@@ -8,9 +8,10 @@ package retrospector.util;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.TextField;
 import org.controlsfx.control.textfield.TextFields;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * Applies various ControlsFX features to vanilla textfields
@@ -18,24 +19,35 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  */
 public class ControlFxTextFieldModifier {
     private static final Integer maxAutocompleteResults = 5;
+    private static final Integer minLengthForResults = 4;
     
     public static void autocompleteMe(TextField textfield, List<String> strings) {
+        final List<String> options = strings.stream()
+                .filter( option -> option.length() > minLengthForResults )
+                .collect(Collectors.toList());
+        
         TextFields.bindAutoCompletion(textfield, (x)->{
-            if (x.isCancelled() || x.getUserText().length() < 4)
+            if (x.isCancelled())
                 return new ArrayList<>();
-            
-            List<String> results = strings.stream()
-                    .filter((y)->
-                            y.length() > 4 &&
-                            y.toLowerCase().contains(x.getUserText().toLowerCase()) &&
-                            !y.equals(x.getUserText())
-                    )
-                    .collect(Collectors.toList());
-            
-            if (results.size() > maxAutocompleteResults)
-                return new ArrayList<>();
-            
-            return results;
+            List<String> matches = GetMatches(x.getUserText(), options);
+            return matches;
         });
+    }
+    
+    private static List<String> GetMatches(String query, List<String> options){
+        if (query.length() < minLengthForResults)
+            return new ArrayList<>();
+
+        List<String> results = options.stream()
+                .filter((y)->
+                        y.toLowerCase().contains(query.toLowerCase()) &&
+                        !y.equals(query)
+                )
+                .collect(Collectors.toList());
+
+        if (results.size() > maxAutocompleteResults)
+            return new ArrayList<>();
+
+        return results;
     }
 }

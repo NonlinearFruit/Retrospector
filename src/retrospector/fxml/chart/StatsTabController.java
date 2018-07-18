@@ -118,7 +118,7 @@ public class StatsTabController implements Initializable {
         ObservableList<String> categories = FXCollections.observableArrayList(DataManager.getCategories());
         categories.add(0,universalCategory);
         categorySelector.setItems(categories);
-        categorySelector.setValue(DataManager.getCategories()[0]);
+        categorySelector.setValue(universalCategory);
         categorySelector.valueProperty().addListener((observe,old,neo)->updateCategory());
         chartReviewsPerRating.setLegendVisible(false);
         chartRprX.setLabel("Rating");
@@ -425,11 +425,5 @@ public class StatsTabController implements Initializable {
             data.getData().add(new XYChart.Data<>("", 0));
         chartReviewsPerRating.getData().clear();
         chartReviewsPerRating.getData().add(data);
-    }
-    
-    // Takes a date and returns the year with decimal value for the
-    // percentage of the year that is complete.
-    private double dateToDouble(LocalDate date){
-        return date.getYear()+(date.getDayOfYear()+0.0)/365.25;
     }
 }
