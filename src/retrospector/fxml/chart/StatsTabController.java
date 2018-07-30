@@ -103,11 +103,8 @@ public class StatsTabController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // Bug Work Around
         chartReviewsPerYear.getXAxis().setAnimated(false);
-        chartReviewsPerYear.setAnimated(true);
         chartReviewsPerDay.getXAxis().setAnimated(false);
-        chartReviewsPerDay.setAnimated(true);
         chartReviewsPerRating.getXAxis().setAnimated(false);
-        chartReviewsPerRating.setAnimated(true);
         // Overall
         setupOverall();
         // Category
