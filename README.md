@@ -7,7 +7,7 @@ Maintain an active list of your personal reviews/ratings of media. In a nutshell
 
 There are a lot of practical use cases. Once you start using Retrospector, you will wonder how you lived without being able to answer questions like 'What was my average rating for Firefly?' or 'How many times have I seen *The Holy Grail*?'
 
-Instructions on how to install Retrospector are [here](https://github.com/NonlinearFruit/Retrospector/wiki/Install). In short, you make sure you have Java (a recent version), download the `Retrospector.zip` from the [latest release](https://github.com/NonlinearFruit/Retrospector/releases), unzip and run `Retrospector.jar`.
+Instructions on how to install Retrospector are [here](https://github.com/NonlinearFruit/Retrospector/wiki/Install). In short, you make sure you have Java (a recent version), download the `Retrospector.zip` from the [latest release](https://github.com/NonlinearFruit/Retrospector/releases/latest), unzip and run `Retrospector.jar`.
 
 # Features
 There are a variety of features baked into Retrospector. Here are the most basic, to help get you started.
