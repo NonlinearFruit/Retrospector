@@ -3,7 +3,7 @@
 [![license](https://img.shields.io/badge/license-unlicense-yellow.svg)](https://github.com/NonlinearFruit/Retrospector/blob/master/LICENSE)
 [![chat](https://img.shields.io/badge/chat-slack-red.svg)](https://retrospector.slack.com)
 
-> **UPDATE:** We are in the process of rewriting this repo into three layers; [Retrospector-JavaFx](https://github.com/NonlinearFruit/Retrospector-JavaFx), [Retrospector-Core](https://github.com/NonlinearFruit/Retrospector-Core), and [Retrospector-Hsqldb](https://github.com/NonlinearFruit/Retrospector-Hsqldb). This will continute to be the main repo for [issues](https://github.com/NonlinearFruit/Retrospector/issues), [releases](https://github.com/NonlinearFruit/Retrospector/releases), and [documentation](https://github.com/NonlinearFruit/Retrospector/wiki).
+> **UPDATE:** We are in the process of rewriting this repo into three layers; [Retrospector-JavaFx](https://github.com/NonlinearFruit/Retrospector-JavaFx), [Retrospector-Core](https://github.com/NonlinearFruit/Retrospector-Core), and [Retrospector-Hsqldb](https://github.com/NonlinearFruit/Retrospector-Hsqldb). This will continute to be the main repo for [issues](https://github.com/NonlinearFruit/Retrospector/issues), [releases](https://github.com/NonlinearFruit/Retrospector/releases), and [documentation](https://github.com/NonlinearFruit/Retrospector/wiki). The update will be finished by July 20, 2019.
 
 Maintain an active list of your personal reviews/ratings of media. In a nutshell, with Retrospector you create a *Media* by entering a title and creator. Then you review that media by entering a number (1-10). In a month or a year, when you are looking for a movie to watch with friends, you can have your friends pick from your top 10 movies.
 
