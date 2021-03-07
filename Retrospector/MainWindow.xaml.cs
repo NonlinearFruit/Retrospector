@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Retrospector.Maui
+namespace Retrospector
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

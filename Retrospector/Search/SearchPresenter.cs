@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Retrospector.Core.Search.Interfaces;
 using Retrospector.Core.Search.Models;
 
-namespace Retrospector.Maui.Search
+namespace Retrospector.Search
 {
     public class SearchPresenter : ISearchPresenter
     {

@@ -7,6 +7,7 @@ using Retrospector.Core.Crud.Models;
 using Retrospector.Core.Search;
 using Retrospector.Core.Search.Interfaces;
 using Retrospector.Core.Search.Models;
+using Retrospector.Crud;
 using Retrospector.DataStorage;
 using Retrospector.DataStorage.Factoids;
 using Retrospector.DataStorage.Factoids.Interfaces;
@@ -16,10 +17,9 @@ using Retrospector.DataStorage.Reviews;
 using Retrospector.DataStorage.Reviews.Interfaces;
 using Retrospector.DataStorage.Search;
 using Retrospector.DataStorage.Search.Interfaces;
-using Retrospector.Maui.Crud;
-using Retrospector.Maui.Search;
+using Retrospector.Search;
 
-namespace Retrospector.Maui.Setup
+namespace Retrospector.Setup
 {
     public class Startup
     {

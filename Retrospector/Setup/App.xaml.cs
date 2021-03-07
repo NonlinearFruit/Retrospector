@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace Retrospector.Maui.Setup
+namespace Retrospector.Setup
 {
     public partial class App : Application
     {

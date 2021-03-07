@@ -1,7 +1,7 @@
-﻿<Application x:Class="Retrospector.Maui.Setup.App"
+﻿<Application x:Class="Retrospector.Setup.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:Retrospector.Maui"
+             xmlns:local="clr-namespace:Retrospector"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
          

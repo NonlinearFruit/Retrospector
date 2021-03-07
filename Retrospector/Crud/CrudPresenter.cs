@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Retrospector.Core.Crud.Interfaces;
 
-namespace Retrospector.Maui.Crud
+namespace Retrospector.Crud
 {
     public class CrudPresenter<T> : ICrudPresenter<T> where T : IModel
     {

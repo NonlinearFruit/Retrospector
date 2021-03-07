@@ -13,10 +13,10 @@ using Retrospector.DataStorage.Medias.Entities;
 using Retrospector.DataStorage.Medias.Interfaces;
 using Retrospector.DataStorage.Reviews.Interfaces;
 using Retrospector.DataStorage.Search.Interfaces;
-using Retrospector.Maui.Setup;
+using Retrospector.Setup;
 using Xunit;
 
-namespace Retrospector.Maui.Tests.Tests.Setup
+namespace Retrospector.Tests.Tests.Setup
 {
     public class StartupTests
     {

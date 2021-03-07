@@ -20,7 +20,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Retrospector.Maui\Retrospector.Maui.csproj" />
+      <ProjectReference Include="..\Retrospector\Retrospector.csproj" />
     </ItemGroup>
 
 </Project>

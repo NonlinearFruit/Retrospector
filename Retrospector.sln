@@ -7,13 +7,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Retrospector.Core", "Retros
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Retrospector.DataStorage", "Retrospector.DataStorage\Retrospector.DataStorage.csproj", "{DAABCA28-1650-4F43-9AFD-6D3E96E54291}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Retrospector.Maui", "Retrospector.Maui\Retrospector.Maui.csproj", "{48B1F22A-AAB9-4162-BA6B-D14C078F4A1E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Retrospector", "Retrospector\Retrospector.csproj", "{48B1F22A-AAB9-4162-BA6B-D14C078F4A1E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Retrospector.Core.Tests", "Retrospector.Core.Tests\Retrospector.Core.Tests.csproj", "{AC114A83-486C-42AE-B220-8CE415C410A2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Retrospector.DataStorage.Tests", "Retrospector.DataStorage.Tests\Retrospector.DataStorage.Tests.csproj", "{9505969D-BB02-48A1-9873-44263C877576}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Retrospector.Maui.Tests", "Retrospector.Maui.Tests\Retrospector.Maui.Tests.csproj", "{E3B9B05F-6EDA-4217-BB56-8729FC1EE3DE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Retrospector.Tests", "Retrospector.Tests\Retrospector.Tests.csproj", "{E3B9B05F-6EDA-4217-BB56-8729FC1EE3DE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
