@@ -6,6 +6,7 @@ using Retrospector.Search;
 using Retrospector.Search.Interfaces;
 using Retrospector.DataStorage.Interfaces;
 using Retrospector.DataStorage.Models;
+using Retrospector.Main;
 using Retrospector.Setup;
 using Xunit;
 
@@ -48,7 +49,14 @@ namespace Retrospector.Tests.Tests.Setup
                 var services = _startup.ConfigureServices(new ServiceCollection());
                 var provider = services.BuildServiceProvider();
 
-                provider.GetService(service);
+                try
+                {
+                    provider.GetService(service);
+                }
+                catch (InvalidOperationException exception)
+                {
+                    Assert.Equal("The calling thread must be STA, because many UI components require this.", exception.Message);
+                }
             }
 
             [Theory]
@@ -62,6 +70,7 @@ namespace Retrospector.Tests.Tests.Setup
             [InlineData(typeof(IQueryBuilder), ServiceLifetime.Transient)]
             [InlineData(typeof(IReviewReducer), ServiceLifetime.Transient)]
             [InlineData(typeof(ISearchFilterBuilder), ServiceLifetime.Transient)]
+            [InlineData(typeof(MainWindow), ServiceLifetime.Transient)]
             public void has_service(Type service, ServiceLifetime lifetime)
 
             {

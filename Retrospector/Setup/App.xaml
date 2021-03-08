@@ -1,9 +1,9 @@
 ﻿<Application x:Class="Retrospector.Setup.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:Retrospector"
-             StartupUri="MainWindow.xaml">
+             Startup="OnStartup"
+             DispatcherUnhandledException="UnhandledExceptionCatcher">
     <Application.Resources>
-         
+
     </Application.Resources>
 </Application>

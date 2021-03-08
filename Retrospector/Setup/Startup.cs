@@ -5,6 +5,7 @@ using Retrospector.Search.Models;
 using Retrospector.DataStorage;
 using Retrospector.DataStorage.Interfaces;
 using Retrospector.DataStorage.Models;
+using Retrospector.Main;
 using Retrospector.Search;
 
 namespace Retrospector.Setup
@@ -29,6 +30,7 @@ namespace Retrospector.Setup
                 .AddTransient<IMediaReducer, MediaReducer>()
                 .AddTransient<IQueryBuilder, QueryBuilder>(p => BuildQueryBuilder(p.GetService<ILeafOperator>()))
                 .AddTransient<IReviewReducer, ReviewReducer>()
+                .AddTransient<MainWindow>()
                 .AddTransient<ISearchDataGateway, SearchDataGateway>()
                 .AddTransient<ISearchFilterBuilder, SearchFilterBuilder>();
         }

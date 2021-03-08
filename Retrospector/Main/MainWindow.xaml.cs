@@ -1,4 +1,4 @@
-﻿namespace Retrospector
+﻿namespace Retrospector.Main
 {
     public partial class MainWindow
     {

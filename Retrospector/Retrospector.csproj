@@ -5,16 +5,17 @@
         <TargetFramework>net5.0-windows</TargetFramework>
         <RootNamespace>Retrospector</RootNamespace>
         <UseWPF>true</UseWPF>
+        <ApplicationIcon>icon.ico</ApplicationIcon>
         <MinVerDefaultPreReleasePhase>preview</MinVerDefaultPreReleasePhase>
         <MinVerTagPrefix>v</MinVerTagPrefix>
     </PropertyGroup>
 
     <ItemGroup>
-        <ApplicationDefinition Remove="App.xaml" />
         <ApplicationDefinition Include="Setup\App.xaml">
             <Generator>MSBuild:Compile</Generator>
             <XamlRuntime>Wpf</XamlRuntime>
         </ApplicationDefinition>
+        <SplashScreen Include="splashscreen.png" />
     </ItemGroup>
 
     <ItemGroup>
