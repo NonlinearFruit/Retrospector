@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using Retrospector.DataStorage;
+using Retrospector.DataStorage.Models;
 using Retrospector.Search;
 using Retrospector.Search.Interfaces;
 using Retrospector.Search.Models;
@@ -89,7 +89,7 @@ namespace Retrospector.Tests.Tests.Search
         public void default_search_removes_when_media_title_does_match()
         {
             var title = "Best Movie";
-            _arrangeContext.Media.Add(new MediaEntity{Title = title});
+            _arrangeContext.Media.Add(new Media{Title = title});
             _arrangeContext.SaveChanges();
 
             var results = Search("not "+title);
@@ -101,7 +101,7 @@ namespace Retrospector.Tests.Tests.Search
         public void default_search_keeps_when_media_title_does_match()
         {
             var title = "Best Movie";
-            _arrangeContext.Media.Add(new MediaEntity{Title = title});
+            _arrangeContext.Media.Add(new Media{Title = title});
             _arrangeContext.SaveChanges();
 
             var results = Search(title);
@@ -114,9 +114,9 @@ namespace Retrospector.Tests.Tests.Search
         {
             var factoidCount = 5;
             var reviewCount = 10;
-            var mediaId = _arrangeContext.Media.Add(new MediaEntity()).Entity.Id;
-            _arrangeContext.Factoids.AddRange(factoidCount, i => new FactoidEntity{MediaId = mediaId});
-            _arrangeContext.Reviews.AddRange(reviewCount, i => new ReviewEntity{MediaId = mediaId});
+            var mediaId = _arrangeContext.Media.Add(new Media()).Entity.Id;
+            _arrangeContext.Factoids.AddRange(factoidCount, i => new Factoid{MediaId = mediaId});
+            _arrangeContext.Reviews.AddRange(reviewCount, i => new Review{MediaId = mediaId});
             _arrangeContext.SaveChanges();
 
             var results = Search("");
@@ -137,9 +137,9 @@ namespace Retrospector.Tests.Tests.Search
         public void search_on_factoid_title_works(string property, string operation, string search, string actual, int numberOfResults)
         {
             var query = $"{Leaf}{property}{operation}{search}";
-            _arrangeContext.Media.Add(new MediaEntity
+            _arrangeContext.Media.Add(new Media
             {
-                Factoids = new []{new FactoidEntity
+                Factoids = new []{new Factoid
                 {
                     Title = actual
                 }}
@@ -164,11 +164,11 @@ namespace Retrospector.Tests.Tests.Search
         public void search_on_media_title_works(string property, string operation, string search, string actual, int numberOfResults)
         {
             var query = $"{Leaf}{property}{operation}{search}";
-            _arrangeContext.Media.Add(new MediaEntity
+            _arrangeContext.Media.Add(new Media
             {
                 Title = actual
             });
-            _arrangeContext.Media.Add(new MediaEntity
+            _arrangeContext.Media.Add(new Media
             {
                 Title = "Off by One Noise"
             });
@@ -189,20 +189,20 @@ namespace Retrospector.Tests.Tests.Search
             var rating = 5;
             var fact = "Contemporary Fantasy";
             var query = $"`U={user}:`T~{title}|`S~{season}:!`C={creator}:`#>{rating}:`O={fact}";
-            _arrangeContext.Media.Add(new MediaEntity
+            _arrangeContext.Media.Add(new Media
             {
                 Title = title,
                 Creator = "Not "+creator,
                 SeasonId = season,
                 Factoids = new []
                 {
-                  new FactoidEntity{Content = fact},
-                  new FactoidEntity()
+                  new Factoid{Content = fact},
+                  new Factoid()
                 },
                 Reviews = new []
                 {
-                    new ReviewEntity {User = user, Rating = rating+1},
-                    new ReviewEntity()
+                    new Review {User = user, Rating = rating+1},
+                    new Review()
                 }
             });
             _arrangeContext.Media.Add(5);

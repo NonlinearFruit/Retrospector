@@ -4,7 +4,8 @@ using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Retrospector.Search;
 using Retrospector.Search.Interfaces;
-using Retrospector.DataStorage;
+using Retrospector.DataStorage.Interfaces;
+using Retrospector.DataStorage.Models;
 using Retrospector.Setup;
 using Xunit;
 
@@ -17,7 +18,7 @@ namespace Retrospector.Tests.Tests.Setup
         public static IEnumerable<object[]> RegisteredTypes => new Startup(new DatabaseConfiguration())
                 .ConfigureServices(new ServiceCollection())
                 .Select(s => s.ServiceType)
-                .Where(t => new [] {typeof(Startup).Assembly, typeof(MediaEntity).Assembly, typeof(BinaryOperator).Assembly}.Contains(t.Assembly))
+                .Where(t => new [] {typeof(Startup).Assembly, typeof(Media).Assembly, typeof(BinaryOperator).Assembly}.Contains(t.Assembly))
                 .Select(t => new object[] {t});
 
         public StartupTests()

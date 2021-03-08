@@ -2,8 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Retrospector.Search.Interfaces;
 using Retrospector.Search.Models;
-using Retrospector.DataStorage;
-using Retrospector.Search.Interfaces;
+using Retrospector.DataStorage.Interfaces;
 
 namespace Retrospector.Search
 {

@@ -1,12 +1,12 @@
 using System.Linq;
 using System.Linq.Expressions;
-using Retrospector.DataStorage;
+using Retrospector.DataStorage.Models;
 using Retrospector.Search;
 using Retrospector.Search.Interfaces;
 using Retrospector.Search.Models;
 using Retrospector.Tests.TestDoubles.Search;
 using Xunit;
-using Filter = System.Func<Retrospector.DataStorage.MediaEntity, Retrospector.DataStorage.ReviewEntity, Retrospector.DataStorage.FactoidEntity, bool>;
+using Filter = System.Func<Retrospector.DataStorage.Models.Media, Retrospector.DataStorage.Models.Review, Retrospector.DataStorage.Models.Factoid, bool>;
 
 namespace Retrospector.Tests.Tests.Search
 {
@@ -64,7 +64,7 @@ namespace Retrospector.Tests.Tests.Search
         public void returns_valid_delegate()
         {
             var function = _builder.BuildFilter(new QueryTree());
-            function.Invoke(new MediaEntity(), new ReviewEntity(), new FactoidEntity());
+            function.Invoke(new Media(), new Review(), new Factoid());
         }
 
         [Fact]
@@ -73,7 +73,7 @@ namespace Retrospector.Tests.Tests.Search
             var query = ArrangeQuery(OperatorType.GiveMeEverything);
 
             var function = _builder.BuildFilter(query);
-            var isMatch = function.Invoke(new MediaEntity(), new ReviewEntity(), new FactoidEntity());
+            var isMatch = function.Invoke(new Media(), new Review(), new Factoid());
 
             Assert.True(isMatch);
         }
@@ -94,7 +94,7 @@ namespace Retrospector.Tests.Tests.Search
                 .ToList();
 
             var function = _builder.BuildFilter(query);
-            var isMatch = function.Invoke(new MediaEntity(), new ReviewEntity(), new FactoidEntity());
+            var isMatch = function.Invoke(new Media(), new Review(), new Factoid());
 
             Assert.Equal(shouldMatch, isMatch);
         }
@@ -115,7 +115,7 @@ namespace Retrospector.Tests.Tests.Search
                 .ToList();
 
             var function = _builder.BuildFilter(query);
-            var isMatch = function.Invoke(new MediaEntity(), new ReviewEntity(), new FactoidEntity());
+            var isMatch = function.Invoke(new Media(), new Review(), new Factoid());
 
             Assert.Equal(shouldMatch, isMatch);
         }
@@ -129,7 +129,7 @@ namespace Retrospector.Tests.Tests.Search
             _leafBuilder.ReturnFor_BuildExpression = (m, r, f) => leafResult;
 
             var function = _builder.BuildFilter(query);
-            var isMatch = function.Invoke(new MediaEntity(), new ReviewEntity(), new FactoidEntity());
+            var isMatch = function.Invoke(new Media(), new Review(), new Factoid());
 
             Assert.Equal(shouldMatch, isMatch);
         }

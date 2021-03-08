@@ -1,4 +1,4 @@
-namespace Retrospector.DataStorage
+namespace Retrospector.DataStorage.Models
 {
     public class DatabaseConfiguration
     {

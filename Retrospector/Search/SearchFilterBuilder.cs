@@ -2,18 +2,18 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using Retrospector.Search.Models;
-using Retrospector.DataStorage;
+using Retrospector.DataStorage.Models;
 using Retrospector.Search.Interfaces;
-using Filter = System.Func<Retrospector.DataStorage.MediaEntity, Retrospector.DataStorage.ReviewEntity, Retrospector.DataStorage.FactoidEntity, bool>;
+using Filter = System.Func<Retrospector.DataStorage.Models.Media, Retrospector.DataStorage.Models.Review, Retrospector.DataStorage.Models.Factoid, bool>;
 
 namespace Retrospector.Search
 {
     public class SearchFilterBuilder : ISearchFilterBuilder
     {
         private readonly ILeafExpressionBuilder _leafBuilder;
-        private ParameterExpression _mediaParameter = Expression.Parameter(typeof(MediaEntity), "media");
-        private ParameterExpression _reviewParameter = Expression.Parameter(typeof(ReviewEntity), "review");
-        private ParameterExpression _factoidParameter = Expression.Parameter(typeof(FactoidEntity), "factoid");
+        private ParameterExpression _mediaParameter = Expression.Parameter(typeof(Media), "media");
+        private ParameterExpression _reviewParameter = Expression.Parameter(typeof(Review), "review");
+        private ParameterExpression _factoidParameter = Expression.Parameter(typeof(Factoid), "factoid");
         private static Filter MatchEverything = (m, r, f) => true;
         private static Expression<Filter> MatchEverything2 = (m, r, f) => true;
 

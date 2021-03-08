@@ -1,4 +1,4 @@
-using Retrospector.DataStorage;
+using Retrospector.DataStorage.Models;
 using Retrospector.Search;
 using Retrospector.Search.Interfaces;
 using Retrospector.Search.Models;
@@ -45,15 +45,15 @@ namespace Retrospector.Tests.Tests.Search
         }
 
         [Theory]
-        [InlineData(nameof(MediaEntity.Title), RetrospectorAttribute.MediaTitle, "Sherlock Holmes")]
-        [InlineData(nameof(MediaEntity.Creator), RetrospectorAttribute.MediaCreator, "AC Doyle")]
-        [InlineData(nameof(MediaEntity.SeasonId), RetrospectorAttribute.MediaSeason, "S1")]
-        [InlineData(nameof(MediaEntity.EpisodeId), RetrospectorAttribute.MediaEpisode, "B1 A Study in Scarlet")]
-        [InlineData(nameof(MediaEntity.Category), RetrospectorAttribute.MediaCategory, "Book")]
-        [InlineData(nameof(MediaEntity.Description), RetrospectorAttribute.MediaDescription, "A great book")]
+        [InlineData(nameof(Media.Title), RetrospectorAttribute.MediaTitle, "Sherlock Holmes")]
+        [InlineData(nameof(Media.Creator), RetrospectorAttribute.MediaCreator, "AC Doyle")]
+        [InlineData(nameof(Media.SeasonId), RetrospectorAttribute.MediaSeason, "S1")]
+        [InlineData(nameof(Media.EpisodeId), RetrospectorAttribute.MediaEpisode, "B1 A Study in Scarlet")]
+        [InlineData(nameof(Media.Category), RetrospectorAttribute.MediaCategory, "Book")]
+        [InlineData(nameof(Media.Description), RetrospectorAttribute.MediaDescription, "A great book")]
         public void populates_the_attributes(string property, RetrospectorAttribute attribute, object value)
         {
-            var media = new MediaEntity();
+            var media = new Media();
             Reflection.SetProperty(media, property, value);
 
             var result = _reducer.Reduce(media);

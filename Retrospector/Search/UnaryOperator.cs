@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Retrospector.Search.Interfaces;
 using Retrospector.Search.Models;
@@ -20,7 +21,7 @@ namespace Retrospector.Search
             query = query.Trim();
             if (query.StartsWith(_syntaxOp) && query.Length > _syntaxOp.Length)
                 return new[] {query.TrimStart(_syntaxOp.ToCharArray()).Trim()};
-            return new string[0];
+            return Array.Empty<string>();
         }
     }
 }

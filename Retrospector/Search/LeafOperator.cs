@@ -54,16 +54,17 @@ namespace Retrospector.Search
             return Option.None<Tuple<RetrospectorAttribute, Comparator, string>>();
         }
 
-        private Option<Tuple<RetrospectorAttribute, Comparator, string>> CalculateSearchValue(Tuple<RetrospectorAttribute, Comparator, string> tuple)
+        private static Option<Tuple<RetrospectorAttribute, Comparator, string>> CalculateSearchValue(Tuple<RetrospectorAttribute, Comparator, string> tuple)
         {
-           if (tuple.Item3.Trim() == "")
-               return Option.None<Tuple<RetrospectorAttribute, Comparator, string>>();
-           return tuple.Some();
+            return tuple.Item3.Trim() == ""
+            ? Option.None<Tuple<RetrospectorAttribute, Comparator, string>>()
+            : tuple.Some();
         }
 
-        private Option<QueryLeaf> BuildQueryLeaf(Tuple<RetrospectorAttribute, Comparator, string> tuple)
+        private static Option<QueryLeaf> BuildQueryLeaf(Tuple<RetrospectorAttribute, Comparator, string> tuple)
         {
-            return new QueryLeaf{Attribute = tuple.Item1, Comparator = tuple.Item2, SearchValue = tuple.Item3}.Some();
+            var (attribute, comparator, searchValue) = tuple;
+            return new QueryLeaf{Attribute = attribute, Comparator = comparator, SearchValue = searchValue}.Some();
         }
     }
 }

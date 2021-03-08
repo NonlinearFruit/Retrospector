@@ -1,5 +1,5 @@
 using System.Linq;
-using Retrospector.DataStorage;
+using Retrospector.DataStorage.Models;
 using Retrospector.Search;
 using Retrospector.Search.Interfaces;
 using Retrospector.Search.Models;
@@ -26,7 +26,7 @@ namespace Retrospector.Tests.Tests.Search
         public void filter_removes_when_media_title_does_not_match()
         {
             var title = "Best Movie";
-            _arrangeContext.Media.Add(new MediaEntity{Title = title});
+            _arrangeContext.Media.Add(new Media{Title = title});
             _arrangeContext.SaveChanges();
             var query = new QueryTree {Type = OperatorType.And, Leaves = new []{new QueryLeaf{Attribute = RetrospectorAttribute.MediaTitle, Comparator = Comparator.Equal, SearchValue = "not "+title}}};
 
@@ -39,7 +39,7 @@ namespace Retrospector.Tests.Tests.Search
         public void filter_keeps_when_media_title_does_match()
         {
             var title = "Best Movie";
-            _arrangeContext.Media.Add(new MediaEntity{Title = title});
+            _arrangeContext.Media.Add(new Media{Title = title});
             _arrangeContext.SaveChanges();
             var query = new QueryTree {Type = OperatorType.And, Leaves = new []{new QueryLeaf{Attribute = RetrospectorAttribute.MediaTitle, Comparator = Comparator.Equal, SearchValue = title}}};
 
@@ -52,7 +52,7 @@ namespace Retrospector.Tests.Tests.Search
         [InlineDatas(0, 1, 10)]
         public void gets_all_media_correctly(int mediaCount)
         {
-            _arrangeContext.Media.AddRange(mediaCount, i => new MediaEntity());
+            _arrangeContext.Media.AddRange(mediaCount, i => new Media());
             _arrangeContext.SaveChanges();
             var query = new QueryTree {Type = OperatorType.GiveMeEverything};
 
@@ -66,9 +66,9 @@ namespace Retrospector.Tests.Tests.Search
         {
             var factoidCount = 5;
             var reviewCount = 10;
-            var mediaId = _arrangeContext.Media.Add(new MediaEntity()).Entity.Id;
-            _arrangeContext.Factoids.AddRange(factoidCount, i => new FactoidEntity{MediaId = mediaId});
-            _arrangeContext.Reviews.AddRange(reviewCount, i => new ReviewEntity{MediaId = mediaId});
+            var mediaId = _arrangeContext.Media.Add(new Media()).Entity.Id;
+            _arrangeContext.Factoids.AddRange(factoidCount, i => new Factoid{MediaId = mediaId});
+            _arrangeContext.Reviews.AddRange(reviewCount, i => new Review{MediaId = mediaId});
             _arrangeContext.SaveChanges();
             var query = new QueryTree {Type = OperatorType.GiveMeEverything};
 

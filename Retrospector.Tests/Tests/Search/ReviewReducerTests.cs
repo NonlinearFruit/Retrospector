@@ -1,5 +1,5 @@
 using System;
-using Retrospector.DataStorage;
+using Retrospector.DataStorage.Models;
 using Retrospector.Search;
 using Retrospector.Search.Interfaces;
 using Retrospector.Search.Models;
@@ -42,12 +42,12 @@ namespace Retrospector.Tests.Tests.Search
         }
 
         [Theory]
-        [InlineData(nameof(ReviewEntity.Rating), RetrospectorAttribute.ReviewRating, 6)]
-        [InlineData(nameof(ReviewEntity.User), RetrospectorAttribute.ReviewUser, "Josh")]
-        [InlineData(nameof(ReviewEntity.Content), RetrospectorAttribute.ReviewContent, "My review")]
+        [InlineData(nameof(Review.Rating), RetrospectorAttribute.ReviewRating, 6)]
+        [InlineData(nameof(Review.User), RetrospectorAttribute.ReviewUser, "Josh")]
+        [InlineData(nameof(Review.Content), RetrospectorAttribute.ReviewContent, "My review")]
         public void populates_the_attributes(string property, RetrospectorAttribute attribute, object value)
         {
-            var review = new ReviewEntity();
+            var review = new Review();
             Reflection.SetProperty(review, property, value);
 
             var result = _reducer.Reduce(review);
@@ -58,7 +58,7 @@ namespace Retrospector.Tests.Tests.Search
         [Fact]
         public void populates_the_datetime_attribute()
         {
-            var review = new ReviewEntity
+            var review = new Review
             {
                 Date = DateTime.Now
             };

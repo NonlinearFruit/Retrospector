@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Retrospector.DataStorage
+namespace Retrospector.DataStorage.Models
 {
     [Table("Media")]
-    public class MediaEntity
+    public class Media
     {
         [Key]
         public int Id { get; set; }
@@ -20,14 +20,14 @@ namespace Retrospector.DataStorage
 
         public string Category { get; set; }
 
-        public MediaTypeEntity Type { get; set; }
+        public MediaType Type { get; set; }
 
         public string Description { get; set; }
 
         public DateTime CreatedDate { get; set; }
 
-        public ICollection<ReviewEntity> Reviews { get; set; } = new List<ReviewEntity>();
+        public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
 
-        public ICollection<FactoidEntity> Factoids { get; set; } = new List<FactoidEntity>();
+        public virtual ICollection<Factoid> Factoids { get; set; } = new List<Factoid>();
     }
 }

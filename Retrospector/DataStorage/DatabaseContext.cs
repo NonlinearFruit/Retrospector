@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using Retrospector.DataStorage.Interfaces;
+using Retrospector.DataStorage.Models;
 
 namespace Retrospector.DataStorage
 {
@@ -20,8 +22,8 @@ namespace Retrospector.DataStorage
         {
         }
 
-        public DbSet<FactoidEntity> Factoids { get; set; }
-        public DbSet<ReviewEntity> Reviews { get; set; }
-        public DbSet<MediaEntity> Media { get; set; }
+        public DbSet<Factoid> Factoids { get; set; }
+        public DbSet<Review> Reviews { get; set; }
+        public DbSet<Media> Media { get; set; }
     }
 }

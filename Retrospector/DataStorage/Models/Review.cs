@@ -2,10 +2,10 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Retrospector.DataStorage
+namespace Retrospector.DataStorage.Models
 {
     [Table("Reviews")]
-    public class ReviewEntity
+    public class Review
     {
         [Key]
         public int Id { get; set; }
@@ -15,6 +15,6 @@ namespace Retrospector.DataStorage
         public string Content { get; set; }
         public DateTime CreatedDate { get; set; }
         public int MediaId { get; set; }
-        public virtual MediaEntity Media { get; set; }
+        public virtual Media Media { get; set; }
     }
 }

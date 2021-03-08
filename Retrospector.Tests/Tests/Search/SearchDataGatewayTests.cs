@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Retrospector.DataStorage;
+using Retrospector.DataStorage.Models;
 using Retrospector.Search;
 using Retrospector.Search.Interfaces;
 using Retrospector.Search.Models;
@@ -67,9 +67,9 @@ namespace Retrospector.Tests.Tests.Search
             var title = "Sign of Four";
             var fact = "Genre";
             var rating = 8;
-            var mediaId = ArrangeMedia(new MediaEntity{Title = title}).Id;
-            ArrangeReview(new ReviewEntity {Rating = rating}, mediaId);
-            ArrangeFactoid(new FactoidEntity {Title = fact}, mediaId);
+            var mediaId = ArrangeMedia(new Media{Title = title}).Id;
+            ArrangeReview(new Review {Rating = rating}, mediaId);
+            ArrangeFactoid(new Factoid {Title = fact}, mediaId);
 
 
             _gateway.Search(tree);
@@ -83,7 +83,7 @@ namespace Retrospector.Tests.Tests.Search
         [Fact]
         public void returns_no_results_when_nothing_passes_the_filter()
         {
-            ArrangeMedia(new MediaEntity());
+            ArrangeMedia(new Media());
             _filterBuilder.ReturnFor_Filter = false;
 
             var results = _gateway.Search(new QueryTree());
@@ -94,7 +94,7 @@ namespace Retrospector.Tests.Tests.Search
         [Fact]
         public void reduces_media_when_media_match_is_found()
         {
-            var id = ArrangeMedia(new MediaEntity()).Id;
+            var id = ArrangeMedia(new Media()).Id;
             _filterBuilder.ReturnFor_Filter = true;
 
             _gateway.Search(new QueryTree());
@@ -106,7 +106,7 @@ namespace Retrospector.Tests.Tests.Search
         [Fact]
         public void reduces_review_when_review_match_is_found()
         {
-            var id = ArrangeReview(new ReviewEntity()).Id;
+            var id = ArrangeReview(new Review()).Id;
             _filterBuilder.ReturnFor_Filter = true;
 
             _gateway.Search(new QueryTree());
@@ -118,7 +118,7 @@ namespace Retrospector.Tests.Tests.Search
         [Fact]
         public void reduces_factoid_when_factoid_match_is_found()
         {
-            var id = ArrangeFactoid(new FactoidEntity()).Id;
+            var id = ArrangeFactoid(new Factoid()).Id;
             _filterBuilder.ReturnFor_Filter = true;
 
             _gateway.Search(new QueryTree());
@@ -130,7 +130,7 @@ namespace Retrospector.Tests.Tests.Search
         [Fact]
         public void returns_reduced_media_dictionary()
         {
-            ArrangeMedia(new MediaEntity());
+            ArrangeMedia(new Media());
             _filterBuilder.ReturnFor_Filter = true;
             var dictionary = new Dictionary<RetrospectorAttribute, string>
             {
@@ -146,7 +146,7 @@ namespace Retrospector.Tests.Tests.Search
         [Fact]
         public void returns_reduced_review_dictionary()
         {
-            ArrangeReview(new ReviewEntity());
+            ArrangeReview(new Review());
             _filterBuilder.ReturnFor_Filter = true;
             var dictionary = new Dictionary<RetrospectorAttribute, string>
             {
@@ -162,7 +162,7 @@ namespace Retrospector.Tests.Tests.Search
         [Fact]
         public void returns_reduced_factoid_dictionary()
         {
-            ArrangeFactoid(new FactoidEntity());
+            ArrangeFactoid(new Factoid());
             _filterBuilder.ReturnFor_Filter = true;
             var dictionary = new Dictionary<RetrospectorAttribute, string>
             {
@@ -180,7 +180,7 @@ namespace Retrospector.Tests.Tests.Search
         public void reduces_multiple_media_when_matches_are_found(int countOfMatches)
         {
             for (var i = 0; i < countOfMatches; i++)
-                ArrangeMedia(new MediaEntity {Title = "Title"});
+                ArrangeMedia(new Media {Title = "Title"});
             var query = new QueryTree();
             _filterBuilder.ReturnFor_Filter = true;
 
@@ -195,7 +195,7 @@ namespace Retrospector.Tests.Tests.Search
         {
             var mediaId = ArrangeMedia().Id;
             for (var i = 0; i < countOfMatches; i++)
-                ArrangeReview(new ReviewEntity {Rating = 5}, mediaId);
+                ArrangeReview(new Review {Rating = 5}, mediaId);
             var query = new QueryTree();
             _filterBuilder.ReturnFor_Filter = true;
 
@@ -210,7 +210,7 @@ namespace Retrospector.Tests.Tests.Search
         {
             var mediaId = ArrangeMedia().Id;
             for (var i = 0; i < countOfMatches; i++)
-                ArrangeFactoid(new FactoidEntity {Title = "Title"}, mediaId);
+                ArrangeFactoid(new Factoid {Title = "Title"}, mediaId);
             var query = new QueryTree();
             _filterBuilder.ReturnFor_Filter = true;
 
@@ -237,9 +237,9 @@ namespace Retrospector.Tests.Tests.Search
         {
             var mediaId = ArrangeMedia().Id;
             for (var i = 0; i < numberOfFactoids; i++)
-                ArrangeFactoid(new FactoidEntity {Title = "Sign of Four"}, mediaId);
+                ArrangeFactoid(new Factoid {Title = "Sign of Four"}, mediaId);
             for (var i = 0; i < numberOfReviews; i++)
-                ArrangeReview(new ReviewEntity {Rating = 9}, mediaId);
+                ArrangeReview(new Review {Rating = 9}, mediaId);
             var query = new QueryTree();
             _filterBuilder.ReturnFor_Filter = true;
 
@@ -265,9 +265,9 @@ namespace Retrospector.Tests.Tests.Search
         {
             var mediaId = ArrangeMedia().Id;
             for (var i = 0; i < numberOfFactoids; i++)
-                ArrangeFactoid(new FactoidEntity {Title = "Sign of Four"}, mediaId+1);
+                ArrangeFactoid(new Factoid {Title = "Sign of Four"}, mediaId+1);
             for (var i = 0; i < numberOfReviews; i++)
-                ArrangeReview(new ReviewEntity {Rating = 9}, mediaId+1);
+                ArrangeReview(new Review {Rating = 9}, mediaId+1);
             var query = new QueryTree();
             _filterBuilder.ReturnFor_Filter = true;
 
@@ -276,14 +276,14 @@ namespace Retrospector.Tests.Tests.Search
             Assert.Single(results);
         }
 
-        private MediaEntity ArrangeMedia(MediaEntity media = null)
+        private Media ArrangeMedia(Media media = null)
         {
-            var storedMedia = _arrangeContext.Media.Add(media ?? new MediaEntity()).Entity;
+            var storedMedia = _arrangeContext.Media.Add(media ?? new Media()).Entity;
             _arrangeContext.SaveChanges();
             return storedMedia;
         }
 
-        private ReviewEntity ArrangeReview(ReviewEntity review, int? mediaId = null)
+        private Review ArrangeReview(Review review, int? mediaId = null)
         {
             review.MediaId = mediaId ?? ArrangeMedia().Id;
             var storedReview = _arrangeContext.Reviews.Add(review).Entity;
@@ -291,7 +291,7 @@ namespace Retrospector.Tests.Tests.Search
             return storedReview;
         }
 
-        private FactoidEntity ArrangeFactoid(FactoidEntity factoid, int? mediaId = null)
+        private Factoid ArrangeFactoid(Factoid factoid, int? mediaId = null)
         {
             factoid.MediaId = mediaId ?? ArrangeMedia().Id;
             var storedFactoid = _arrangeContext.Factoids.Add(factoid).Entity;

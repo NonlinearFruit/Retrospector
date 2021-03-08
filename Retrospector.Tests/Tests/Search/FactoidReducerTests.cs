@@ -1,4 +1,4 @@
-using Retrospector.DataStorage;
+using Retrospector.DataStorage.Models;
 using Retrospector.Search;
 using Retrospector.Search.Interfaces;
 using Retrospector.Search.Models;
@@ -38,7 +38,7 @@ namespace Retrospector.Tests.Tests.Search
         [Fact]
         public void sets_the_title()
         {
-            var factoid = new FactoidEntity
+            var factoid = new Factoid
             {
                 Title = "Genre"
             };
@@ -51,7 +51,7 @@ namespace Retrospector.Tests.Tests.Search
         [Fact]
         public void sets_the_content()
         {
-            var factoid = new FactoidEntity
+            var factoid = new Factoid
             {
                 Content = "2020"
             };

@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Retrospector.DataStorage;
+using Retrospector.DataStorage.Models;
 using Retrospector.Search;
 using Retrospector.Search.Interfaces;
 using Retrospector.Search.Models;
@@ -30,7 +30,7 @@ namespace Retrospector.Tests.Tests.Search
         public void returns_valid_delegate()
         {
             var function = _builder.BuildExpression(new QueryLeaf());
-            function.Compile().Invoke(new MediaEntity(), new ReviewEntity(), new FactoidEntity());
+            function.Compile().Invoke(new Media(), new Review(), new Factoid());
         }
 
         [Fact]
@@ -100,7 +100,7 @@ namespace Retrospector.Tests.Tests.Search
         public void creates_expression_that_filters_out_review_based_on_date(Comparator comparator, string actualDate, string searchValue, bool shouldMatch)
         {
             var query = ArrangeQuery(RetrospectorAttribute.ReviewDate, comparator, searchValue);
-            var review = new ReviewEntity
+            var review = new Review
             {
                 Date = DateTime.Parse(actualDate)
             };
@@ -119,7 +119,7 @@ namespace Retrospector.Tests.Tests.Search
         public void handles_non_integer_when_searching_on_review_date(Comparator comparator)
         {
             var query = ArrangeQuery(RetrospectorAttribute.ReviewDate, comparator, "not date");
-            var review = new ReviewEntity();
+            var review = new Review();
 
             var function = _builder.BuildExpression(query);
             var isMatch = function.Compile().Invoke(null, review, null);
@@ -139,7 +139,7 @@ namespace Retrospector.Tests.Tests.Search
         public void creates_expression_that_filters_out_review_based_on_rating(Comparator comparator, int actualRating, string searchValue, bool shouldMatch)
         {
             var query = ArrangeQuery(RetrospectorAttribute.ReviewRating, comparator, searchValue);
-            var review = new ReviewEntity
+            var review = new Review
             {
                 Rating = actualRating
             };
@@ -158,7 +158,7 @@ namespace Retrospector.Tests.Tests.Search
         public void handles_non_integer_when_searching_on_review_rating(Comparator comparator)
         {
             var query = ArrangeQuery(RetrospectorAttribute.ReviewRating, comparator, "not int");
-            var review = new ReviewEntity();
+            var review = new Review();
 
             var function = _builder.BuildExpression(query);
             var isMatch = function.Compile().Invoke(null, review, null);
@@ -278,9 +278,9 @@ namespace Retrospector.Tests.Tests.Search
                     SearchValue = value
                 };
 
-        private MediaEntity ArrangeMedia(RetrospectorAttribute attribute, string value)
+        private Media ArrangeMedia(RetrospectorAttribute attribute, string value)
         {
-            var media = new MediaEntity();
+            var media = new Media();
             switch (attribute)
             {
                 case RetrospectorAttribute.MediaTitle:
@@ -305,9 +305,9 @@ namespace Retrospector.Tests.Tests.Search
             return media;
         }
 
-        private ReviewEntity ArrangeReview(RetrospectorAttribute attribute, string value)
+        private Review ArrangeReview(RetrospectorAttribute attribute, string value)
         {
-            var review = new ReviewEntity();
+            var review = new Review();
             switch (attribute)
             {
                 case RetrospectorAttribute.ReviewUser:
@@ -320,9 +320,9 @@ namespace Retrospector.Tests.Tests.Search
             return review;
         }
 
-        private FactoidEntity ArrangeFactoid(RetrospectorAttribute attribute, string value)
+        private Factoid ArrangeFactoid(RetrospectorAttribute attribute, string value)
         {
-            var factoid = new FactoidEntity();
+            var factoid = new Factoid();
             switch (attribute)
             {
                 case RetrospectorAttribute.FactoidTitle:

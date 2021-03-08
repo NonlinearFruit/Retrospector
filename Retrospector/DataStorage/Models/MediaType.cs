@@ -1,6 +1,6 @@
-namespace Retrospector.DataStorage
+namespace Retrospector.DataStorage.Models
 {
-    public enum MediaTypeEntity
+    public enum MediaType
     {
         MiniSeries,
         Series,

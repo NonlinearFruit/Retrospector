@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using Retrospector.Search.Models;
-using Retrospector.DataStorage;
+using Retrospector.DataStorage.Models;
 using Retrospector.Search.Interfaces;
 
 namespace Retrospector.Search
 {
     public class MediaReducer : IMediaReducer
     {
-        public Dictionary<RetrospectorAttribute, string> Reduce(MediaEntity item)
+        public Dictionary<RetrospectorAttribute, string> Reduce(Media item)
         {
             return new Dictionary<RetrospectorAttribute, string>
             {

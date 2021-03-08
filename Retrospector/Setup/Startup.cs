@@ -3,9 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Retrospector.Search.Interfaces;
 using Retrospector.Search.Models;
 using Retrospector.DataStorage;
+using Retrospector.DataStorage.Interfaces;
+using Retrospector.DataStorage.Models;
 using Retrospector.Search;
-using Retrospector.Search.Interfaces;
-using ILeafOperator = Retrospector.Search.Interfaces.ILeafOperator;
 
 namespace Retrospector.Setup
 {

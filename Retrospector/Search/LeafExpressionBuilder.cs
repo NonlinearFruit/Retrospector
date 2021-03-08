@@ -2,7 +2,7 @@ using System;
 using System.Linq.Expressions;
 using Retrospector.Search.Models;
 using Retrospector.Search.Interfaces;
-using Filter = System.Func<Retrospector.DataStorage.MediaEntity, Retrospector.DataStorage.ReviewEntity, Retrospector.DataStorage.FactoidEntity, bool>;
+using Filter = System.Func<Retrospector.DataStorage.Models.Media, Retrospector.DataStorage.Models.Review, Retrospector.DataStorage.Models.Factoid, bool>;
 
 namespace Retrospector.Search
 {

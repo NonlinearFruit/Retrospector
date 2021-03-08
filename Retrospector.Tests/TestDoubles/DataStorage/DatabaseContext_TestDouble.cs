@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Retrospector.DataStorage;
+using Retrospector.DataStorage.Interfaces;
 
 namespace Retrospector.Tests.TestDoubles.DataStorage
 {

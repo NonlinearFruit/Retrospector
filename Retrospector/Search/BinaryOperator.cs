@@ -9,7 +9,7 @@ namespace Retrospector.Search
     public class BinaryOperator : IOperator
     {
         public OperatorType OperatorType { get; }
-        private string _syntaxOp;
+        private readonly string _syntaxOp;
 
         public BinaryOperator(OperatorType type, string syntaxOp)
         {
@@ -20,7 +20,7 @@ namespace Retrospector.Search
         public IEnumerable<string> Parse(string query)
         {
             if (!query.Contains(_syntaxOp))
-                return new string[0];
+                return Array.Empty<string>();
 
             return query
                 .Trim()
