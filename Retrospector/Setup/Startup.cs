@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
 using Retrospector.Search.Interfaces;
@@ -6,33 +7,44 @@ using Retrospector.DataStorage;
 using Retrospector.DataStorage.Interfaces;
 using Retrospector.DataStorage.Models;
 using Retrospector.Main;
+using Retrospector.Main.Interfaces;
 using Retrospector.Search;
+using Retrospector.Utilities;
+using Retrospector.Utilities.Interfaces;
 
 namespace Retrospector.Setup
 {
     public class Startup
     {
-        public DatabaseConfiguration DatabaseConfig { get; set; }
+        public Configuration Configuration { get; set; }
 
-        public Startup(DatabaseConfiguration databaseConfig)
+        public Startup(Configuration configuration)
         {
-            DatabaseConfig = databaseConfig;
+            Configuration = configuration;
         }
 
         public IServiceCollection ConfigureServices(IServiceCollection services)
         {
             return services
-                .AddSingleton<DatabaseConfiguration>(DatabaseConfig)
+                .AddSingleton<Configuration>(Configuration)
                 .AddTransient<IDatabaseContext, DatabaseContext>()
                 .AddTransient<IFactoidReducer, FactoidReducer>()
                 .AddTransient<ILeafExpressionBuilder, LeafExpressionBuilder>()
                 .AddTransient<ILeafOperator, LeafOperator>(p => BuildLeafOperator())
+                .AddTransient<ILogger, Logger>()
                 .AddTransient<IMediaReducer, MediaReducer>()
                 .AddTransient<IQueryBuilder, QueryBuilder>(p => BuildQueryBuilder(p.GetService<ILeafOperator>()))
                 .AddTransient<IReviewReducer, ReviewReducer>()
-                .AddTransient<MainWindow>()
                 .AddTransient<ISearchDataGateway, SearchDataGateway>()
-                .AddTransient<ISearchFilterBuilder, SearchFilterBuilder>();
+                .AddTransient<ISearchFilterBuilder, SearchFilterBuilder>()
+                .AddTransient<IMainWindow, MainWindow>()
+                .AddTransient<MainWindowViewModel>();
+        }
+
+        public void Configure(IServiceProvider provider)
+        {
+            provider.GetService<IDatabaseContext>().RunMigrations();
+            provider.GetService<IMainWindow>().Show();
         }
 
         private static LeafOperator BuildLeafOperator()

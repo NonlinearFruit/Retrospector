@@ -1,0 +1,9 @@
+{
+    "ConnectionString": "Data Source=localhost;Initial Catalog=Retrospector;Integrated Security=true;",
+    "LogFile": "Retrospector-Logs.log",
+    "DefaultUser": "Ben",
+    "DefaultRating": "6",
+    "GithubUser": "",
+    "Categories": ["Article","Book","Lecture","Movie","Podcast","Poem","Scripture","TV Series","YouTube"],
+    "Factoids": ["Year","Topic","Owned","Genre","Creator"]
+}

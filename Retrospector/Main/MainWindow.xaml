@@ -3,9 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Retrospector"
+        xmlns:local="clr-namespace:Retrospector.Main"
         mc:Ignorable="d"
-        Title="Retrospector" Height="800" Width="1300">
+        Title="Retrospector" Height="800" Width="1300" d:DataContext="{local:MainWindowViewModel}">
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
@@ -21,9 +21,79 @@
         </Menu>
         <TabControl DockPanel.Dock="Bottom">
             <TabItem Header="Search" IsEnabled="True">
-                <Label Content="Content goes here..." />
+                <StackPanel>
+                    <TextBox x:Name="searchBox" TextChanged="TextBoxBase_OnTextChanged"/>
+                    <DataGrid ItemsSource="{Binding SearchResults}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="#" IsReadOnly="True" />
+                            <DataGridTextColumn Header="Title" IsReadOnly="True" />
+                            <DataGridTextColumn Header="Creator" IsReadOnly="True" />
+                            <DataGridTextColumn Header="Season" IsReadOnly="True" />
+                            <DataGridTextColumn Header="Episode" IsReadOnly="True" />
+                            <DataGridTextColumn Header="Category" IsReadOnly="True" />
+                            <DataGridTextColumn Header="Reviews" IsReadOnly="True" />
+                            <DataGridTextColumn Header="Rating Mean" IsReadOnly="True" />
+                            <DataGridTextColumn Header="Rating Current" IsReadOnly="True" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </StackPanel>
             </TabItem>
-            <TabItem Header="Media" IsEnabled="True"/>
+            <TabItem Header="Media" IsEnabled="True">
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Top" Orientation="Vertical" HorizontalAlignment="Center">
+                        <StackPanel Orientation="Horizontal"><TextBox Text="Title"/><Button Content="New"/></StackPanel>
+                        <StackPanel Orientation="Horizontal"><Label Content="by"/><TextBox Text="Creator"/></StackPanel>
+                        <StackPanel Orientation="Horizontal"><TextBox Text="Season"/><Button Content="Add"/></StackPanel>
+                        <StackPanel Orientation="Horizontal"><TextBox Text="Episode"/><Button Content="Add"/></StackPanel>
+                    </StackPanel>
+                    <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Button Content="Back"/>
+                        <Button Content="Save"/>
+                        <Button Content="Delete"/>
+                        <Button Content="Cancel"/>
+                        <Button Content="Forward"/>
+                    </StackPanel>
+                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <StackPanel>
+                            <Label Content="Category:"/>
+                            <ComboBox></ComboBox>
+                            <Label Content="Type:"/>
+                            <ComboBox></ComboBox>
+                            <Label Content="Description:"/>
+                            <TextBox MinLines="5" AcceptsReturn="True"></TextBox>
+                        </StackPanel>
+                        <StackPanel>
+                            <Label Content="Factoids:"/>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <Button Content="New"/>
+                                <Button Content="Edit"/>
+                                <Button Content="Delete"/>
+                            </StackPanel>
+                            <DataGrid>
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Type" IsReadOnly="True" />
+                                    <DataGridTextColumn Header="Content" IsReadOnly="True" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </StackPanel>
+                        <StackPanel>
+                            <Label Content="Reviews:"/>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <Button Content="New"/>
+                                <Button Content="Edit"/>
+                                <Button Content="Delete"/>
+                            </StackPanel>
+                            <DataGrid>
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Rating" IsReadOnly="True" />
+                                    <DataGridTextColumn Header="User" IsReadOnly="True" />
+                                    <DataGridTextColumn Header="Date" IsReadOnly="True" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </StackPanel>
+                    </StackPanel>
+                </DockPanel>
+            </TabItem>
             <TabItem Header="Chart" IsEnabled="False"/>
             <TabItem Header="Wishlist" IsEnabled="False"/>
             <TabItem Header="List" IsEnabled="False"/>

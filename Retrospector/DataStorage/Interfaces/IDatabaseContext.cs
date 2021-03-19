@@ -9,5 +9,6 @@ namespace Retrospector.DataStorage.Interfaces
         DbSet<Review> Reviews { get; set; }
         DbSet<Media> Media { get; set; }
         int SaveChanges();
+        void RunMigrations();
     }
 }

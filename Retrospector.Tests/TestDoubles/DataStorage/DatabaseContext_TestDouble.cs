@@ -20,5 +20,11 @@ namespace Retrospector.Tests.TestDoubles.DataStorage
         {
             optionsBuilder.UseInMemoryDatabase(_id);
         }
+
+        public int CountOfCallsTo_RunMigrations { get; set; }
+        public new void RunMigrations()
+        {
+            CountOfCallsTo_RunMigrations++;
+        }
     }
 }

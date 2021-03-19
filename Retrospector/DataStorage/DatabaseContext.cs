@@ -1,14 +1,19 @@
 using Microsoft.EntityFrameworkCore;
 using Retrospector.DataStorage.Interfaces;
 using Retrospector.DataStorage.Models;
+using Retrospector.Setup;
 
 namespace Retrospector.DataStorage
 {
     public class DatabaseContext : DbContext, IDatabaseContext
     {
-        private readonly DatabaseConfiguration _config;
+        private readonly Configuration _config;
 
-        public DatabaseContext(DatabaseConfiguration config)
+        public DbSet<Factoid> Factoids { get; set; }
+        public DbSet<Review> Reviews { get; set; }
+        public DbSet<Media> Media { get; set; }
+
+        public DatabaseContext(Configuration config)
         {
             _config = config;
         }
@@ -22,8 +27,9 @@ namespace Retrospector.DataStorage
         {
         }
 
-        public DbSet<Factoid> Factoids { get; set; }
-        public DbSet<Review> Reviews { get; set; }
-        public DbSet<Media> Media { get; set; }
+        public void RunMigrations()
+        {
+            base.Database.Migrate();
+        }
     }
 }
