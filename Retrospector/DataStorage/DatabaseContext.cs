@@ -1,4 +1,7 @@
+using System;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Retrospector.DataStorage.Interfaces;
 using Retrospector.DataStorage.Models;
 using Retrospector.Setup;
@@ -25,6 +28,35 @@ namespace Retrospector.DataStorage
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder
+                .Entity<Media>()
+                .Property(m => m.CreatedDate)
+                .HasDefaultValueSql("sysutcdatetime()");
+
+            modelBuilder
+                .Entity<MediaTypeEntity>()
+                .Property(t => t.CreatedDate)
+                .HasDefaultValueSql("sysutcdatetime()");
+
+            modelBuilder
+                .Entity<MediaTypeEntity>()
+                .HasData(Enum
+                    .GetValues<MediaType>()
+                    .Select(e => new MediaTypeEntity
+                    {
+                        Id = (int) e,
+                        Name = e.ToString()
+                    }));
+
+            modelBuilder
+                .Entity<Review>()
+                .Property(r => r.CreatedDate)
+                .HasDefaultValueSql("sysutcdatetime()");
+
+            modelBuilder
+                .Entity<Factoid>()
+                .Property(f => f.CreatedDate)
+                .HasDefaultValueSql("sysutcdatetime()");
         }
 
         public void RunMigrations()

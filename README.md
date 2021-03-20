@@ -37,3 +37,7 @@ The best part of storing reviews is seeing charts!
 ## Achievements
 There are several achievements that you can earn by using Retrospector to its fullest potential. [Warning: these are addictive]
 ![screenshot](/screenshots/Achievements.gif)
+
+## Migrations
+
+ - Genrate with `dotnet ef migrations add --project Retrospector/Retrospector.csproj -o DataStorage/Migrations <name>`
