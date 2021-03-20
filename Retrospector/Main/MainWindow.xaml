@@ -22,20 +22,12 @@
         <TabControl DockPanel.Dock="Bottom">
             <TabItem Header="Search" IsEnabled="True">
                 <StackPanel>
-                    <TextBox x:Name="searchBox" TextChanged="TextBoxBase_OnTextChanged"/>
-                    <DataGrid ItemsSource="{Binding SearchResults}">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="#" IsReadOnly="True" />
-                            <DataGridTextColumn Header="Title" IsReadOnly="True" />
-                            <DataGridTextColumn Header="Creator" IsReadOnly="True" />
-                            <DataGridTextColumn Header="Season" IsReadOnly="True" />
-                            <DataGridTextColumn Header="Episode" IsReadOnly="True" />
-                            <DataGridTextColumn Header="Category" IsReadOnly="True" />
-                            <DataGridTextColumn Header="Reviews" IsReadOnly="True" />
-                            <DataGridTextColumn Header="Rating Mean" IsReadOnly="True" />
-                            <DataGridTextColumn Header="Rating Current" IsReadOnly="True" />
-                        </DataGrid.Columns>
-                    </DataGrid>
+                    <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}">
+                        <TextBox.InputBindings>
+                            <KeyBinding Command="{Binding SearchCommand}" Key="Enter" />
+                        </TextBox.InputBindings>
+                    </TextBox>
+                    <DataGrid x:Name="searchResultTable" ItemsSource="{Binding SearchResults}" AutoGenerateColumns="False" VerticalScrollBarVisibility="Auto"/>
                 </StackPanel>
             </TabItem>
             <TabItem Header="Media" IsEnabled="True">

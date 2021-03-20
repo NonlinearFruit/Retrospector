@@ -33,8 +33,9 @@ namespace Retrospector.Tests.Tests.Main
             public void creates_query_tree()
             {
                 var search = "`U=Ben";
+                _viewModel.SearchText = search;
 
-                _viewModel.SearchCommand.Execute(search);
+                _viewModel.SearchCommand.Execute(null);
 
                 Assert.Equal(Verify.Once, _queryBuilder.CountOf_BuildQuery_Calls);
                 Assert.Equal(search, _queryBuilder.LastQueryPassedTo_BuildQuery);
@@ -46,7 +47,7 @@ namespace Retrospector.Tests.Tests.Main
                 var tree = new QueryTree();
                 _queryBuilder.ReturnFor_BuildQuery = tree;
 
-                _viewModel.SearchCommand.Execute("");
+                _viewModel.SearchCommand.Execute(null);
 
                 Assert.Equal(Verify.Once, _searchDataGateway.CountOfCallsTo_Search);
                 Assert.Equal(tree, _searchDataGateway.LastQueryPassedTo_Search);
@@ -58,20 +59,16 @@ namespace Retrospector.Tests.Tests.Main
                 var result = new Dictionary<RetrospectorAttribute, string>();
                 _searchDataGateway.ReturnFor_Search = new []{result};
 
-                _viewModel.SearchCommand.Execute("");
+                _viewModel.SearchCommand.Execute(null);
 
                 Assert.Contains(result, _viewModel.SearchResults);
             }
 
             [Fact]
-            public void handles_wrong_type()
-            {
-                _viewModel.SearchCommand.Execute(DateTime.Now);
-            }
-
-            [Fact]
             public void handles_null()
             {
+                _viewModel.SearchText = null;
+
                 _viewModel.SearchCommand.Execute(null);
             }
 
@@ -80,7 +77,7 @@ namespace Retrospector.Tests.Tests.Main
             {
                 _viewModel.SearchResults.Add(new Dictionary<RetrospectorAttribute, string>());
 
-                _viewModel.SearchCommand.Execute("");
+                _viewModel.SearchCommand.Execute(null);
 
                 Assert.Empty(_viewModel.SearchResults);
             }

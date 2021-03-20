@@ -32,12 +32,15 @@ namespace Retrospector.Search
             if (query == null)
                 return new Dictionary<RetrospectorAttribute, string>[0];
             var filter = _filterBuilder.BuildFilter(query);
+            var allMedia = _context.Media.ToList();
+            var allReviews = _context.Reviews.ToList();
+            var allFactoids = _context.Factoids.ToList();
             return (
-                from media in _context.Media.AsEnumerable()
-                join review in _context.Reviews on media.Id equals review.MediaId into mediaReviews
-                from mediaReview in mediaReviews.AsEnumerable().DefaultIfEmpty()
-                join factoid in _context.Factoids on media.Id equals factoid.MediaId into mediaFactoids
-                from mediaFactoid in mediaFactoids.AsEnumerable().DefaultIfEmpty()
+                from media in allMedia
+                join review in allReviews on media.Id equals review.MediaId into mediaReviews
+                from mediaReview in mediaReviews.DefaultIfEmpty()
+                join factoid in allFactoids on media.Id equals factoid.MediaId into mediaFactoids
+                from mediaFactoid in mediaFactoids.DefaultIfEmpty()
                 where filter(media, mediaReview, mediaFactoid)
                 select _mediaReducer
                     .Reduce(media)

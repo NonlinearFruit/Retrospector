@@ -1,5 +1,9 @@
-﻿using System.Windows.Controls;
+﻿using System;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
 using Retrospector.Main.Interfaces;
+using Retrospector.Search.Models;
 
 namespace Retrospector.Main
 {
@@ -12,12 +16,19 @@ namespace Retrospector.Main
             InitializeComponent();
             _viewModel = viewModel;
             DataContext = _viewModel;
+            Loaded += Load;
         }
 
-        private void TextBoxBase_OnTextChanged(object sender, TextChangedEventArgs e)
+        private void Load(object sender, RoutedEventArgs e)
         {
-            var search = searchBox.Text;
-            _viewModel.SearchCommand.Execute(search);
+            foreach (var attribute in Enum.GetValues<RetrospectorAttribute>())
+                searchResultTable.Columns.Add(new DataGridTextColumn
+                {
+                    Header = attribute.ToString(),
+                    Binding = new Binding($"[{(int)attribute}]"),
+                    IsReadOnly = true,
+                    Width = DataGridLength.SizeToHeader
+                });
         }
     }
 }

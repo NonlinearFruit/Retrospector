@@ -13,6 +13,7 @@ namespace Retrospector.Main
         private readonly IQueryBuilder _queryBuilder;
         private readonly ISearchDataGateway _searchDataGateway;
 
+        public string SearchText { get; set; }
         public ICommand SearchCommand { get; set; }
         public ICollection<IDictionary<RetrospectorAttribute, string>> SearchResults { get; set; }
 
@@ -26,9 +27,7 @@ namespace Retrospector.Main
 
         private void Search(object obj)
         {
-            if (obj is not string search)
-                return;
-            var tree = _queryBuilder.BuildQuery(search);
+            var tree = _queryBuilder.BuildQuery(SearchText);
             SearchResults.Clear();
             _searchDataGateway
                 .Search(tree)
