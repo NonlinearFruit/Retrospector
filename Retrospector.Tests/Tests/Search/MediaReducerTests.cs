@@ -17,6 +17,7 @@ namespace Retrospector.Tests.Tests.Search
         }
 
         [Theory]
+        [InlineData(RetrospectorAttribute.MediaId)]
         [InlineData(RetrospectorAttribute.MediaTitle)]
         [InlineData(RetrospectorAttribute.MediaCreator)]
         [InlineData(RetrospectorAttribute.MediaSeason)]
@@ -31,6 +32,7 @@ namespace Retrospector.Tests.Tests.Search
         }
 
         [Theory]
+        [InlineData(RetrospectorAttribute.MediaId)]
         [InlineData(RetrospectorAttribute.MediaTitle)]
         [InlineData(RetrospectorAttribute.MediaCreator)]
         [InlineData(RetrospectorAttribute.MediaSeason)]
@@ -45,6 +47,7 @@ namespace Retrospector.Tests.Tests.Search
         }
 
         [Theory]
+        [InlineData(nameof(Media.Id), RetrospectorAttribute.MediaId, 169)]
         [InlineData(nameof(Media.Title), RetrospectorAttribute.MediaTitle, "Sherlock Holmes")]
         [InlineData(nameof(Media.Creator), RetrospectorAttribute.MediaCreator, "AC Doyle")]
         [InlineData(nameof(Media.SeasonId), RetrospectorAttribute.MediaSeason, "S1")]

@@ -9,8 +9,9 @@ namespace Retrospector.Search
     {
         public Dictionary<RetrospectorAttribute, string> Reduce(Media item)
         {
-            return new Dictionary<RetrospectorAttribute, string>
+            return new ()
             {
+                {RetrospectorAttribute.MediaId, $"{item?.Id}" ?? ""},
                 {RetrospectorAttribute.MediaTitle, item?.Title ?? ""},
                 {RetrospectorAttribute.MediaCreator, item?.Creator ?? ""},
                 {RetrospectorAttribute.MediaSeason, item?.SeasonId ?? ""},

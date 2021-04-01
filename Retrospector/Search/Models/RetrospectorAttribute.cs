@@ -2,6 +2,7 @@ namespace Retrospector.Search.Models
 {
     public enum RetrospectorAttribute
     {
+        MediaId,
         MediaTitle,
         MediaCreator,
         MediaSeason,
