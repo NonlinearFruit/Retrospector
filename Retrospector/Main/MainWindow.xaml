@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Retrospector.Main"
+        xmlns:mediaTab="clr-namespace:Retrospector.MediaTab"
         mc:Ignorable="d"
         Title="Retrospector" Height="800" Width="1300" d:DataContext="{local:MainWindowViewModel}">
     <DockPanel>
@@ -19,77 +20,17 @@
                 <MenuItem Header="_About" IsEnabled="False"/>
             </MenuItem>
         </Menu>
-        <TabControl DockPanel.Dock="Bottom">
-            <TabItem Header="Search" IsEnabled="True">
-                <StackPanel>
-                    <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}">
-                        <TextBox.InputBindings>
-                            <KeyBinding Command="{Binding SearchCommand}" Key="Enter" />
-                        </TextBox.InputBindings>
-                    </TextBox>
-                    <DataGrid x:Name="searchResultTable" ItemsSource="{Binding SearchResults}" AutoGenerateColumns="False" VerticalScrollBarVisibility="Auto"/>
-                </StackPanel>
-            </TabItem>
-            <TabItem Header="Media" IsEnabled="True">
-                <DockPanel>
-                    <StackPanel DockPanel.Dock="Top" Orientation="Vertical" HorizontalAlignment="Center">
-                        <StackPanel Orientation="Horizontal"><TextBox Text="Title"/><Button Content="New"/></StackPanel>
-                        <StackPanel Orientation="Horizontal"><Label Content="by"/><TextBox Text="Creator"/></StackPanel>
-                        <StackPanel Orientation="Horizontal"><TextBox Text="Season"/><Button Content="Add"/></StackPanel>
-                        <StackPanel Orientation="Horizontal"><TextBox Text="Episode"/><Button Content="Add"/></StackPanel>
-                    </StackPanel>
-                    <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
-                        <Button Content="Back"/>
-                        <Button Content="Save"/>
-                        <Button Content="Delete"/>
-                        <Button Content="Cancel"/>
-                        <Button Content="Forward"/>
-                    </StackPanel>
-                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" HorizontalAlignment="Center">
-                        <StackPanel>
-                            <Label Content="Category:"/>
-                            <ComboBox></ComboBox>
-                            <Label Content="Type:"/>
-                            <ComboBox></ComboBox>
-                            <Label Content="Description:"/>
-                            <TextBox MinLines="5" AcceptsReturn="True"></TextBox>
-                        </StackPanel>
-                        <StackPanel>
-                            <Label Content="Factoids:"/>
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                <Button Content="New"/>
-                                <Button Content="Edit"/>
-                                <Button Content="Delete"/>
-                            </StackPanel>
-                            <DataGrid>
-                                <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Type" IsReadOnly="True" />
-                                    <DataGridTextColumn Header="Content" IsReadOnly="True" />
-                                </DataGrid.Columns>
-                            </DataGrid>
-                        </StackPanel>
-                        <StackPanel>
-                            <Label Content="Reviews:"/>
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                <Button Content="New"/>
-                                <Button Content="Edit"/>
-                                <Button Content="Delete"/>
-                            </StackPanel>
-                            <DataGrid>
-                                <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Rating" IsReadOnly="True" />
-                                    <DataGridTextColumn Header="User" IsReadOnly="True" />
-                                    <DataGridTextColumn Header="Date" IsReadOnly="True" />
-                                </DataGrid.Columns>
-                            </DataGrid>
-                        </StackPanel>
-                    </StackPanel>
-                </DockPanel>
-            </TabItem>
-            <TabItem Header="Chart" IsEnabled="False"/>
-            <TabItem Header="Wishlist" IsEnabled="False"/>
-            <TabItem Header="List" IsEnabled="False"/>
-            <TabItem Header="Achievements" IsEnabled="False"/>
+        <TabControl DockPanel.Dock="Bottom" ItemsSource="{Binding Tabs}">
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Header}"/>
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+            <TabControl.ContentTemplate>
+                <DataTemplate>
+                    <ContentControl Content="{Binding}"/>
+                </DataTemplate>
+            </TabControl.ContentTemplate>
         </TabControl>
     </DockPanel>
 </Window>

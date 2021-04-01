@@ -60,7 +60,7 @@ namespace Retrospector.Tests.Tests.Setup
                 }
                 catch (InvalidOperationException exception)
                 {
-                    Assert.Equal("The calling thread must be STA, because many UI components require this.", exception.Message);
+                    Assert.True("The calling thread must be STA, because many UI components require this." == exception.Message, exception.Message);
                 }
             }
 

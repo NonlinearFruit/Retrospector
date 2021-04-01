@@ -5,10 +5,13 @@ using Retrospector.Search.Interfaces;
 using Retrospector.Search.Models;
 using Retrospector.DataStorage;
 using Retrospector.DataStorage.Interfaces;
-using Retrospector.DataStorage.Models;
 using Retrospector.Main;
 using Retrospector.Main.Interfaces;
+using Retrospector.MediaTab;
+using Retrospector.MediaTab.Interfaces;
 using Retrospector.Search;
+using Retrospector.SearchTab;
+using Retrospector.SearchTab.Interfaces;
 using Retrospector.Utilities;
 using Retrospector.Utilities.Interfaces;
 
@@ -24,22 +27,22 @@ namespace Retrospector.Setup
         }
 
         public IServiceCollection ConfigureServices(IServiceCollection services)
-        {
-            return services
+            => services
                 .AddSingleton<Configuration>(Configuration)
                 .AddTransient<IDatabaseContext, DatabaseContext>()
                 .AddTransient<IFactoidReducer, FactoidReducer>()
                 .AddTransient<ILeafExpressionBuilder, LeafExpressionBuilder>()
                 .AddTransient<ILeafOperator, LeafOperator>(p => BuildLeafOperator())
                 .AddTransient<ILogger, Logger>()
+                .AddTransient<IMainWindow, MainWindow>()
                 .AddTransient<IMediaReducer, MediaReducer>()
+                .AddTransient<IMediaTab, MediaTabViewModel>()
                 .AddTransient<IQueryBuilder, QueryBuilder>(p => BuildQueryBuilder(p.GetService<ILeafOperator>()))
                 .AddTransient<IReviewReducer, ReviewReducer>()
                 .AddTransient<ISearchDataGateway, SearchDataGateway>()
                 .AddTransient<ISearchFilterBuilder, SearchFilterBuilder>()
-                .AddTransient<IMainWindow, MainWindow>()
+                .AddTransient<ISearchTab, SearchTabViewModel>()
                 .AddTransient<MainWindowViewModel>();
-        }
 
         public void Configure(IServiceProvider provider)
         {

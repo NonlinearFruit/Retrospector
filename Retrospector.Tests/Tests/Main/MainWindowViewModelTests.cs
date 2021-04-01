@@ -1,85 +1,34 @@
-using System;
-using System.Collections.Generic;
 using Retrospector.Main;
-using Retrospector.Search;
-using Retrospector.Search.Models;
-using Retrospector.Tests.TestDoubles.Search;
-using Retrospector.Tests.Utilities;
+using Retrospector.Tests.TestDoubles;
 using Xunit;
 
 namespace Retrospector.Tests.Tests.Main
 {
     public class MainWindowViewModelTests
     {
-        private readonly MainWindowViewModel _viewModel;
-        private readonly SearchDataGateway_TestDouble _searchDataGateway;
-        private readonly QueryBuilder_TestDouble _queryBuilder;
+        private MainWindowViewModel _viewModel;
+        private Tab_TestDouble _searchTab;
+        private Tab_TestDouble _mediaTab;
 
         protected MainWindowViewModelTests()
         {
-            _queryBuilder = new QueryBuilder_TestDouble();
-            _searchDataGateway = new SearchDataGateway_TestDouble();
-            _viewModel = new MainWindowViewModel(_queryBuilder, _searchDataGateway);
+            _searchTab = new Tab_TestDouble();
+            _mediaTab = new Tab_TestDouble();
+            _viewModel = new MainWindowViewModel(_searchTab, _mediaTab);
         }
 
-        public class SearchCommand : MainWindowViewModelTests
+        public class Constructor : MainWindowViewModelTests
         {
-            public SearchCommand()
+            [Fact]
+            public void search_tab_is_stored_as_a_tab()
             {
-                _searchDataGateway.ReturnFor_Search = Array.Empty<Dictionary<RetrospectorAttribute, string>>();
+                Assert.Contains(_searchTab, _viewModel.Tabs);
             }
 
             [Fact]
-            public void creates_query_tree()
+            public void media_tab_is_stored_as_a_tab()
             {
-                var search = "`U=Ben";
-                _viewModel.SearchText = search;
-
-                _viewModel.SearchCommand.Execute(null);
-
-                Assert.Equal(Verify.Once, _queryBuilder.CountOf_BuildQuery_Calls);
-                Assert.Equal(search, _queryBuilder.LastQueryPassedTo_BuildQuery);
-            }
-
-            [Fact]
-            public void searches_the_database()
-            {
-                var tree = new QueryTree();
-                _queryBuilder.ReturnFor_BuildQuery = tree;
-
-                _viewModel.SearchCommand.Execute(null);
-
-                Assert.Equal(Verify.Once, _searchDataGateway.CountOfCallsTo_Search);
-                Assert.Equal(tree, _searchDataGateway.LastQueryPassedTo_Search);
-            }
-
-            [Fact]
-            public void stores_results_on_property()
-            {
-                var result = new Dictionary<RetrospectorAttribute, string>();
-                _searchDataGateway.ReturnFor_Search = new []{result};
-
-                _viewModel.SearchCommand.Execute(null);
-
-                Assert.Contains(result, _viewModel.SearchResults);
-            }
-
-            [Fact]
-            public void handles_null()
-            {
-                _viewModel.SearchText = null;
-
-                _viewModel.SearchCommand.Execute(null);
-            }
-
-            [Fact]
-            public void clears_old_search_results()
-            {
-                _viewModel.SearchResults.Add(new Dictionary<RetrospectorAttribute, string>());
-
-                _viewModel.SearchCommand.Execute(null);
-
-                Assert.Empty(_viewModel.SearchResults);
+                Assert.Contains(_mediaTab, _viewModel.Tabs);
             }
         }
     }
