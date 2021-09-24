@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Retrospector.Search.Models;
 using Retrospector.SearchTab;
+using Retrospector.Tests.TestDoubles;
 using Retrospector.Tests.TestDoubles.Search;
 using Retrospector.Tests.Utilities;
 using Xunit;
@@ -13,12 +14,14 @@ namespace Retrospector.Tests.Tests.SearchTab
         private readonly SearchTabViewModel _viewModel;
         private readonly SearchDataGateway_TestDouble _searchDataGateway;
         private readonly QueryBuilder_TestDouble _queryBuilder;
+        private readonly MediaTab_TestDouble _mediaTab;
 
         protected SearchTabViewModelTests()
         {
             _queryBuilder = new QueryBuilder_TestDouble();
             _searchDataGateway = new SearchDataGateway_TestDouble();
-            _viewModel = new SearchTabViewModel(_queryBuilder, _searchDataGateway);
+            _mediaTab = new MediaTab_TestDouble();
+            _viewModel = new SearchTabViewModel(_queryBuilder, _searchDataGateway, _mediaTab);
         }
 
         public class Constructor : SearchTabViewModelTests
@@ -88,6 +91,62 @@ namespace Retrospector.Tests.Tests.SearchTab
                 _viewModel.SearchCommand.Execute(null);
 
                 Assert.Empty(_viewModel.SearchResults);
+            }
+        }
+
+        public class NewMediaCommand : SearchTabViewModelTests
+        {
+            [Fact]
+            public void calls_new_media()
+            {
+                _viewModel.NewMediaCommand.Execute(null);
+
+                Assert.Equal(Verify.Once, _mediaTab.CountOfCallsTo_New);
+            }
+        }
+
+        public class LoadMediaCommand : SearchTabViewModelTests
+        {
+            [Fact]
+            public void calls_load_media()
+            {
+                var id = 5;
+                _viewModel.SelectedResult = new Dictionary<RetrospectorAttribute, string>
+                {
+                    { RetrospectorAttribute.MediaId, $"{id}" }
+                };
+
+                _viewModel.LoadMediaCommand.Execute(null);
+
+                Assert.Equal(Verify.Once, _mediaTab.CountOfCallsTo_Load);
+                Assert.Equal(id, _mediaTab.LastIdPassedTo_Load);
+            }
+
+            [Fact]
+            public void handles_when_no_result_is_selected()
+            {
+                _viewModel.SelectedResult = null;
+
+                _viewModel.LoadMediaCommand.Execute(null);
+            }
+
+            [Fact]
+            public void handles_when_there_is_no_media_id_attribute()
+            {
+                _viewModel.SelectedResult = new Dictionary<RetrospectorAttribute, string>();
+
+                _viewModel.LoadMediaCommand.Execute(null);
+            }
+
+            [Fact]
+            public void handles_when_the_media_id_is_not_an_int()
+            {
+                _viewModel.SelectedResult = new Dictionary<RetrospectorAttribute, string>
+                {
+                    { RetrospectorAttribute.MediaId, "I am not an int" }
+                };
+
+                _viewModel.LoadMediaCommand.Execute(null);
             }
         }
     }

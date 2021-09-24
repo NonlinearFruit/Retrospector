@@ -5,7 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Retrospector.MediaTab"
              mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="300"
+             d:DataContext="{d:MediaTabViewModel}">
     <x:Code><![CDATA[ public MediaTab() { InitializeComponent(); }]]></x:Code>
     <Grid>
         <DockPanel>
@@ -14,13 +15,13 @@
                     <TextBox Text="{Binding Media.Title}" /><Button Content="New" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <Label Content="by" /><TextBox Text="Creator" />
+                    <Label Content="by" /><TextBox Text="{Binding Media.Creator}" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <TextBox Text="Season" /><Button Content="Add" />
+                    <TextBox Text="{Binding Media.Season}" /><Button Content="Add" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <TextBox Text="Episode" /><Button Content="Add" />
+                    <TextBox Text="{Binding Media.Episode}" /><Button Content="Add" />
                 </StackPanel>
             </StackPanel>
             <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
@@ -30,45 +31,45 @@
                 <Button Content="Cancel" />
                 <Button Content="Forward" />
             </StackPanel>
-            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" HorizontalAlignment="Center">
-                <StackPanel>
+            <DockPanel DockPanel.Dock="Top" HorizontalAlignment="Center">
+                <StackPanel DockPanel.Dock="Left">
                     <Label Content="Category:" />
-                    <ComboBox />
+                    <ComboBox ItemsSource="{Binding Categories}" SelectedItem="{Binding Media.Category}"/>
                     <Label Content="Type:" />
-                    <ComboBox />
+                    <ComboBox ItemsSource="{Binding MediaTypes}" SelectedItem="{Binding Media.Type}"/>
                     <Label Content="Description:" />
-                    <TextBox MinLines="5" AcceptsReturn="True" />
+                    <TextBox MinLines="5" AcceptsReturn="True" Text="{Binding Media.Description}"/>
                 </StackPanel>
-                <StackPanel>
+                <StackPanel DockPanel.Dock="Left">
                     <Label Content="Factoids:" />
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <Button Content="New" />
                         <Button Content="Edit" />
                         <Button Content="Delete" />
                     </StackPanel>
-                    <DataGrid>
+                    <DataGrid ItemsSource="{Binding Media.Factoids}" AutoGenerateColumns="False">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Type" IsReadOnly="True" />
-                            <DataGridTextColumn Header="Content" IsReadOnly="True" />
+                            <DataGridTextColumn Header="Type" IsReadOnly="True" Binding="{Binding Title}"/>
+                            <DataGridTextColumn Header="Content" IsReadOnly="True" Binding="{Binding Content}"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </StackPanel>
-                <StackPanel>
+                <StackPanel DockPanel.Dock="Left">
                     <Label Content="Reviews:" />
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <Button Content="New" />
                         <Button Content="Edit" />
                         <Button Content="Delete" />
                     </StackPanel>
-                    <DataGrid>
+                    <DataGrid ItemsSource="{Binding Media.Reviews}" AutoGenerateColumns="False">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Rating" IsReadOnly="True" />
-                            <DataGridTextColumn Header="User" IsReadOnly="True" />
-                            <DataGridTextColumn Header="Date" IsReadOnly="True" />
+                            <DataGridTextColumn Header="Rating" IsReadOnly="True" Binding="{Binding Rating}"/>
+                            <DataGridTextColumn Header="User" IsReadOnly="True" Binding="{Binding User}"/>
+                            <DataGridTextColumn Header="Date" IsReadOnly="True" Binding="{Binding Date}"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </StackPanel>
-            </StackPanel>
+            </DockPanel>
         </DockPanel>
     </Grid>
 </UserControl>

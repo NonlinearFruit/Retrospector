@@ -29,6 +29,8 @@ namespace Retrospector.Setup
         public IServiceCollection ConfigureServices(IServiceCollection services)
             => services
                 .AddSingleton<Configuration>(Configuration)
+                .AddSingleton<IMediaTab, MediaTabViewModel>()
+                .AddTransient<Func<IDatabaseContext>>(p => p.GetService<IDatabaseContext>)
                 .AddTransient<IDatabaseContext, DatabaseContext>()
                 .AddTransient<IFactoidReducer, FactoidReducer>()
                 .AddTransient<ILeafExpressionBuilder, LeafExpressionBuilder>()
@@ -36,7 +38,6 @@ namespace Retrospector.Setup
                 .AddTransient<ILogger, Logger>()
                 .AddTransient<IMainWindow, MainWindow>()
                 .AddTransient<IMediaReducer, MediaReducer>()
-                .AddTransient<IMediaTab, MediaTabViewModel>()
                 .AddTransient<IQueryBuilder, QueryBuilder>(p => BuildQueryBuilder(p.GetService<ILeafOperator>()))
                 .AddTransient<IReviewReducer, ReviewReducer>()
                 .AddTransient<ISearchDataGateway, SearchDataGateway>()

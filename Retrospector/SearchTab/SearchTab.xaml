@@ -5,15 +5,27 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Retrospector.SearchTab"
              mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="300"
+             d:DataContext="{d:SearchTabViewModel}">
     <Grid>
-        <StackPanel>
-            <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}">
+        <DockPanel LastChildFill="True">
+            <TextBox DockPanel.Dock="Top" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}">
                 <TextBox.InputBindings>
                     <KeyBinding Command="{Binding SearchCommand}" Key="Enter" />
                 </TextBox.InputBindings>
             </TextBox>
-            <DataGrid x:Name="searchResultTable" ItemsSource="{Binding SearchResults}" AutoGenerateColumns="False" VerticalScrollBarVisibility="Auto"/>
-        </StackPanel>
+            <DockPanel DockPanel.Dock="Bottom" LastChildFill="False">
+                <Button DockPanel.Dock="Left" Command="{Binding NewMediaCommand}">New</Button>
+                <Button DockPanel.Dock="Left" Command="{Binding LoadMediaCommand}">Load</Button>
+            </DockPanel>
+            <DataGrid
+                DockPanel.Dock="Top"
+                x:Name="searchResultTable"
+                ItemsSource="{Binding SearchResults}"
+                AutoGenerateColumns="False"
+                VerticalScrollBarVisibility="Auto"
+                SelectedItem="{Binding SelectedResult}"
+                />
+        </DockPanel>
     </Grid>
 </UserControl>

@@ -7,13 +7,13 @@ namespace Retrospector.Tests.Tests.Main
     public class MainWindowViewModelTests
     {
         private MainWindowViewModel _viewModel;
-        private Tab_TestDouble _searchTab;
-        private Tab_TestDouble _mediaTab;
+        private SearchTab_TestDouble _searchTab;
+        private MediaTab_TestDouble _mediaTab;
 
         protected MainWindowViewModelTests()
         {
-            _searchTab = new Tab_TestDouble();
-            _mediaTab = new Tab_TestDouble();
+            _searchTab = new SearchTab_TestDouble();
+            _mediaTab = new MediaTab_TestDouble();
             _viewModel = new MainWindowViewModel(_searchTab, _mediaTab);
         }
 

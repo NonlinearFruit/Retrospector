@@ -8,6 +8,7 @@ using Retrospector.DataStorage.Interfaces;
 using Retrospector.DataStorage.Models;
 using Retrospector.Main;
 using Retrospector.Main.Interfaces;
+using Retrospector.MediaTab.Interfaces;
 using Retrospector.Setup;
 using Retrospector.Tests.TestDoubles.DataStorage;
 using Retrospector.Tests.TestDoubles.Main;
@@ -24,7 +25,7 @@ namespace Retrospector.Tests.Tests.Setup
         public static IEnumerable<object[]> RegisteredTypes => new Startup(new Configuration())
                 .ConfigureServices(new ServiceCollection())
                 .Select(s => s.ServiceType)
-                .Where(t => new [] {typeof(Startup).Assembly, typeof(Media).Assembly, typeof(BinaryOperator).Assembly}.Contains(t.Assembly))
+                .Where(t => typeof(Startup).Assembly == t.Assembly)
                 .Select(t => new object[] {t});
 
         protected StartupTests()
@@ -66,18 +67,7 @@ namespace Retrospector.Tests.Tests.Setup
 
             [Theory]
             [InlineData(typeof(Configuration), ServiceLifetime.Singleton)]
-            [InlineData(typeof(IDatabaseContext), ServiceLifetime.Transient)]
-            [InlineData(typeof(IFactoidReducer), ServiceLifetime.Transient)]
-            [InlineData(typeof(ILeafExpressionBuilder), ServiceLifetime.Transient)]
-            [InlineData(typeof(ILeafOperator), ServiceLifetime.Transient)]
-            [InlineData(typeof(ILogger), ServiceLifetime.Transient)]
-            [InlineData(typeof(IMediaReducer), ServiceLifetime.Transient)]
-            [InlineData(typeof(IQueryBuilder), ServiceLifetime.Transient)]
-            [InlineData(typeof(IReviewReducer), ServiceLifetime.Transient)]
-            [InlineData(typeof(ISearchDataGateway), ServiceLifetime.Transient)]
-            [InlineData(typeof(ISearchFilterBuilder), ServiceLifetime.Transient)]
-            [InlineData(typeof(IMainWindow), ServiceLifetime.Transient)]
-            [InlineData(typeof(MainWindowViewModel), ServiceLifetime.Transient)]
+            [InlineData(typeof(IMediaTab), ServiceLifetime.Singleton)]
             public void has_service(Type service, ServiceLifetime lifetime)
 
             {
