@@ -34,4 +34,9 @@ jobs:
       - name: Install dependencies
         run: dotnet restore
       - name: Test
-        run: dotnet test Retrospector.Tests/Retrospector.Tests.csproj --logger:"console;verbosity=normal"
+        run: dotnet test Retrospector.Tests/Retrospector.Tests.csproj --logger:"console;verbosity=normal" --collect:"XPlat Code Coverage"
+      - name: Coverage
+        uses: codecov/codecov-action@v1
+        with:
+          file: ./Retrospector.Tests/TestResults/*/coverage.cobertura.xml
+          verbose: true # optional (default = false)
