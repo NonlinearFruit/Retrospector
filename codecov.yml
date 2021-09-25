@@ -1,0 +1,4 @@
+ignore:
+  - "**/*.xaml"
+  - "**/*.xaml.cs"
+  - "Retrospector/DataStorage/Migrations"

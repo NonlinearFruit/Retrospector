@@ -13,6 +13,7 @@ ProjectSection(SolutionItems) = preProject
 	LICENSE.txt = LICENSE.txt
 	README.md = README.md
 	.github\workflows\dotnet-core.yml = .github\workflows\dotnet-core.yml
+	codecov.yml = codecov.yml
 EndProjectSection
 EndProject
 Global
