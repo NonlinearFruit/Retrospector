@@ -34,4 +34,4 @@ jobs:
       - name: Install dependencies
         run: dotnet restore
       - name: Test
-        run: dotnet test *.Tests/*.Tests.csproj --logger:"console;verbosity=normal"
+        run: dotnet test Retrospector.Tests/Retrospector.Tests.csproj --logger:"console;verbosity=normal"
