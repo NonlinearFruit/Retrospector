@@ -1,6 +1,7 @@
 # Retrospector
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/NonlinearFruit/Retrospector/.NET%20Core)](https://github.com/NonlinearFruit/Retrospector/actions/workflows/dotnet-core.yml)
 [![Code Coverage](https://img.shields.io/codecov/c/gh/NonlinearFruit/Retrospector.svg)](https://codecov.io/gh/NonlinearFruit/Retrospector)
+[![Maintainability](https://api.codeclimate.com/v1/badges/751282dbecb81769d038/maintainability)](https://codeclimate.com/github/NonlinearFruit/Retrospector/maintainability)
 [![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/NonlinearFruit/Retrospector)](https://gitlab.com/NonlinearFruit/retrospector/-/tags)
 [![license](https://img.shields.io/badge/license-unlicense-yellow.svg)](https://github.com/NonlinearFruit/Retrospector/blob/master/LICENSE)
 
