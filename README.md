@@ -2,6 +2,7 @@
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/NonlinearFruit/Retrospector/.NET%20Core)](https://github.com/NonlinearFruit/Retrospector/actions/workflows/dotnet-core.yml)
 [![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/NonlinearFruit/Retrospector)](https://gitlab.com/NonlinearFruit/retrospector/-/tags)
 [![license](https://img.shields.io/badge/license-unlicense-yellow.svg)](https://github.com/NonlinearFruit/Retrospector/blob/master/LICENSE)
+[![Snyk Vulnerabilities for GitHub Repo](https://img.shields.io/snyk/vulnerabilities/github/NonlinearFruit/Retrospector)](https://app.snyk.io/org/nonlinearfruit/projects)
 
 > **UPDATE:** We are in the process of rewriting this repo. First to .Net with WPF, then to .Net Maui (when Windows support is available).
 
