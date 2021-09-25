@@ -1,0 +1,51 @@
+image: mcr.microsoft.com/dotnet/sdk:5.0
+
+stages:
+  - build
+  - test
+  - mutate
+  - deploy
+
+Dotnet Build:
+  stage: build
+  script:
+    - dotnet build
+
+Dotnet Test:
+  stage: test
+  script:
+    - dotnet add **/*.Tests.csproj package JunitXml.TestLogger
+    - dotnet add **/*.Tests.csproj package coverlet.collector
+    - dotnet test --logger 'junit;logfilename=test_results.xml' --collect 'XPlat Code Coverage'
+    - cat */TestResults/*/coverage.cobertura.xml | grep 'coverage line-rate'
+  coverage: /line-rate="0\.(\d\d)/
+  artifacts:
+    reports:
+      junit:
+        - '*/TestResults/test_results.xml'
+      cobertura:
+        - '*/TestResults/*/coverage.cobertura.xml'
+
+Mutation Test:
+  stage: mutate
+  script:
+    - dotnet tool install --global dotnet-stryker
+    - export PATH=/root/.dotnet/tools:$PATH
+    - cd *.Tests
+    - dotnet stryker
+    - cd ../
+    - mkdir MutationReport
+    - mv */StrykerOutput/*/reports/mutation-report.html MutationReport/mutation-report.html
+  artifacts:
+    expose_as: 'Mutation Report'
+    paths:
+      - 'MutationReport/mutation-report.html'
+    expire_in: 2 weeks
+
+Deploy Executable:
+  stage: deploy
+  script:
+    - echo "ToDo"
+  only:
+    - master
+    - tags

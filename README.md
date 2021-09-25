@@ -1,7 +1,8 @@
 # Retrospector
-[![release](https://img.shields.io/github/release/NonlinearFruit/Retrospector.svg)](https://github.com/NonlinearFruit/Retrospector/releases/latest)
+[![Gitlab pipeline status](https://img.shields.io/gitlab/pipeline/NonlinearFruit/Retrospector/master)](https://gitlab.com/NonlinearFruit/retrospector/-/pipelines)
+[![Gitlab code coverage](https://img.shields.io/gitlab/coverage/NonlinearFruit/Retrospector/master)](https://gitlab.com/NonlinearFruit/retrospector/-/pipelines)
+[![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/NonlinearFruit/Retrospector?sort=semver)](https://gitlab.com/NonlinearFruit/retrospector/-/tags)
 [![license](https://img.shields.io/badge/license-unlicense-yellow.svg)](https://github.com/NonlinearFruit/Retrospector/blob/master/LICENSE)
-[![chat](https://img.shields.io/badge/chat-slack-red.svg)](https://retrospector.slack.com)
 
 > **UPDATE:** We are in the process of rewriting this repo. First to .Net with WPF, then to .Net Maui (when Windows support is available).
 
