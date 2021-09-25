@@ -1,0 +1,35 @@
+name: .NET Core
+
+on: push
+
+jobs:
+  Build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0
+      - name: Clean
+        run: dotnet clean --configuration Release && dotnet nuget locals all --clear
+      - name: Install dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+
+  Test:
+    needs: Build
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0
+      - name: Clean
+        run: dotnet clean --configuration Release && dotnet nuget locals all --clear
+      - name: Install dependencies
+        run: dotnet restore
+      - name: Test
+        run: dotnet test *.Tests/*.Tests.csproj --logger:"console;verbosity=normal"
