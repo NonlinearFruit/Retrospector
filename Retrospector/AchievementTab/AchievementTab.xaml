@@ -10,8 +10,21 @@
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="VisibleIfTrue"></BooleanToVisibilityConverter>
     </UserControl.Resources>
-    <Grid>
-        <ListBox ItemsSource="{Binding Achievements}" ScrollViewer.HorizontalScrollBarVisibility="Visible">
+    <DockPanel LastChildFill="True">
+        <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Center" Orientation="Horizontal">
+            <Label Content="{Binding CountOfGoldAchievements}"/>
+            <fa:IconBlock Icon="Trophy" FontSize="20" Foreground="Gold"/>
+            <Label Content="  "/>
+            <Label Content="{Binding CountOfSilverAchievements}"/>
+            <fa:IconBlock Icon="Trophy" FontSize="20" Foreground="Silver"/>
+            <Label Content="  "/>
+            <Label Content="{Binding CountOfBronzeAchievements}"/>
+            <fa:IconBlock Icon="Trophy" FontSize="20" Foreground="SaddleBrown"/>
+            <Label Content="  "/>
+            <Label Content="{Binding CountOfLockAchievements}"/>
+            <fa:IconBlock Icon="Lock" FontSize="20" Foreground="Gray"/>
+        </StackPanel>
+        <ListBox ItemsSource="{Binding Achievements}" ScrollViewer.HorizontalScrollBarVisibility="Visible" DockPanel.Dock="Bottom">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel HorizontalAlignment="Center">
@@ -30,5 +43,5 @@
                 </ItemsPanelTemplate>
             </ListBox.ItemsPanel>
         </ListBox>
-    </Grid>
+    </DockPanel>
 </UserControl>

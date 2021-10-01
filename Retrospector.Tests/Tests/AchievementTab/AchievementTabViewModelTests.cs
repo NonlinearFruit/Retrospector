@@ -54,5 +54,111 @@ namespace Retrospector.Tests.Tests.AchievementTab
                 Assert.Contains(achievement, viewModel.Achievements);
             }
         }
+
+        public class AchievementsCounts : AchievementTabViewModelTests
+        {
+            [Theory]
+            [InlineData(0, Achievement.Gold, 0)]
+            [InlineData(1, Achievement.Gold, 1)]
+            [InlineData(5, Achievement.Gold, 5)]
+            [InlineData(1, Achievement.Silver, 0)]
+            [InlineData(1, Achievement.Bronze, 0)]
+            public void gold_count_is_correct(int countOfAchievements, string colorOfAchievements, int expectedCount)
+            {
+                for (var i = 0; i < countOfAchievements; i++)
+                    _viewModel.Achievements.Add(new Achievement
+                    {
+                        Color = colorOfAchievements,
+                        Progress = 100
+                    });
+
+                Assert.Equal(expectedCount, _viewModel.CountOfGoldAchievements);
+            }
+
+            [Fact]
+            public void gold_count_ignores_in_progress()
+            {
+                _viewModel.Achievements.Add(new Achievement
+                {
+                    Color = Achievement.Gold,
+                    Progress = 99
+                });
+
+                Assert.Equal(0, _viewModel.CountOfGoldAchievements);
+            }
+
+            [Theory]
+            [InlineData(0, Achievement.Silver, 0)]
+            [InlineData(1, Achievement.Silver, 1)]
+            [InlineData(5, Achievement.Silver, 5)]
+            [InlineData(1, Achievement.Gold, 0)]
+            [InlineData(1, Achievement.Bronze, 0)]
+            public void silver_count_is_correct(int countOfAchievements, string colorOfAchievements, int expectedCount)
+            {
+                for (var i = 0; i < countOfAchievements; i++)
+                    _viewModel.Achievements.Add(new Achievement
+                    {
+                        Color = colorOfAchievements,
+                        Progress = 100
+                    });
+
+                Assert.Equal(expectedCount, _viewModel.CountOfSilverAchievements);
+            }
+
+            [Fact]
+            public void silver_count_ignores_in_progress()
+            {
+                _viewModel.Achievements.Add(new Achievement
+                {
+                    Color = Achievement.Silver,
+                    Progress = 99
+                });
+
+                Assert.Equal(0, _viewModel.CountOfSilverAchievements);
+            }
+
+            [Theory]
+            [InlineData(0, Achievement.Bronze, 0)]
+            [InlineData(1, Achievement.Bronze, 1)]
+            [InlineData(5, Achievement.Bronze, 5)]
+            [InlineData(1, Achievement.Silver, 0)]
+            [InlineData(1, Achievement.Gold, 0)]
+            public void bronze_count_is_correct(int countOfAchievements, string colorOfAchievements, int expectedCount)
+            {
+                for (var i = 0; i < countOfAchievements; i++)
+                    _viewModel.Achievements.Add(new Achievement
+                    {
+                        Color = colorOfAchievements,
+                        Progress = 100
+                    });
+
+                Assert.Equal(expectedCount, _viewModel.CountOfBronzeAchievements);
+            }
+
+            [Fact]
+            public void bronze_count_ignores_in_progress()
+            {
+                _viewModel.Achievements.Add(new Achievement
+                {
+                    Color = Achievement.Bronze,
+                    Progress = 99
+                });
+
+                Assert.Equal(0, _viewModel.CountOfBronzeAchievements);
+            }
+
+            [Theory]
+            [InlineData(0, 0, 0)]
+            [InlineData(1, 50, 1)]
+            [InlineData(5, 75, 5)]
+            [InlineData(1, 100, 0)]
+            public void lock_count_is_correct(int countOfAchievements, int progress, int expectedCount)
+            {
+                for (var i = 0; i < countOfAchievements; i++)
+                    _viewModel.Achievements.Add(new Achievement{Progress = progress});
+
+                Assert.Equal(expectedCount, _viewModel.CountOfLockAchievements);
+            }
+        }
     }
 }
