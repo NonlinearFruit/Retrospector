@@ -1,7 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Retrospector.MediaTab.Interfaces;
 
-namespace Retrospector.Tests.TestDoubles
+namespace Retrospector.Tests.TestDoubles.MediaTab
 {
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     public class MediaTab_TestDouble : IMediaTab
@@ -19,5 +19,7 @@ namespace Retrospector.Tests.TestDoubles
         {
             CountOfCallsTo_New++;
         }
+
+        public string Header { get; }
     }
 }

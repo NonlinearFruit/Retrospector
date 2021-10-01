@@ -25,11 +25,8 @@
                 </StackPanel>
             </StackPanel>
             <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Content="Back" />
                 <Button Content="Save" />
                 <Button Content="Delete" />
-                <Button Content="Cancel" />
-                <Button Content="Forward" />
             </StackPanel>
             <DockPanel DockPanel.Dock="Top" HorizontalAlignment="Center">
                 <StackPanel DockPanel.Dock="Left">

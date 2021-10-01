@@ -1,12 +1,16 @@
 ﻿<Application x:Class="Retrospector.Setup.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:achievementTab="clr-namespace:Retrospector.AchievementTab"
              xmlns:mediaTab="clr-namespace:Retrospector.MediaTab"
              xmlns:searchTab="clr-namespace:Retrospector.SearchTab"
              Startup="OnStartup"
              DispatcherUnhandledException="UnhandledExceptionCatcher">
     <Application.Resources>
         <ResourceDictionary>
+            <DataTemplate DataType="{x:Type achievementTab:AchievementTabViewModel}">
+                <achievementTab:AchievementTab />
+            </DataTemplate>
             <DataTemplate DataType="{x:Type mediaTab:MediaTabViewModel}">
                 <mediaTab:MediaTab />
             </DataTemplate>

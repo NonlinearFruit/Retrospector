@@ -2,18 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
-using Retrospector.Search;
-using Retrospector.Search.Interfaces;
 using Retrospector.DataStorage.Interfaces;
-using Retrospector.DataStorage.Models;
-using Retrospector.Main;
 using Retrospector.Main.Interfaces;
 using Retrospector.MediaTab.Interfaces;
 using Retrospector.Setup;
 using Retrospector.Tests.TestDoubles.DataStorage;
 using Retrospector.Tests.TestDoubles.Main;
 using Retrospector.Tests.Utilities;
-using Retrospector.Utilities.Interfaces;
 using Xunit;
 
 namespace Retrospector.Tests.Tests.Setup
@@ -62,6 +57,10 @@ namespace Retrospector.Tests.Tests.Setup
                 catch (InvalidOperationException exception)
                 {
                     Assert.True("The calling thread must be STA, because many UI components require this." == exception.Message, exception.Message);
+                }
+                catch (ArgumentNullException exception)
+                {
+                    Assert.True("Value cannot be null. (Parameter 'connectionString')" == exception.Message, exception.Message);
                 }
             }
 

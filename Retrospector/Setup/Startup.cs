@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
+using Retrospector.AchievementTab;
+using Retrospector.AchievementTab.Interfaces;
 using Retrospector.Search.Interfaces;
 using Retrospector.Search.Models;
 using Retrospector.DataStorage;
@@ -31,6 +33,9 @@ namespace Retrospector.Setup
                 .AddSingleton<Configuration>(Configuration)
                 .AddSingleton<IMediaTab, MediaTabViewModel>()
                 .AddTransient<Func<IDatabaseContext>>(p => p.GetService<IDatabaseContext>)
+                .AddTransient<IAchievementGenerator, SocialAchievements>()
+                .AddTransient<IAchievementGenerator, WordyAchievements>()
+                .AddTransient<IAchievementTab, AchievementTabViewModel>()
                 .AddTransient<IDatabaseContext, DatabaseContext>()
                 .AddTransient<IFactoidReducer, FactoidReducer>()
                 .AddTransient<ILeafExpressionBuilder, LeafExpressionBuilder>()

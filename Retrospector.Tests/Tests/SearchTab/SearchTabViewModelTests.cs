@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Retrospector.Search.Models;
 using Retrospector.SearchTab;
-using Retrospector.Tests.TestDoubles;
+using Retrospector.Tests.TestDoubles.MediaTab;
 using Retrospector.Tests.TestDoubles.Search;
 using Retrospector.Tests.Utilities;
 using Xunit;

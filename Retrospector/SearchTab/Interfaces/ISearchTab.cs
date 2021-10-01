@@ -1,6 +1,8 @@
+using Retrospector.Main.Interfaces;
+
 namespace Retrospector.SearchTab.Interfaces
 {
-    public interface ISearchTab
+    public interface ISearchTab : ITab
     {
     }
 }
