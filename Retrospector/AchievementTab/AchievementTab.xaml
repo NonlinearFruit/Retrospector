@@ -24,7 +24,7 @@
             <Label Content="{Binding CountOfLockAchievements}"/>
             <fa:IconBlock Icon="Lock" FontSize="20" Foreground="Gray"/>
         </StackPanel>
-        <ListBox ItemsSource="{Binding Achievements}" ScrollViewer.HorizontalScrollBarVisibility="Visible" DockPanel.Dock="Bottom">
+        <ListBox ItemsSource="{Binding Achievements}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" DockPanel.Dock="Bottom">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel HorizontalAlignment="Center">
