@@ -9,64 +9,74 @@
              d:DataContext="{d:MediaTabViewModel}">
     <x:Code><![CDATA[ public MediaTab() { InitializeComponent(); }]]></x:Code>
     <Grid>
-        <DockPanel>
-            <StackPanel DockPanel.Dock="Top" Orientation="Vertical" HorizontalAlignment="Center">
-                <StackPanel Orientation="Horizontal">
-                    <TextBox Text="{Binding Media.Title}" /><Button Content="New" />
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <Label Content="by" /><TextBox Text="{Binding Media.Creator}" />
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <TextBox Text="{Binding Media.Season}" /><Button Content="Add" />
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <TextBox Text="{Binding Media.Episode}" /><Button Content="Add" />
-                </StackPanel>
-            </StackPanel>
-            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Content="Save" />
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="20" />
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Center">
+            <DockPanel LastChildFill="True">
+                <Button DockPanel.Dock="Right" Content="New" />
+                <TextBox DockPanel.Dock="Left" Text="{Binding Media.Title}" />
+            </DockPanel>
+            <DockPanel LastChildFill="True">
+                <Label DockPanel.Dock="Left" Content="by" />
+                <TextBox DockPanel.Dock="Right" Text="{Binding Media.Creator}" />
+            </DockPanel>
+            <DockPanel LastChildFill="True">
+                <Button DockPanel.Dock="Right" Content="Add" />
+                <TextBox DockPanel.Dock="Left" Text="{Binding Media.Season}" />
+            </DockPanel>
+            <DockPanel LastChildFill="True">
+                <Button DockPanel.Dock="Right" Content="Add" />
+                <TextBox DockPanel.Dock="Left" Text="{Binding Media.Episode}"/>
+            </DockPanel>
+        </StackPanel>
+        <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button Content="Save" />
+            <Button Content="Delete" />
+        </StackPanel>
+        <StackPanel Grid.Row="1" Grid.Column="0">
+            <Label Content="Category:" />
+            <ComboBox ItemsSource="{Binding Categories}" SelectedItem="{Binding Media.Category}"/>
+            <Label Content="Type:" />
+            <ComboBox ItemsSource="{Binding MediaTypes}" SelectedItem="{Binding Media.Type}"/>
+            <Label Content="Description:" />
+            <TextBox MinLines="5" AcceptsReturn="True" Text="{Binding Media.Description}" TextWrapping="Wrap"/>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Grid.Column="1">
+            <Label Content="Factoids:" />
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Content="New" />
+                <Button Content="Edit" />
                 <Button Content="Delete" />
             </StackPanel>
-            <DockPanel DockPanel.Dock="Top" HorizontalAlignment="Center">
-                <StackPanel DockPanel.Dock="Left">
-                    <Label Content="Category:" />
-                    <ComboBox ItemsSource="{Binding Categories}" SelectedItem="{Binding Media.Category}"/>
-                    <Label Content="Type:" />
-                    <ComboBox ItemsSource="{Binding MediaTypes}" SelectedItem="{Binding Media.Type}"/>
-                    <Label Content="Description:" />
-                    <TextBox MinLines="5" AcceptsReturn="True" Text="{Binding Media.Description}"/>
-                </StackPanel>
-                <StackPanel DockPanel.Dock="Left">
-                    <Label Content="Factoids:" />
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <Button Content="New" />
-                        <Button Content="Edit" />
-                        <Button Content="Delete" />
-                    </StackPanel>
-                    <DataGrid ItemsSource="{Binding Media.Factoids}" AutoGenerateColumns="False">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Type" IsReadOnly="True" Binding="{Binding Title}"/>
-                            <DataGridTextColumn Header="Content" IsReadOnly="True" Binding="{Binding Content}"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </StackPanel>
-                <StackPanel DockPanel.Dock="Left">
-                    <Label Content="Reviews:" />
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <Button Content="New" />
-                        <Button Content="Edit" />
-                        <Button Content="Delete" />
-                    </StackPanel>
-                    <DataGrid ItemsSource="{Binding Media.Reviews}" AutoGenerateColumns="False">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Rating" IsReadOnly="True" Binding="{Binding Rating}"/>
-                            <DataGridTextColumn Header="User" IsReadOnly="True" Binding="{Binding User}"/>
-                            <DataGridTextColumn Header="Date" IsReadOnly="True" Binding="{Binding Date}"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </StackPanel>
-            </DockPanel>
-        </DockPanel>
+            <DataGrid ItemsSource="{Binding Media.Factoids}" AutoGenerateColumns="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Type" IsReadOnly="True" Binding="{Binding Title}"/>
+                    <DataGridTextColumn Header="Content" IsReadOnly="True" Binding="{Binding Content}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Grid.Column="2">
+            <Label Content="Reviews:" />
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Content="New" />
+                <Button Content="Edit" />
+                <Button Content="Delete" />
+            </StackPanel>
+            <DataGrid ItemsSource="{Binding Media.Reviews}" AutoGenerateColumns="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Rating" IsReadOnly="True" Binding="{Binding Rating}"/>
+                    <DataGridTextColumn Header="User" IsReadOnly="True" Binding="{Binding User}"/>
+                    <DataGridTextColumn Header="Date" IsReadOnly="True" Binding="{Binding Date}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </StackPanel>
     </Grid>
 </UserControl>
