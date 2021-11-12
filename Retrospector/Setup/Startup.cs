@@ -33,6 +33,7 @@ namespace Retrospector.Setup
                 .AddSingleton<Configuration>(Configuration)
                 .AddSingleton<IMediaTab, MediaTabViewModel>()
                 .AddTransient<Func<IDatabaseContext>>(p => p.GetService<IDatabaseContext>)
+                .AddTransient<IAchievementGenerator, ApprenticeAchievements>()
                 .AddTransient<IAchievementGenerator, SocialAchievements>()
                 .AddTransient<IAchievementGenerator, WordyAchievements>()
                 .AddTransient<IAchievementTab, AchievementTabViewModel>()

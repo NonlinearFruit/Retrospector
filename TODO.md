@@ -1,10 +1,3 @@
-String hint = "Give it time";
-apprentice = new Achievement("","Apprentice","Retrospect for 1 year",3);
-apprentice.setHint(hint);
-journeyman = new Achievement("","Journeyman","Retrospect for 5 years",2);
-journeyman.setHint(hint);
-master = new Achievement("","Master","Retrospect for 10 years",1);
-
 String hint = "The weakest link";
 researcher = new Achievement("","Researcher","1k facts for each factoid",1);
 researcher.setHint(hint);

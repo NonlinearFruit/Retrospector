@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using Retrospector.AchievementTab;
 using Retrospector.AchievementTab.Interfaces;
 
-namespace Retrospector.Tests.Tests.AchievementTab
+namespace Retrospector.Tests.TestDoubles.AchievementTab
 {
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     public class AchievementGenerator_TestDouble : IAchievementGenerator

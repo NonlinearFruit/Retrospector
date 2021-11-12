@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Retrospector.AchievementTab;
 using Retrospector.AchievementTab.Interfaces;
+using Retrospector.Tests.TestDoubles.AchievementTab;
 using Retrospector.Tests.Utilities;
 using Xunit;
 
