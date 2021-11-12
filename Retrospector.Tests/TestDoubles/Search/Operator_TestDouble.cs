@@ -11,10 +11,10 @@ namespace Retrospector.Tests.TestDoubles.Search
 
         public Func<string, IEnumerable<string>> ReturnFor_Parse { get; set; }
         public string LastQueryPassedTo_Parse { get; set; }
-        public int CountOf_Parse_Calls { get; set; }
+        public int CountOfCallsTo_Parse { get; set; }
         public virtual IEnumerable<string> Parse(string query)
         {
-            CountOf_Parse_Calls++;
+            CountOfCallsTo_Parse++;
             LastQueryPassedTo_Parse = query;
             return ReturnFor_Parse?.Invoke(query);
         }

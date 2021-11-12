@@ -7,10 +7,10 @@ namespace Retrospector.Tests.TestDoubles.Search
     {
         public QueryTree ReturnFor_BuildQuery { get; set; }
         public string LastQueryPassedTo_BuildQuery { get; set; }
-        public int CountOf_BuildQuery_Calls { get; set; }
+        public int CountOfCallsTo_BuildQuery { get; set; }
         public QueryTree BuildQuery(string query)
         {
-            CountOf_BuildQuery_Calls++;
+            CountOfCallsTo_BuildQuery++;
             LastQueryPassedTo_BuildQuery = query;
             return ReturnFor_BuildQuery;
         }

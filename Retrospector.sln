@@ -14,7 +14,7 @@ ProjectSection(SolutionItems) = preProject
 	README.md = README.md
 	.github\workflows\dotnet-core.yml = .github\workflows\dotnet-core.yml
 	codecov.yml = codecov.yml
-	TODO.md = TODO.md
+	TODO Achievements.md = TODO Achievements.md
 EndProjectSection
 EndProject
 Global

@@ -58,7 +58,7 @@ namespace Retrospector.Tests.Tests.Search
 
             foreach (var op in _operators)
             {
-                Assert.Equal(Verify.Once, op.CountOf_Parse_Calls);
+                Assert.Equal(Verify.Once, op.CountOfCallsTo_Parse);
                 Assert.Equal(query, op.LastQueryPassedTo_Parse);
             }
         }
@@ -122,7 +122,7 @@ namespace Retrospector.Tests.Tests.Search
 
             _builder.BuildQuery(query);
 
-            Assert.Equal(Verify.Once, _leafOp.CountOf_Parse_Calls);
+            Assert.Equal(Verify.Once, _leafOp.CountOfCallsTo_Parse);
             Assert.Equal(query, _leafOp.LastQueryPassedTo_Parse);
         }
 

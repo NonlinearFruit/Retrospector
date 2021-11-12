@@ -56,7 +56,7 @@ namespace Retrospector.Tests.Tests.Search
 
             _gateway.Search(tree);
 
-            Assert.Equal(Verify.Once, _filterBuilder.CountOf_BuildExpression_Calls);
+            Assert.Equal(Verify.Once, _filterBuilder.CountOfCallsTo_BuildExpression);
             Assert.Equal(tree, _filterBuilder.LastTreePassedTo_BuildExpression);
         }
 
@@ -74,7 +74,7 @@ namespace Retrospector.Tests.Tests.Search
 
             _gateway.Search(tree);
 
-            Assert.Equal(Verify.Once, _filterBuilder.CountOf_Filter_Calls);
+            Assert.Equal(Verify.Once, _filterBuilder.CountOfCallsTo_Filter);
             Assert.Equal(title, _filterBuilder.LastMediaPassedTo_Filter.Title);
             Assert.Equal(rating, _filterBuilder.LastReviewPassedTo_Filter.Rating);
             Assert.Equal(fact, _filterBuilder.LastFactoidPassedTo_Filter.Title);

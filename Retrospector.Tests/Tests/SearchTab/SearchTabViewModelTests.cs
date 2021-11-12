@@ -48,7 +48,7 @@ namespace Retrospector.Tests.Tests.SearchTab
 
                 _viewModel.SearchCommand.Execute(null);
 
-                Assert.Equal(Verify.Once, _queryBuilder.CountOf_BuildQuery_Calls);
+                Assert.Equal(Verify.Once, _queryBuilder.CountOfCallsTo_BuildQuery);
                 Assert.Equal(search, _queryBuilder.LastQueryPassedTo_BuildQuery);
             }
 
